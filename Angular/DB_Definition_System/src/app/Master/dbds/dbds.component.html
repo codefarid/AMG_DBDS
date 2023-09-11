@@ -103,7 +103,7 @@
                                         <p>Set as Primary Key?</p>
                                         <p-selectButton id="setPKNo{{i+1}}" [options]="stateOptions" formControlName="isPk" optionLabel="label" optionValue="value"></p-selectButton> 
                                     </div>
-                                    <div class="field p-2">
+                                    <div class="field p-2" *ngIf="!isEdit">
                                         <p>Set as Foreign Key?</p>
                                         <!-- <p-treeSelect class="md:w-20rem w-full" containerStyleClass="w-full" formControlName="isFK" [options]="fkey" [showClear]="true" placeholder="Select Item" (onNodeSelect)="foreignkeySelected($event)"></p-treeSelect> -->
                                         <p-dropdown class="mb-2 mr-2" formControlName="isFKto" [options]="dropDownJoinTable" optionLabel="text" optionValue="value" placeholder="Select Table Name" (onChange)="foreignkeySelectedTable($event.value)"></p-dropdown>
@@ -114,7 +114,7 @@
                                 </div>
                                 </p-panel>
                                 <div class="p-card-footer" >
-                                    <p-button id="deleteFieldNo{{i+1}}" icon="pi pi-trash" styleClass="ml-2 p-button-danger" (click)="deleteField(i); blockedFields[i]=true ; setStatTD(i,'inactive')" *ngIf="isEdit" formControlName="statTD"></p-button>
+                                    <p-button id="deleteFieldNo{{i+1}}" icon="pi pi-trash" styleClass="ml-2 p-button-danger" (click)="deleteField(i); blockedFields[i]=true ; setStatTD(i,'inactive')" *ngIf="isEdit" ></p-button>
                                     <p-button id="undoDeleteFieldNo{{i+1}}" icon="pi pi-history" styleClass="ml-2 p-button-warning" (click)="undoDeleteField(i) ; blockedFields[i]=false ;setStatTD(i,'active')" *ngIf="isEdit"></p-button>
                                 </div>
                         </div>

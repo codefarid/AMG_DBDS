@@ -68,6 +68,7 @@ export class DBDSComponent implements OnInit {
     downloadStore: any[] = [];
 
     dropDownJoinTable: DropdownLevel[] = [];
+    dropDownTextAndValue: DropdownLevel[] = []
 
     dictionary: Dictionary[] = [];
     tableNameList: any[] = [];
@@ -153,6 +154,7 @@ export class DBDSComponent implements OnInit {
     }
  
     joinTableSelected($event:any){
+        console.log($event)
         let a = $event.text
         this.selectedAplications = a
         // console.log(a,"????")
@@ -160,14 +162,14 @@ export class DBDSComponent implements OnInit {
             text: 'No',
             value: '',
         });
+        this.dropDownJoinTable = this.dropDownTextAndValue.filter((el:any) => el.app == a)
         setTimeout(() => {
-            this.api.getMaterialInput().subscribe((data: any ) => {
-                this.dropDownJoinTable = data.joinTo.filter((el:any) => el.app == a)
-                // console.log(this.dropDownJoinTable);
+            // this.api.getMaterialInput().subscribe((data: any ) => {
+            //     // console.log(this.dropDownJoinTable);
                 
-            },(error) => {
-                console.log(error)
-            })
+            // },(error) => {
+            //     console.log(error)
+            // })
         }, 500);
         
     }
@@ -187,20 +189,20 @@ export class DBDSComponent implements OnInit {
         console.log(data)
     }
 
-    foreignKeySelection() {
-        console.log(this.selectedAplications)
-        if(this.selectedAplications) {
-            setTimeout(() => {
-                this.api.getDataFkey().subscribe((data:any) => {
-                    this.fkey = data.data.filter((el:any) => el.app == this.selectedAplications)
-                    console.log(this.fkey)
-                },(error) => {
-                    console.log(error)
-                })
-            }, 750);
-        } else {
-        }
-    }
+    // foreignKeySelection() {
+    //     console.log(this.selectedAplications)
+    //     if(this.selectedAplications) {
+    //         setTimeout(() => {
+    //             this.api.getDataFkey().subscribe((data:any) => {
+    //                 this.fkey = data.data.filter((el:any) => el.app == this.selectedAplications)
+    //                 console.log(this.fkey)
+    //             },(error) => {
+    //                 console.log(error)
+    //             })
+    //         }, 750);
+    //     } else {
+    //     }
+    // }
 
     fourCharSugestions($event:any) {
         let x = $event.text
@@ -264,6 +266,7 @@ export class DBDSComponent implements OnInit {
                         this.sugestion = data.sugestion;
                         this.application = data.dropApp;
                         this.categories = data.category;
+                        this.dropDownTextAndValue = data.joinTo
                         this.spinner.hide()
                         this.loadSugestionInit = false
                     },
@@ -400,16 +403,11 @@ export class DBDSComponent implements OnInit {
         }
     }
 
-    findIsFKto(val:any) {
-        if(val == "0") {
-            // this.inputForm.controls['joinTo'].disable();
-            console.log(this.inputForm.controls['joinTo'].getRawValue())
-        } else {
-            // this.inputForm.controls['joinTo'].enable();
-            let x = this.dropDownJoinTable.find(({value}) => value == val)
-            console.log(x,x?.text)
-            return x?.text
-        }
+    findIsFKto(val:any,app:any) {
+        this.dropDownJoinTable = this.dropDownTextAndValue.filter((el:any) => el.app == app)
+        let x = this.dropDownJoinTable.find(({value}) => value == val)
+        console.log(x,x?.text)
+        return x
     }
 
     dropdownValueInit() {
@@ -524,19 +522,19 @@ export class DBDSComponent implements OnInit {
         this.api.getOneTable(data.id).subscribe(
             (res) => {
                 console.log(res)
-                let appName = res.table_data.aplication_name
+                let appName = res.table_data[0].aplication_name
                 let obj = {text:appName}
-                console.log(res.field_data.length)
                 let countField = res.field_data.length
                 let stopCount = 0
+                this.joinTableSelected(obj)
+                // console.log(this.dropDownJoinTable)
                 // let stoped = false
                 for(let is = 0;is < countField ;is++) {
                     const fieldArray = this.inputForm.get('field') as FormArray;
                     fieldArray.push(this.createFieldFormGroup());
                     stopCount += 1
                 }
-                if(countField == stopCount) {
-                    this.joinTableSelected(obj)
+                if(countField == stopCount) {                   
                     this.editTableDetail = res.field_data.map((el: any,i:number) => {
                         return {
                             fieldNameEdit: this.findEditFieldNameByValue(el.field_id),
@@ -547,7 +545,7 @@ export class DBDSComponent implements OnInit {
                             isPk: this.findfieldIsPk(el.statPk),
                             // statTD: el.status !== "0" ? el.status:"",
                             isFK: el.isFK !== "0" ? this.findisFK(el.isFK) : "",
-                            isFKto: el.isFKto !== "0" ? this.findIsFKto(el.isFKto) : ""//debuging disini besok!!!
+                            isFKto: el.isFKto !== "0" ? this.findIsFKto(el.isFKto, appName) : ""//debuging disini besok!!!
                         };
                     });
                     // console.log(this.fieldIdRemoved,"chek rubah sebelum hapus")
