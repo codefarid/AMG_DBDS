@@ -1,0 +1,16 @@
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+<p-toast key="Message" [baseZIndex]="100"></p-toast>
+<ngx-spinner size = "medium" type="square-jelly-box"><p style="color: white" > Checking... </p></ngx-spinner>
+<div class="layout-wrapper" [ngClass]="containerClass">
+    <app-topbar></app-topbar>
+    <div class="layout-sidebar">
+        <app-sidebar></app-sidebar>
+    </div>
+    <div class="layout-main-container">
+        <div class="layout-main">
+            <router-outlet></router-outlet>
+        </div>
+        <app-footer></app-footer>
+    </div>
+    <div class="layout-mask"></div>
+</div>

@@ -1,0 +1,1541 @@
+Amendment Quantity 2
+AMG Approval
+Available Quantity
+Available Status
+Access Date
+Account No.
+Actual Quantity
+Accounting Remark
+Access Time
+Account Type
+Inv. Disc.
+Inv. Disc. 2
+Address Name
+Address Code
+Inv. Disc. %
+Inv. Disc. %
+Address Line 1
+Address Line 2
+Address Line 3
+Address Line 4
+Advice Note Number
+Allow Excess Order Qty
+Approval Info Date
+Approval Info From
+Approval Info No
+Approval Info Subject
+Approval Info Time
+Approval Info To
+Angle Judgement
+All Item Flag
+Alternate Item Name
+Alternate Item Code
+Adjustment Amount
+Adjustment No
+Adjustment Date
+Adjustment Effect
+Adjustment Line No
+Adjustment No.
+Adjustment Price
+Adjustment Quantity
+Allow Delivery Order
+Allocated Effect
+Alignment
+Allow Issue
+Allocated Quantity
+Allow SP3
+Allow In Transit
+Allow Write Off
+Amount
+Amount
+Amendment Quantity
+Amendment Type
+BPCS AP Invoice Date
+Application Name
+Application Code
+Approval Request Amount
+Approval Request By
+Approval Request No.
+Approval Request Date
+Approval Request Status
+Approval Request Amount
+Approval Request Date
+A/R Amt
+Area Name
+Area Code
+ASAP Customer Code
+Assignment Date
+ASAP Flag
+Apsect Name
+Aspect Code
+Assy New Price
+Allow Split Pallet 
+Assy Price
+Attachment Line
+Attention Name
+Attention Code
+Attention Position
+Attendance Qty.
+Attendance
+Authorization Name
+Authorization Code
+Application Default URL
+Authorized To
+Approval By
+Approval Date
+Apply Final Approval Flag
+Apply Approval Level
+Required Approval Quantity
+Approval Remark
+Approval Status
+Approval Time
+Assy Process Flag
+Billing Address 1
+Billing Address 1
+Billing Address 1
+Billing Address 1
+Barcode From
+Batch No
+Barcode
+Base Cash Disc
+Barcode To
+Budget Amount
+Base Disc. 1
+Base Disc. 2
+Base Disc. 3
+Budget Category
+Base Disc. Amount
+Buget Currency
+Birth Date
+Budget Name
+Budget Code
+Budget Control Remark
+Budget Year
+Breakfast Amount
+Beginning Amount
+Begin Effect
+Beginning Quantity
+Base Gross Amount
+Behandle
+Base Inv. Disc 1
+Base Inv. Disc 2
+Base Invoice Amount
+Bank Account
+Bank Account Name
+Bank Branch
+Bank Charge
+Bank Name
+Bank Code
+BL/AWB Number
+BOM Amount
+Bill of Material Doc. No.
+Bill of Material Name
+Base Net Amount
+Bending Process Flag
+Bending Code
+Base Net Amount
+BPCS Journal Book
+Bonus %
+BPCS Cost Element
+BPCS Input Manual Flag
+Branch Name
+Brand
+Brand Name
+Branch Code
+Broken Quantity
+Base Sales Price
+Base Sales VAT
+Business Trip Amount
+Birth City
+Base Total Disc Amount
+Birth Date
+BT Flag 1
+BT Flag 2
+BT Flag 3
+Business Trip Price
+Business Trip Type
+BT User Group
+Business Unit Name
+Business Unit Code
+BPCS Redesign Type
+Buyer Name
+Buyer Code
+COGS Additional Amount
+Category Name
+Category Code
+Category Parent
+Calibration Periode Type
+Case Number
+Cancel Status
+Calibration Time Unit
+Category Type
+Container/Box Name
+Container/Box No.
+Container/Box Type
+Container/Box Type Name
+Cust. Category 1
+Cust. Category 2
+Cust. Category 3
+Cust. Category 4
+Cust. Category 5
+Cust. Category 6
+Cust. Category 7
+Cust. Category 8
+Cust. Category 9
+Cust. Category 10
+Cost Center Name
+Cost Center Code
+Conv. Case Quantity
+Ceramic
+Cost Element Code
+Confirmed By
+Confirm Date
+Confirmation Flag
+Confirm Remark
+Confirm Time
+Cust. Group 1
+Cust. Group 2
+Cust. Group 3
+Cust. Group 4
+Cust. Group 5
+Cust. Group 6
+Cust. Group 7
+Cust. Group 8
+Cust. Group 9
+Change Date
+Cust. Hierarchy Name
+Cust. Hierarchy
+Change Time
+Child UOM
+Change User
+Character Value
+Certification No
+Carry In Date
+Certification Name
+Certification Code
+Carry In Quality Control
+Change Item Issued Quantity
+CarryIn Time
+Carry In User Id
+????
+Credit Limit Amount
+Cancel Date
+Credit Limit
+Continuous Line Group
+Class Level
+Class Name
+Column No.
+Class Parent
+Credit Limit Type
+Column Value
+Claim No
+Claim Date
+Claim Line No
+Commodity Code
+Claim Option
+Claim Owner
+Claim Qty
+Claim Reason
+Claim Type
+Country Name
+Country Code
+Country Code
+Carry Out Flag
+Cost Of Good Sales
+Company Name
+Company Code
+Change Item Receive Quantity
+Is Corporate
+Closing Period Date
+Can See Price And Amount
+Contact Person Name
+Contact Person Code
+Close Qty
+Country Code
+Create Date
+Creditable
+Crate No
+Crate Quantity
+Close Reason Code
+Close Reason Remark
+Create Time
+Create User
+Cash Amt
+Cash Disc.
+Cost Set
+Can See Available Stock
+Cash Disc. %
+City Name
+City Code
+Customer Category
+Customer Class
+Cutting Process Flag
+Customer Global Code
+Customer Group
+Customer Item No
+Customer Name
+Customer Code
+Old Customer Code
+Customer PO
+Customer Status
+Curring Time
+Customer TOP
+Customer Type
+Converted Character
+Customer/Vendor Code 1
+Converted Value
+Currency Date
+Currency From
+Currency Code IDR
+Currency Name
+Currency Code
+Currency PPH
+Currency PPN
+Currency To
+Currency Code USD
+Defect Quantity 2
+Allow Delivery Advance
+Dealer Approval Date
+Dealer Approval Status
+Days
+Debit/Credit
+Allow Delivery Back Date
+Discount Amount 1
+Discount Amount 2
+Discount Amount 3
+Discount Amount
+Document Class
+Document Code
+Document Date
+Document Line
+Document Type Name
+Document No
+Discount Percentage 1
+Discount Percentage 2
+Discount Percentage 3
+Discount Percent
+BPCS Doc. Prefix
+BPCS Doc. Sequence
+Document Status
+Document Type
+Discount Type Name
+BPCS Doc. Year
+Delivery Total Amount
+Dealer Code
+Deffoger
+Department Name
+Department Code
+EPA
+Description
+ETA
+ETD
+Delivery Fixed Amount
+Component Name
+Component Code
+Component Key
+Field Key
+Field Source
+Document Last Doc No
+Document Last Sys No
+Document Code by Location
+Defect Name
+Defect Code
+Document Format
+Defect Quantity
+Document Reset Every
+Table Name
+Defect Type
+Use Table
+Document Code by Warehouse
+DG Cargo
+Discount Group No
+Division Name
+Division Code
+Dictionary Type
+Dictionary Type Name
+Delivery Date
+Delivery Time
+Delivery Type
+Domestic Transportation Charge
+Dealer Meeting %
+Detail Net Amount Hotel
+Detail Net Amount Meal
+Detail Net Amount Allowance
+Detail Net Amount Transport
+Detail Net Amount Entertainment
+Detail Net Amount Investigation
+Detail Net Amount Other
+Dinner Amount
+Delivery Order No
+Delivery Order Date
+DO Flag 1
+DO Flag 2
+DO Flag 3
+DO Flag 4
+DO Flag 5
+DO Flag 6
+DO Flag 7
+DO Flag 8
+DO Flag 9
+Delivery Order Line No
+Delivery Order No
+Delivery Price
+Delivery Quantity
+Item Delivery Unit
+Down Payment PPN BM
+Down Payment DPP
+Down Payment Amount
+Down Payment PPN
+Defect Position Group
+Defect Position Name
+Defect Position
+Dasar Pengenaan Pajak Amount
+Currency Rate for DPP
+Down Payment Percentage
+Depth Unit
+Delivery Request Date
+Driver Name
+Dealer Reason Code
+Dealer Reason Remark
+Dispose Doc. No
+Dispose Date
+Direct Shipment Flag
+System Last No.
+Defect Surface Name
+Defect Surface
+Destination Name
+Destination Type
+From Date
+In Date
+Out Date
+To Date
+Due Date
+Document URL
+Delivery Variable Amount
+Email When Order Approved
+Extra Cost
+Email When Order Cancelled
+Employee Category Name
+Employee Category Code
+Excess Qty
+Ending Amount
+End Date
+Email When Order Delivered
+Effective Date From
+Education Name
+Education Code
+Ending Quantity
+End Time
+Effective Date To
+Effective Date
+Employee Grade
+End Lifetime Date
+Email 1
+Email 2
+Email Address
+Emergency Flag
+From Employee
+Email Message
+Employee Name
+Employee ID
+Employee Title
+To Employee
+Employee Type
+Employee Type Name
+Entry Date
+Employee Position
+Empty Pallet Balance
+Estimated Delivery Date
+Estimated Delivery Day
+Estimated Lifetime
+Extra Charge
+Expired Date
+Exchange Rate
+Factor Group
+Factor Name
+Fax 1
+Fax 2
+Fax No.
+Fixed COGS Amount
+Field Complete Name
+Field Level
+Field Name
+Field Code
+Field Upline
+Field Value
+File Create Date
+Field Name
+Filler
+File Name
+File Create Time
+File Upload
+Flag 1
+Flag 2
+Flag 3
+Flag 4
+Flag 5
+Flag 6
+Flag 7
+Flag 8
+Flag 9
+Flag 10
+Flag
+Flag Hotel
+Faktur Pajak Amount
+Faktur Pajak Category
+Faktur Pajak Date
+Masa Faktur Pajak 
+Faktur Pajak No
+Faktur Pajak Pengganti
+Tahun Faktur Pajak 
+Freight Charge
+Formal Receiving Date
+From Supplier Code
+CFS Charges
+First Trx. Date
+Furnace Process Flag
+Furnace Code
+Good Quantity 2
+GCEP User ID
+Good Quantity
+Gender
+Goods Issue No
+Goods Issue Line
+GL Account
+GL Description
+Glass New Price
+Glass Price
+Good Ratio Actual
+Goods Receipt Allocation Qty
+Goods Receipt No
+Goods Receipt Date
+Receipt Effect
+Goods Receipt Line
+Group Level
+Group Name
+Group Number
+Goods Receipt Qty
+Goods Receipt Remark
+Good Ratio Target
+Goods Receipt UOM
+Group Upline
+Gross Amount
+GSMASH Customer Type
+GSMASH Item Code
+Harbour From
+Hash Code
+Harbour To
+Table Header Approval By Field
+Table Header Approval Date Field
+Table Header Approval Remark Field
+Table Header Approval Status Field
+Table Header Approval Time Field
+Table Header Branch Field
+Table Header Company Field
+Table Header Document No Field
+Head Office
+Table Header Order Status Field
+Table Header
+Height Unit
+HNS
+Issued Quantity 2
+Item Category by Design
+Incoterms Code
+Initial Control
+Item Category Name
+Item Category Code
+Initial Control Process
+Incoterms Remark
+Net Amount IDR
+CIF Charges
+Item Group Desc
+Item Group Code
+Image URL
+BPCS/Non BPCS (Y/N)
+Intransit Effect
+LC/Not LC Indicator (Y/N)
+Location (JKT/SDA)
+Incentive %
+Intransit Quantity
+Income Tax Code
+Income Tax Percent
+Inspection Date
+Inspection Time
+Invoice Receipt No
+Invoice Receipt Date
+Invoice Receipt Line
+Invoice Receipt Price
+Insurance
+Issue No
+Issued Date
+Issue Effect
+Issue Line
+Issued Quantity
+Item Actual Cost
+Item Thickness 1
+Item Thickness 2
+Item Category
+Child Item
+Item Class
+Item Count
+Item Depth
+Non Inventory Item
+Item Flag 2 - reserved
+Item Flag 3 - reserved
+Item Flag 4 - reserved
+Item Flag 5 - reserved
+Item Flag 6 - reserved
+Item Flag 7 - reserved
+Item Flag 8 - reserved
+Item Flag 9 - reserved
+From Item Code
+Item Group 1
+Item Group 2
+Item Group 3
+Item Group 4
+Item Group 5
+Item Group 6
+Item Group 7
+Item Group 8
+Item Group 9
+Item Group
+Item Height
+Inner / Outer
+Item Length
+Minimum Balance
+Minimum Balance
+Maximum Balance
+Item Name Extended
+Item Name
+Item Code
+Item Option
+Parent Item
+Item Price
+Item Qty
+Reorder Point
+Item Standard Cost
+Item Thick
+To Item Code
+Item Type Code
+Item Type Name
+Inventory UOM
+Item Width
+Item Weight
+Image URL 1
+Image URL 2
+Image URL 3
+Image URL
+Invoice Amount
+Invoice Category
+Invoice Class
+Invoice No
+Invoice Date
+Invoice Flag
+Invoice Line No
+Invoice Description
+Invoice No
+Invoice Price
+Invoice Type
+BPCS Journal Entry No
+BPCS Journal Transaction No
+Join Date
+Kanban Create Date
+Kanban Create Time
+KD Lot No
+Transportation Description
+Transportation Key
+Kanban File Name
+Kind of Raw Glass
+Kanban Qty / Pallet
+Key Code 1
+Key Code 2
+Key Name
+Key Code
+Table Line 1 Approval Status Field
+Table Line 1 Branch Field
+Table Line 1 Company Field
+Table Line 1 Document No Field
+Level 1 Description
+Level 1 Line
+Table Line 1 Order Status Field
+Table Line 1
+Table Line 2 Approval Status Field
+Table Line 2 Branch Field
+Table Line 2 Company Field
+Table Line 2 Document No Field
+Level 2 Description
+Level 2 Line
+Table Line 2 Order Status Field
+Table Line 2
+Table Line 3 Approval Status Field
+Table Line 3 Branch Field
+Table Line 3 Company Field
+Table Line 3 Document No Field
+Table Line 3 Order Status Field
+Table Line 3
+Table Line 4 Approval Status Field
+Table Line 4 Branch Field
+Table Line 4 Company Field
+Table Line 4 Document No Field
+Table Line 4 Order Status Field
+Table Line 4
+Table Line 5 Approval Status Field
+Table Line 5 Branch Field
+Table Line 5 Company Field
+Table Line 5 Document No Field
+Table Line 5 Order Status Field
+Table Line 5
+Label
+Lawan Address 1
+Lawan Address 2
+Latitute 1
+Latitute 2
+Last Borrow By
+Last Borrow Date
+Lunch Amount
+Last Calibration Date
+LC Number
+Last Calibration User
+BPCS Journal Ledger
+Language Code
+Line No
+Qty / Lot Kanban
+Line Status
+Line Type
+Length Unit
+Location Amendment
+Location Defect
+From Location
+Location Good
+Location Issue
+Longitute 1
+Longitute 2
+Location Name
+Location No
+Old Location Code
+To Location
+Location Type
+Line Process Group 1
+Line Process Group 2
+Line Process Group 3
+Line Process Group 4
+Line Process Group 5
+Line Process Group 6
+Line Process Group 7
+Line Process Group 8
+Line Process Group 9
+Line Process Group Name
+Line Process Group Code
+Line Process Name
+Line Process No.
+Line Process Next
+Line Process Status
+Procces Type
+Process Type Name
+Load Rate Actual
+Last Repaired By
+Last Repair Date
+Load Rate Target
+Last Delivery
+Last Receive
+Last Line No
+Last Level No
+Last Organization
+Last Repair
+Last Trx. Date
+Lot No From
+Lot No
+Lot No To
+Last Used Date
+Last Used Line Production
+Level Amount
+Last Verification Date
+Level Name
+Level No
+Last Verification User
+Material No
+Mirror Base
+Mandatory
+Model Name
+Model Code
+Memo
+Menu Name
+Menu Code
+Menu Parent Code
+Menu Sequence
+Menu Type
+Manufacturing Method
+Shop Order Issue By
+Shop Order Issue No
+Shop Order Issue Date
+Manufacturing Issue Effect
+Shop Order Issue Line
+Minutes
+Manufacturing Issue Qty
+Shop Order Issued Type
+Manufacture
+Min. Order Qty
+Monthly PO Active
+Mobile Phone 1
+Mobile Phone 2
+Mobile Phone No.
+Shop Order No
+Shop Order Date
+Manufacturing Receipt Effect
+Shop Order From
+Shop Order Group No
+Shop Order Line
+Month
+Mobile Phone 1
+Mobile Phone No.
+Manufacturing Receipt Qty
+Shop Order To
+Shop Order Type
+Map From Code
+Map Name
+Map Code
+Map To Code
+Map Type
+Marks Code
+Shop Order Receipt No
+Shop Order Receipt Date
+Shop Order Receipt Line
+Marking Code
+Marital Status
+MSSP
+Multiply
+Menu URL
+Movement Quantity
+Movement Type
+Name Lawan Transaction
+Name
+Nationality Name
+Nationality Code
+Not Good Quantity
+Nickname
+NPKP
+NPWP Lawan Transaction
+Nomor Polisi
+NPWP
+Unpack Stock Quantity
+Net Amount
+Numeric Value
+Other Allowance 1 %
+Other Allowance 2 %
+Original Adj. Quantity
+OB
+On Behalf User 
+Overdue Day
+Order Length
+Order Width
+Organization Group 1
+Organization Group 2
+Organization Group 3
+Organization Group 4
+Organization Group 5
+RFA Org. No
+Organization Group
+Organization Level
+Organization Name
+Organization Code
+Organization To
+Organization Upline
+Original No
+Original Date
+Original Size Code
+Operating Profit Amount
+Operator Code
+On Purchase Quantity
+Operation No
+Operation Type
+Over Quota Charge Amount
+Order Qty Min
+Order Qty Max
+Operation Time Ratio Actual
+Order Class
+Order Date
+Order Effect
+Order Line
+Order No
+Order Quantity
+Order Status
+Order Size Code
+Operation Time Ratio Target
+Order Type
+On Sales Quantity
+Defect Code Other
+Operation Time Group
+Operation Time Code
+Operation Time Type
+Outstanding Amount
+Outstanding Quantity
+One Way Pallet
+Parts Color
+Packing List No
+Packing Date
+Parts Name
+Parts No
+Parameter
+Parent UOM
+Parts Weight
+Probation Date
+Profit Center Name
+Profit Center Code
+Price Type
+Purchase Discount Amount
+Production Date
+Production End Date
+Production End Time
+Purchase Discount Name
+Purchase Discount Code
+Purchase Discount Percent
+Production Start Date
+Production Start Time
+Production Time
+PEB Date
+PEB No
+From Pallet No.
+Pallet Height
+Pallet Length
+Pallet Name
+Pallet Code
+New Pallet Code
+Plan EPA
+Pallet Quantity
+Period
+Pallet Serial No.
+To Pallet No.
+New Pallet Type
+Pallet Type
+Pallet Width
+Pallet Weight
+Parameter Field Value 1
+Parameter Field Value 2
+Parameter Field Value 3
+Parameter Field Value 4
+Parameter Field Value 5
+Program Name
+Program Code
+PPH Amount
+PPH Currency Code
+Phone 1
+Phone 2
+Phone No.
+PPH Percent
+PPH Tax Code
+PICC
+PIC Name
+Police Number
+Project Code
+PKP Date
+Pallet Application
+Place Trip Code
+Pallet Location
+Production Line Name
+Production Line
+Pallet Status
+Place Trip Desciption
+Pallet Warehouse
+Disc Inv Promotion No
+Cash Disc Promotion No
+Disc PC Promotion No
+Disc PC 2 Promotion No
+Disc PC 3 Promotion No
+PPN Amount
+PPN BM Amount
+Person Name Concerned
+PPN Currency Code
+Purchase Return No
+Purchase Return Date
+Pur. Return Effect
+Purchase Return Line No
+PPN Percent
+Purchase Return Quantity
+PPN Tax Code
+Purchase Return UOM
+Total Purchase Order
+Purchase Order Category
+Closed PO Quantity
+Position Category
+Purchase Order No
+Purchase Order Date
+Pur. Receipt Effect
+Purchase Order Line No
+Purchase Order No
+New PO Price
+New PO Quantity
+Purchase Price
+Purchase Quantity
+PO Submission
+Position Defect
+Position X
+Position Y
+Purchase Order Type
+PO Type Name
+Item Purchase Unit
+Production Planned Downtime
+PPH Amount
+PPH Cost Element Code
+PPH Flag
+PPH Percent
+PPN Cost Element Code
+PPN Flag
+Purpose of Visit
+Pallet Quota Quantity
+Closed Purchase Request Quantity
+Purchase Request No
+Purchase Request Date
+Price Factor 1
+Price Factor 2
+Price Factor 3
+Print Flag
+Purchase Request Line
+Purchase Request Price
+Purchase Request Quantity
+Print Count
+Purchase Request Type
+Purchase Request UOM
+PCS / Shift Actual
+Payment Slip Last Document No.
+Payment Slip No.
+Payment Slip Date
+Passport Flag
+Payment Slip Line
+Payment Slip Description
+Passport Periode
+Pack Stock Quantity
+PCS / Shift Target
+Password
+Payment Slip Tax Document No.
+Psychotest Description
+Psychotest Date
+Psychotest Name
+Psychotest No
+Position Top
+Psychotest Progress
+Psychotest Purpose
+Psychotest Status
+Psychotest Type
+Production Unplanned Downtime
+Program URL
+Purchase UOM Conversion
+Purchase UOM
+PVB Moisture
+PVB Lot No
+PVB Maker
+Payment Slip Expedition No
+Payment Slip Expedition Date
+Prefix Code
+Payment Terms Code
+Payment No
+Payment Date
+Payment Flag
+Payment Amount
+Payment Name
+Payment Code
+Payment Status
+Payment To
+Payment Type
+Payment Type Name
+Quality Control Date
+Quality Control Flag
+Quality Control Reason
+Quality Control User Id
+Quotation Request No
+Quotation Request Date
+Quarter Incentive
+Quotation Request Line
+Qty. of Month 01
+Qty. of Month 02
+Qty. of Month 03
+Qty. of Month 04
+Qty. of Month 05
+Qty. of Month 06
+Qty. of Month 07
+Qty. of Month 08
+Qty. of Month 09
+Qty. of Month 10
+Qty. of Month 11
+Qty. of Month 12
+Quarter Target Amount
+From Quantity
+Minimum Quantity
+Maximum Quantity
+To Quantity
+Quantity
+Quotation URL
+RFA Amount
+RFA Branch
+RFA Currency
+RFA No.
+RFA Date
+Rank
+RFA Subject
+Rate
+Robotic Pallet Code
+Remain Back Order Detail
+Receipt Date
+Recutting Length
+Record Status
+Receipt Type
+Recutting Width
+Change Over Doc No
+Change Over Date
+Change Over Line
+Change Over No
+Change Over Quantity
+Religion
+Remark Line 1
+Remark Line 2
+Remark Line 3
+Remark Line 4
+Remark
+Reference BOM Doc. No.
+Reference Branch
+Reference No
+Reference Date
+Reference Doc. Type
+Reference Item
+Reference Line No
+Reference Location
+Reference No
+Reference Pallet
+Reference Reason Code
+Reference Sales Quotation
+Reference To
+Reference Type
+RFASB User Group
+Reference UOM
+Reference User
+Reference Warehouse
+Register Date
+Raw Glass Judgement
+Access Right
+Reject Quantity
+Rack Judgement
+Receive Note No
+Receive Note Date
+Receipt Note Flag
+Receive Note Line No
+Room Name
+Room Code
+Report Name
+Report Code
+Repair Quantity
+Request By
+Required Calibration
+Request No
+Request Date
+Request Line
+Request No
+Request/Required Quantity
+Requester Remark
+Required Suspese Payment
+Request Status
+Required Verification
+Result Date
+Receipt Slip Flag
+Reason Group
+Reason Name
+Reason Code
+Result Quantity
+Reason Remark
+Reason Table
+Result Time
+Reason Type
+Reserved 1
+Reserved 2
+Reserved 3
+Reserved 4
+Reserved 5
+Route Line
+Route Name
+Route No
+Return Quantity
+Rate Type
+Reference URL
+Revision Date
+Revision No
+Revision Time
+Rework Date
+Rework Flag
+Row Text
+Row No
+Rework Quantity
+Row Type
+Shipping Address 1
+Shipping Address 2
+Shipping Address 3
+Shipping Address 4
+Sailing Date
+Shipping (Code) From
+Province
+Municipality
+Subdistrict
+Village
+Shipping (Code) To
+Subject Document No.
+Sub Element
+Shade Band
+Subject Name
+Subject Code
+Subject Rate Orientation
+Subject Rate Professional
+Subject Rate Best Practice
+Subject Type
+Subject Type Name
+Scanner Barcode
+Schedule Date
+Stock Taking Consolidation Flag
+Subject Category Name
+Schedule No.
+Scrap Factor
+Schedule Time
+Schedule Type
+Special Discount Amount 1
+Special Discount Amount 2
+Sales Discount Amount
+Subdefect Name
+Subdefect
+Special Discount Percentage 1
+Special Discount Percentage 2
+Sales Discount Percent
+SEAL No
+Settlement Employee Group
+Serial No
+Surveyor Fee
+Split Flag
+Shift Group
+Shift Name
+SG File Name
+Shift Code
+Split Quantity
+Shift Sequence
+SGA Expense Amount
+Store Goods Location
+Single Model
+SG User Group
+Shipment Amount
+Shift
+Shipping Line
+Shipment Name
+Ship To Code
+Number of Shipment
+Shipment Sequence
+Scrap Issue Quantity
+Stock Information Type
+Scrap Issue Unit
+Skill Name
+Skill Code
+Sales Account
+Slip No
+Sales New Price
+Price 1
+Price 2
+Price 3
+Sales Price Code
+Sales Price Group
+Sales Price Name
+Sales Price
+Sales Quantity
+Sales Type
+Sales UOM Conversion
+Item Sales Unit
+Sales VAT %
+Sales VAT
+SNI/Karantina Fee
+Sales Return Effect
+Sales Return Quantity
+Sales Order Amt
+Sales Order No
+Sales Order Date
+Delivery Order Effect
+SO Line
+Sales Order Sys No
+Delvery Order Qty
+Sales Order Type
+SO Type Name
+SP3 No
+SP3 Date
+Specification
+SP3 Line
+Specification Name
+SP3 No
+SP3 Quantity
+Special Note
+Spesification Stock
+Start Production Time
+Sales Price Type
+Specification Value
+Sales Quotation No.
+Sales Quotation Date
+Sequence From
+Sequence No
+Sales Quotation Rev. No.
+Sequence To
+Data Source
+Sales Request No
+Sales Request Date
+Sort Key
+Sales Request Line No
+Sub Rank
+SG Request Type
+SSNO
+Subtotal
+Status
+Stock Take No
+Start Date
+Stock Taking Flag
+Settlement Group
+Settlement Item
+Settlement Detail
+Stock Take Line
+Storage Location
+Settlement Name
+Start Time
+Stock Type
+Settlement Type
+Supplier Address
+Submit Date
+Supply Length
+Suffix Code
+Submit Status
+Supply Size
+Supply Width
+System Quantity
+Sync Status
+Size Name
+Tax Address 1
+Tax Address 2
+Tax Address 3
+Category Table Code 1
+Category Table Code 2
+Table Name
+Table Code
+Table Type
+Ticket Date
+Ticket No From
+Ticket Line
+Ticket No
+New Ticket No
+Ticket No To
+Ticket Type
+Thick Unit
+Total Disc. Amt
+Terms of Delivery Days
+Trip Date From
+Terms of Delivery Name
+Terms of Delivery No
+Trip Date To
+TEXT
+Transfer No
+Transfer Date
+Transfer Line
+Transfer No
+Transfer Price
+Transfer Quantity
+Target Date
+Target Time
+Transfer In No
+Transfer In Date
+Transfer In Effect
+Transfer In Line
+Tax Invoice No
+Transfer In Quantity
+Tax Invoice Status
+Transfer In By
+Title Category
+Title Name
+Title Code
+Title Sequence
+From Time
+In Time
+Out Time
+To Time
+Trainer Name
+Trainer Code
+Trainer Type
+Total Order By Item
+Closed Transfer Out Qty.
+Transfer Out No
+Transfer Out Date
+Transfer Out Effect
+Transfer Out Line
+Transfer Out Quantity
+Transfer Out Type
+Transfer Out By
+Training Plan No
+Training Plan Date
+Terms of Payment Days
+Line No
+TOP Name
+TOP Code
+TOP Type
+TOP Type Name
+Close Transfer Req. Qty.
+Transfer Request No
+Transfer Request Date
+Transfer Request Line
+Tarif PPN BM 
+Transaction No
+Transaction Date
+Transaction Line No
+Traning Name
+Transaction No
+Transportation %
+BPCS Doc. Prefix for Tax
+Transaction Reason
+BPCS Doc. Sequence for Tax
+Transaction Time
+Transaction Type Name
+Transaction Type
+BPCS Doc. Year for Tax
+Tooling Screen Category
+Tooling Screen Code
+Tooling Screen Item Group
+Transporter Name
+Tooling Screen Name
+Transporter Code
+Tooling Screen Type
+Total Amount
+Total Invoice
+Total PPH
+Total PPN
+Total Weight
+Attachment URL
+Tax Amount
+Tax City
+Tax Effective Date
+Tax Name
+Tax Code
+Tax Percent
+Tax Type
+Tax Zip
+Type Name
+User Email Notification Group
+User Group Name
+User Group Code
+UOM Conversion
+UOM From
+UOM Name
+UOM Code
+UOM Seq
+UOM To
+Unit New Price
+Unit Price
+Upline Dealer Code
+Close Stock Request Qty
+Usage Request No.
+Usage Request Date
+Usage Request Line
+Usage Request Type
+Net Amount USD
+Usage By
+Domain User ID
+Usage No
+Usage Date
+Usage Line No
+User Name
+User ID
+Usage Qty
+User Type
+Variable Value
+Variable Name
+Variable Code
+Variable Sequence
+VAT Tax Code
+VAT Tax Percent
+Variable Type
+Variable Value
+Variable COGS Amount
+Vendor Class
+Voided Remark
+Vessel Code
+Vendor Group
+Vendor Alternate
+Vendor Name
+Vendor Code
+Vendor Price
+Vendor Type
+Vehicle No.
+Voucher Code
+Variance Quantity
+Visa Flag
+Visa Periode
+VAT Flag
+Vendor for Tax
+Vendor for Tax
+WBS Level
+WBS Description
+WBS Element
+WBS Upper Level
+Warehouse Code ASAP
+Work Center Name
+Work Center Code
+Work Center Status
+Working Data No
+Working Data Date
+Width Unit
+Week
+Weight Unit
+Warehouse Amendment
+Warehouse Attention
+Warehouse Defect
+From Warehouse
+Warehouse Good
+Warehouse Group
+Warehouse Issue
+Warehouse Name
+Warehouse Code
+Old Warehouse Code
+To Warehouse
+Warehouse Type
+Beginning Week Date
+Ending Week Date
+Write Off No
+Write Off Date
+Write Off Line No
+Write Off No.
+Write Off Price
+Write Off Quantity
+Warranty by Pallet
+Work Date
+Work Flag
+Warranty Limit
+Way of Transp. Code
+Item Exchange No
+Item Exchange Date
+Item Exchange Line
+Pallet Exchange No
+Pallet Exchange Date
+Pallet Exchange LIne
+Show Cross Reference Flag
+Pallet Yard Empty Location
+Pallet Yard Warehouse
+Year
+Yakigata (Baking Pan) From
+Yakigata (Baking Pan) To
+Yearly Adjusted
+Yearly Basic Incentive
+Yearly Cooperation
+Year From
+Yearly Payment
+Year Quarter
+Yearly Sales Growth
+Year To
+Zipcode
+Transportation Going
+Transportation leaving
+Destination Time
+Daily Amount
+Hotel Amount
+Settelment Group No
+Attachment Name
+Budget Code Up
+VEMT User Group
+Vendor Code HO
+Vendor Code FGCKP
+Vendor Code FGSDA
+Vendor Code AGCKP
+Corporate Agreement
+Attachment Document No

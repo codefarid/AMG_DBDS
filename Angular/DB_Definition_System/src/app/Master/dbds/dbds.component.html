@@ -1,0 +1,364 @@
+<p-dialog  [header]="modalTitle" [modal]="true" [(visible)]="displayForm" [breakpoints]="{'960px': '75vw'}" [style]="{width: '65vw'}" [resizable]="false">
+    <form [formGroup]="inputForm" (ngSubmit)="submitForm()">
+        <div class="formgrid grid">
+            <div class="field p-2" *ngIf="!isExistingTable">
+                <p>Select Category</p>
+                <!-- <p-selectButton id="isMasterTable" formControlName="isMaster" [options]="stateOptions" optionLabel="label" optionValue="value" styleClass="w-full"></p-selectButton> -->
+                <p-autoComplete formControlName="isMaster" [suggestions]="filteredCategories" (completeMethod)="filterCategory($event)" [forceSelection]="true" field="key" [dropdown]="true"></p-autoComplete>
+            </div>
+            <div class="field p-2" *ngIf="!isExistingTable">
+                <p>Insert Table Name</p>
+                <input class="w-full" pInputText id="tableName" formControlName="tableName" >
+            </div>
+            <div class="field p-2" *ngIf="isExistingTable">
+                <p>Insert Existing Table Id</p>
+                <input class="w-full" pInputText formControlName="extTableName">
+            </div>
+            <div class="field p-2" *ngIf="isExistingTable">
+                <p>Insert Existing Table Name</p>
+                <input class="w-full" pInputText formControlName="extName">
+            </div>
+            <div class="field p-2">
+                <p>Select Application</p>
+                <p-autoComplete [forceSelection]="true" formControlName="appName" [suggestions]="filteredAppNames" (completeMethod)="filterAppName($event)" field="text" [dropdown]="true" (onSelect)="joinTableSelected($event)"></p-autoComplete>
+                <!-- <p-dropdown [options]="application" formControlName="appName" optionLabel="text" optionValue="value" styleClass="w-full" placeholder="" (onClick)="joinTableSelected($event)"></p-dropdown> -->
+            </div>
+            <div class="field p-2" *ngIf="isEdit">
+                <p>Joined table</p>
+                <p-dropdown formControlName="joinTo" [options]="dropDownJoinTable" optionLabel="text" optionValue="value" placeholder="select by apps"></p-dropdown>
+            </div>
+            <div class="field p-2" *ngIf="!isEdit">
+                <p>Join Table?</p>
+                <p-dropdown formControlName="joinTo" [options]="dropDownJoinTable" optionLabel="text" optionValue="value" placeholder="select by apps"></p-dropdown>
+            </div>
+            
+        </div>
+        
+        <div class="col-12" >
+            <div class="col-8" id="toButtonAdd">
+                <h6>Create Field!</h6>
+                <p-button label="Add Field" icon="pi pi-plus" (click)="addField()" [attr.aria-label]="'Add Field'"></p-button>
+                
+            </div>
+            <div class="col-8">
+                <div formArrayName="field">
+                    <div *ngFor="let field of fieldControls; let i=index;">
+                        <p-card #fields id="fieldCard" styleClass="scalein animation-duration-500 animation-iteration-1"  class="p-2" [style]="{ width: '125%' }">
+                            <div [formGroupName]="i">
+                                <div class="p-card-header">
+                                    <div class="flex flex-row flex-wrap gap-12 justify-content-between">
+                                        <div class="flex my-auto">
+                                            <h5>Field No.{{ i + 1 }}</h5>
+                                        </div>
+                                        <div class="flex">
+                                            <p-button icon="pi pi-times" styleClass="ml-2 p-button-danger" (click)="removeField(i)"></p-button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p-panel #pnl header="Field Form" styleClass="mt-4">
+                                <div class="formgrid grid">
+                                    
+                                    <div class="field p-2" *ngIf="!isExistingTable && !isEdit">
+                                        <p>Insert Field Name</p>
+                                        <!-- <input pInputText id="fieldName" formControlName="fieldName"> -->
+                                        <p-autoComplete id="insertFieldName{{i+1}}" formControlName="fieldName" [suggestions]="filteredSugestion" (completeMethod)="filteredSugestionInit($event)" field="key" [dropdown]="true"></p-autoComplete>
+                                    </div>
+                                    <div class="field p-2" *ngIf="isEdit && editExistingTable">
+                                        <p>Edit Field ID</p>
+                                        <!-- <p-autoComplete formControlName="fieldName" [suggestions]="filteredSugestion" (completeMethod)="filteredSugestionInit($event)" field="value"></p-autoComplete> -->
+                                        <p-autoComplete id="editFieldId{{i+1}}" formControlName="fieldName" [suggestions]="filteredSugestion" (completeMethod)="filteredSugestionInit($event)" field="value"></p-autoComplete>
+                                    </div>
+                                    <div class="field p-2" *ngIf="isEdit && editExistingTable">
+                                        <p>Edit Field Name</p>
+                                        <p-autoComplete id="fieldNameEdit{{i+1}}" formControlName="extFname" [suggestions]="filteredSugestion" (completeMethod)="filteredSugestionInit($event)" field="key" ></p-autoComplete>
+                                    </div>
+                                    <div class="field p-2" *ngIf="isEdit && !editExistingTable">
+                                        <p>Edit Field Name from Master</p>
+                                        <!-- <input pInputText id="fieldName" formControlName="fieldName"> -->
+                                        <p-autoComplete id="editFieldNameNotExist{{i+1}}" formControlName="fieldNameEdit" [suggestions]="filteredSugestion" (completeMethod)="filteredSugestionInit($event)" field="key" [dropdown]="true"></p-autoComplete>
+                                    </div>
+                                    
+                                    <div class="field p-2" *ngIf="isExistingTable">
+                                        <p>Insert Existing Field ID</p>
+                                        <p-autoComplete id="fieldNameExisting{{i+1}}" formControlName="fieldName" [suggestions]="filteredSugestion" (completeMethod)="filteredSugestionInit($event)" field="value"></p-autoComplete>
+                                    </div>
+                                    <div class="field p-2" *ngIf="isExistingTable">
+                                        <p>Insert Existing Field Name</p>
+                                        <p-autoComplete id="extFName{{i+1}}" formControlName="extFname" [suggestions]="filteredSugestion" (completeMethod)="filteredSugestionInit($event)" field="key"></p-autoComplete>
+                                    </div>
+    
+                                    <div class="field p-2" >
+                                        <p>Data Type</p>
+                                        <p-dropdown id="ddDatype{{i+1}}" [options]="dataType" formControlName="datTypeField" placeholder="dataType" [group]="true" (onChange)="getDatTypeValidator($event)">
+                                            <ng-template let-group pTemplate="group">
+                                                <span>{{ group.label }}</span>
+                                            </ng-template>
+                                        </p-dropdown>
+                                    </div>
+                                    <div class="field p-2" >
+                                        <p>Max Length</p>
+                                        <p-inputNumber id="maxLenNo{{i+1}}" pStyleClass="w-1" formControlName="maxlenField" placeholder="(0)" [max]="maxLenValidator"></p-inputNumber>
+                                    </div>
+                                    <div class="field p-2">
+                                        <p>Set as Primary Key?</p>
+                                        <p-selectButton id="setPKNo{{i+1}}" [options]="stateOptions" formControlName="isPk" optionLabel="label" optionValue="value"></p-selectButton> 
+                                    </div>
+                                    <div class="field p-2">
+                                        <p>Set as Foreign Key?</p>
+                                        <!-- <p-treeSelect class="md:w-20rem w-full" containerStyleClass="w-full" formControlName="isFK" [options]="fkey" [showClear]="true" placeholder="Select Item" (onNodeSelect)="foreignkeySelected($event)"></p-treeSelect> -->
+                                        <p-dropdown class="mb-2 mr-2" formControlName="isFKto" [options]="dropDownJoinTable" optionLabel="text" optionValue="value" placeholder="Select Table Name" (onChange)="foreignkeySelectedTable($event.value)"></p-dropdown>
+                                        <p-dropdown class="mt-2 ml-2" formControlName="isFK" [options]="fkeyStore" optionLabel="text" optionValue="value" placeholder="Select Field Column" (onChange)="foreignkeySelectedField($event.value)"></p-dropdown>
+
+                                    </div>
+                                    
+                                </div>
+                                </p-panel>
+                                <div class="p-card-footer" >
+                                    <p-button id="deleteFieldNo{{i+1}}" icon="pi pi-trash" styleClass="ml-2 p-button-danger" (click)="deleteField(i); blockedFields[i]=true ; setStatTD(i,'inactive')" *ngIf="isEdit" formControlName="statTD"></p-button>
+                                    <p-button id="undoDeleteFieldNo{{i+1}}" icon="pi pi-history" styleClass="ml-2 p-button-warning" (click)="undoDeleteField(i) ; blockedFields[i]=false ;setStatTD(i,'active')" *ngIf="isEdit"></p-button>
+                                </div>
+                        </div>
+                        </p-card>
+                  </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="col-12">
+            <!-- <p-button class="p-2" type="submit" label="Submit" icon="pi pi-check"></p-button> -->
+            <p-button (click)="showQuery()" icon="pi pi-external-link" label="Submit" [loading]="loading"></p-button>
+            <p-button class="ml-2" icon="pi pi-chevron-up" label="Scrolls to top" (click)="toTop()"></p-button>
+        </div>
+    </form>
+    <div id="bawah"></div>
+    </p-dialog>
+<p-dialog [header]="modalTitle" [modal]="true" [(visible)]="displayOneQuery"  [style]="{maxWidth: '65vw'}">
+      <p-tabView class="justify-content-center">
+        <p-tabPanel header="Select Query">
+            <div *ngFor="let i of this.displayQuerySelect">
+                <p><b>{{i}}</b></p>
+            </div>
+            <br>
+            <!-- <p-button icon="pi pi-replay" label="modified this Query" (onClick)="settingsQueryPlayGround()"></p-button> -->
+            <br>
+            <p-button icon="pi pi-send" label="Send Query to Store Page" (onClick)="sendToDownloadPage(this.displayQuerySelect);this.displayOneQuery = false"></p-button>
+            
+        </p-tabPanel>
+        <p-tabPanel header="Created Query">
+            <div *ngFor="let text of displayQueryAfter">
+                <p><b>{{ text }}</b></p>
+              </div>
+            <br>
+            <p-button icon="pi pi-send" label="Send Query to Store Page" (onClick)="sendToDownloadPage(this.displayQueryAfter);this.displayOneQuery = false"></p-button>
+            
+        </p-tabPanel>
+        <p-tabPanel header="Costumized Select Query" class="grid">
+            <form [formGroup]="inputForm2" (ngSubmit)="selectQueryPlayGround()">
+                <div class="formgrid grid">
+                    <div class="col-12 mb-2">
+                        <!-- <div class="col-4">
+                        </div> -->
+                        <b>Where Condition ? :</b>
+                        <br>
+                        <br>
+                        <p-dropdown [options]="this.columnNameList" formControlName="whereCond" class="ml-2" placeholder="Select Column Name"></p-dropdown> 
+                        <p-dropdown [options]="this.whereOperandList" formControlName="whereOperan" class="ml-2" placeholder="Select Operator"></p-dropdown> 
+                        <input type="text" pInputText formControlName="whereValCond" class="ml-2"> 
+                        <br>
+                        <p-dropdown [options]="this.columnNameList" formControlName="whereCond2" class="ml-2 mt-2 mb-2" *ngIf="this.addNewWhere" placeholder="Select Column Name"></p-dropdown> 
+                        <p-dropdown [options]="this.whereOperandList" formControlName="whereOperan2" class="ml-2 mt-2 mb-2" *ngIf="this.addNewWhere" placeholder="Select Operator"></p-dropdown>
+                        <input type="text" pInputText formControlName="whereValCond2" class="ml-2 mt-2 mb-2" *ngIf="this.addNewWhere"> 
+                        <!-- <div >
+                        </div> -->
+                        <br>
+                        <!-- if like the input shouldbe contain '%input%' if isNull or Not Null do not give quote '' -->
+                        <!-- <div class="col-6 mt-2">
+                        </div> -->
+                        <p-button class="sm mt-2 ml-2" icon="pi pi-power-off" (onClick)="this.disableWhere = true; caseSwitch()" styleClass="p-button-danger" *ngIf="!this.disableWhere"></p-button>
+                        <p-button class="sm mt-2 ml-2" icon="pi pi-power-off" (onClick)="this.disableWhere = false;caseSwitch()" styleClass="p-button-success" *ngIf="this.disableWhere"></p-button>
+                        <p-button class="sm mt-2 ml-2" icon="pi pi-plus" (onClick)="this.addNewWhere = true" *ngIf="!this.addNewWhere"></p-button>
+                        <p-button class="sm mt-2 ml-2 p-button-danger" icon="pi pi-times" (onClick)="this.addNewWhere = false" *ngIf="this.addNewWhere"></p-button>
+                        <!-- <div class="col-2 mt-2">
+                        </div> -->
+                    </div>
+
+                    <div class="col-12 mb-2">
+                        <b>OR Conditiion ? : </b>
+                        <!-- <div class="col-4">
+                        </div> -->
+                        <br>
+                        <br>
+                        <p-dropdown [options]="this.columnNameList" formControlName="orCond" class="mr-2" placeholder="Select Column Name"></p-dropdown>
+                        <p-dropdown [options]="this.orOperanList" formControlName="orOperand" class="mr-2" placeholder="Select Operator"></p-dropdown>
+                        <input type="text" pInputText formControlName="orValCond" class="mr-2">
+                        <br> 
+                        <!-- <div *ngIf="this.addNewOr">
+                            <p-dropdown [options]="this.columnNameList" formControlName="orCond" class="mr-2"></p-dropdown>
+                            <p-dropdown [options]="this.orOperanList" formControlName="orOperand" class="mr-2"></p-dropdown> 
+                            <input type="text" pInputText formControlName="orValCond" class="mr-2"> 
+                        </div> -->
+                        <!-- <div class="col-6 mt-2 ml-2">
+                        </div> -->
+                        <br>
+                        <p-button class="sm ml-2" icon="pi pi-power-off" (onClick)="this.disableOr = true; caseSwitch()" styleClass="p-button-danger" *ngIf="!this.disableOr"></p-button>
+                        <p-button class="sm ml-2" icon="pi pi-power-off" (onClick)="this.disableOr = false; caseSwitch()" styleClass="p-button-success" *ngIf="this.disableOr"></p-button>
+                        <!-- <p-button class="sm ml-2" icon="pi pi-plus" (onClick)="this.addNewOr = true" *ngIf="!this.addNewOr"></p-button>
+                        <p-button class="sm ml-2 p-button-danger" icon="pi pi-times" (onClick)="this.addNewOr = false" *ngIf="this.addNewOr"></p-button> -->
+                        <!-- <div class="col-2 mt-2 ml-2">
+                        </div> -->
+                    </div>
+
+                    <div class="col-12 mb-2">
+                        <b>Between Condition? :</b>
+                        <!-- <div class="col-4">
+                        </div>
+                        
+                        <div class="col-6 mt-2 ml-2">
+                        </div> -->
+                        <br>
+                        <br>
+                        <p-dropdown class="mr-2" [options]="this.columnNameList" formControlName="betweenCond" class="ml-2" placeholder="Select Column Name"></p-dropdown>
+                            =
+                        <input class="ml-2" type="text" pInputText  formControlName="betweenVal" class="ml-2"> 
+                         
+                        <div class="col-6 justify-content-center mt-2 mb-2">
+                            <b>AND</b>
+                        </div> 
+                        <p-dropdown class="mr-2" [options]="this.columnNameList" formControlName="betweenCond2" class="ml-2" placeholder="Select Column Name"></p-dropdown>
+                            =
+                        <input class="ml-2" type="text" pInputText  formControlName="betweenVal2" class="ml-2"> 
+                        <br>
+                        <br>
+                         <!-- filter using "data type === Date Type , Exact and Approximate Numeric ," -->        
+                         <p-button class="sm p-2 ml-2" icon="pi pi-power-off" (onClick)="this.disableBetween = true ;caseSwitch()" styleClass="p-button-danger" *ngIf="!this.disableBetween"></p-button>
+                         <p-button class="sm p-2 ml-2" icon="pi pi-power-off" (onClick)="this.disableBetween = false ;caseSwitch()" styleClass="p-button-success" *ngIf="this.disableBetween"></p-button>
+                        <!-- <div class="col-2 mt-2 ml-2">
+                        </div> -->
+                    </div>
+
+                    <div class="col-12 mb-2">
+                        <b>Order By:</b>
+                        <br>
+                        <br>
+                        <!-- <div class="col-4">
+                        </div>
+                        <div class="col-6 ml-2 mt-2">
+                            <p-button icon="pi pi-plus" label="add new ORDER condition"></p-button> 
+                        </div> -->
+                        <p-dropdown [options]="this.columnNameList" formControlName="orderCond" class="mb-2" placeholder="Select Column Name"></p-dropdown>
+                        <br>
+                        <p-selectButton class="ml-2 mt-2" [options]="this.selectAorDESC" formControlName="ascdesc" optionLabel="label" optionValue="value" class="ml-2"></p-selectButton>
+                        <br>
+                        <p-button class="sm ml-2" icon="pi pi-power-off" (onClick)="this.disableOrderBy = true;caseSwitch()" styleClass="p-button-danger" *ngIf="!this.disableOrderBy"></p-button>
+                        <p-button class="sm ml-2" icon="pi pi-power-off" (onClick)="this.disableOrderBy = false;caseSwitch()" styleClass="p-button-success" *ngIf="this.disableOrderBy"></p-button>
+            
+                        <!-- <div class="col-2 ml-2 mt-2">
+                        </div> -->
+                    </div>
+
+                    <div class="col-12 mb-2">
+                        <b>Skip Rows ?:</b>
+                        <!-- <div class="col-4">
+                        </div>
+                        <div class="col-6 ml-2 mt-2">
+                        </div> -->
+                        <br>
+                        <p-inputNumber pStyleClass="w-1" formControlName="skipinCond"></p-inputNumber>
+                    </div>
+
+                    <div class="col-12 mb-2">
+                        <b>Fetch Only :</b>
+                        <br>
+                        <!-- <div class="col-4">
+                        </div>
+                        <div class="col-6 mt-2 ml-2">
+                        </div> -->
+                        <p-inputNumber pStyleClass="w-1" formControlName="fetchOnlyCond"></p-inputNumber>
+                        <!-- <div class="col-2 ml-2 mt-2">
+                        </div> -->
+                        <br>
+                        <br>
+                        <p-button class="sm ml-2" icon="pi pi-power-off" (onClick)="this.disableSkipRows = true;caseSwitch()" styleClass="p-button-danger" *ngIf="!this.disableSkipRows"></p-button>
+                        <p-button class="sm ml-2" icon="pi pi-power-off" (onClick)="this.disableSkipRows = false;caseSwitch()" styleClass="p-button-success" *ngIf="this.disableSkipRows"></p-button>
+                    </div>
+                </div>
+            </form>
+            <div class="footer col-12">
+                <p-button icon="pi pi-send" label="submit" (onClick)="selectQueryPlayGround()" ></p-button>
+            </div>
+        </p-tabPanel>
+        
+    </p-tabView>
+</p-dialog>
+<p-dialog header="Stored Querries" [(visible)]="downloadQuery" [breakpoints]="{'960px': '75vw'}" [style]="{width: '65vw'}" [resizable]="false">
+    <div *ngFor="let text of downloadStore">
+        <p><b>{{ text }}</b></p>
+      </div>
+      <br>
+    <p-button icon="pi pi-trash" label="Delete" (onClick)="downloadQueries()"></p-button>
+    <!-- <p-button icon="pi pi-file-import" label="Download" (onClick)="getDownloadQueries()" *ngIf="this.readyToDownloads"></p-button> -->
+    <!-- <a [href]="downloadLink" [download]="createdFileName" class="p-button p-button-success" *ngIf="readyToDownloads" (onClick)="getDownloadQueries()">  
+        <i class="pi pi-file-import"></i> Download
+    </a> -->
+
+</p-dialog>
+
+<p-card>
+    <div class="flex justify-content-center flex-wrap">
+        <h4 [style.font-weight]="'bold'">Daftar Table</h4>
+    </div>
+    <div class="grid">
+        <div class="col-12">
+            <button class="p-2" pButton type="button" icon="pi pi-plus" iconPos="left" label="Add Table" (click)="showForm()"></button>
+            <!-- <button class="p-2 ml-2" pButton type="button" icon="pi pi-plus" iconPos="left" label="Add Table" (click)="showNewForm()"></button> -->
+            <button class="p-2 ml-2" pButton type="button" icon="pi pi-plus" iconPos="left" label="Insert Existing Table" (click)="existingTableForm()"></button>
+            <button class="p-2 ml-2" pButton type="button" icon="pi pi-download" iconPos="left" label="Stored Querries" (click)="this.downloadQuery = true" >
+                <p-badge class="mr-2" [value]="this.totalStoredQuery.toString()" severity="warning" iconPos="top" *ngIf="this.totalStoredQuery !== 0"></p-badge>
+            </button>
+        </div>
+        <div class="col-12"> 
+            <p-table #dt [value]="dictionary" styleClass="p-datatable-sm p-datatable-gridlines justify-content-between" [rowHover]="true"
+            [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]"  responsiveLayout="scroll"
+            [paginator]="true" [lazy]="true" (onLazyLoad)="loadDictionary($event)" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [filterDelay]="1" [loading]="loading" dataKey="id" [totalRecords]="totalRecord">                   
+            <ng-template pTemplate="caption">
+                <div class="flex">
+                    <span class="p-input-icon-left ml-auto">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt.filterGlobal(getEventValue($event), 'contains')" placeholder="Search keyword" />
+                    </span>
+                </div>
+                </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="w-1">Id</th>
+                    <th>Caption</th>
+                    <th class="w-1">Fields</th>
+                    <th class="w-1">Aplications</th>
+                    <th class="w-3">join</th>
+                    <th class="w-1">info</th>
+                    <th class="w-2">Action</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-d>
+                <tr>
+                    <td>{{ d.id }}</td>
+                    <td>{{ d.caption }}</td>
+                    <td>{{ d.totalField }}</td>
+                    <td>{{d.aplication}}</td>
+                    <td>{{defJoined(d.joined)}}</td>
+                    <td>{{defEksisting(d.isExisting)}}</td>
+                    <td>
+                        <span class="p-buttonset ml-2 border-rounded">
+                            <p-button pRipple icon="pi pi-pencil" styleClass="p-button-sm p-button-warning" pTooltip="Edit Table" tooltipPosition="bottom" (click)="showEditForm(d)"></p-button>
+                            <p-button pRipple icon="pi pi-trash" styleClass="p-button-sm p-button-danger" pTooltip="Delete Table" tooltipPosition="bottom" (click)="deleteBtn(d, $event)"></p-button>
+                            <p-button pRipple icon="pi pi-eye" styleClass="p-button-sm p-button-info" pTooltip="View Querries" tooltipPosition="bottom" (click)="viewOneQueries(d)"></p-button>
+                        </span>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        </div>
+    </div>
+</p-card>

@@ -1,0 +1,15 @@
+JWT:
+    1. npm i @auth0/angular-jwt
+    2. import { JwtHelperService } from '@auth0/angular-jwt';
+
+Spinner:
+    1. npm i ngx-spinner@15.0.1
+    2. "styles": [
+                    "node_modules/ngx-spinner/animations/square-jelly-box.css"
+                    // You're able to add multiple files if you need
+                ]
+    3. import { NgxSpinnerModule } from "ngx-spinner";
+
+Message & Confirmation Service:
+    1. Add to service providers: MessageService, -> From primeng/api
+    1. Add to service providers: ConfirmationService, -> From primeng/api

@@ -1,0 +1,86 @@
+<p-toast key="Message" [baseZIndex]="100"></p-toast>
+<p-dialog [header]="modalTitle" [modal]="true" [(visible)]="displayForm">
+    <form [formGroup]="inputForm">
+        <div class="col-12">
+            <label for="code" class="block"><span class="text-red-500">*</span>Code</label>
+            <!-- <input type="text" pInputText formControlName="code" class="w-full" /> -->
+            <p-inputMask class="w-full" mask="(a***)" placeholder="(DCNO)" formControlName="code"></p-inputMask>
+        </div><div class="col-12">
+            <label for="value" class="block"><span class="text-red-500">*</span>Value</label>
+            <input type="text" pInputText formControlName="value" class="w-7.5" />
+        </div>
+        <div class="col-12" *ngIf="isEdit">
+            <p>Status Dictionary?</p>
+            <p-selectButton [options]="stateOptions" formControlName="stat" optionLabel="label" optionValue="value"></p-selectButton>
+        </div>
+    </form>
+    <ng-template pTemplate="footer">
+        <div class="flex justify-content-between flex-wrap card-container purple-container">
+            <div class="flex align-items-center justify-content-center">
+                <p-button label="Submit" icon="pi pi-check" iconPos="right" (click)="submitForm()"></p-button>
+            </div> 
+        </div>
+    </ng-template>
+</p-dialog>
+
+<p-card>
+    <div class="flex justify-content-center flex-wrap">
+        <h4 [style.font-weight]="'bold'">Dictionary Database</h4>
+    </div>
+    <div class="grid">
+        <div class="col-12">
+            <button pButton type="button" icon="pi pi-plus" iconPos="left" label="New" (click)="showForm()"></button>
+        </div>
+        <div class="col-12">
+            <p-table #dt [value]="dictionaries" styleClass="p-datatable-sm p-datatable-gridlines" [rowHover]="true"
+            [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]"  responsiveLayout="scroll"
+            [paginator]="true" [lazy]="true" (onLazyLoad)="loadDictionaries($event)" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [filterDelay]="1" [loading]="loading" dataKey="id" [totalRecords]="totalRecord">
+                <ng-template pTemplate="caption">
+                <div class="flex">
+                    <span class="p-input-icon-left ml-auto">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt.filterGlobal(getEventValue($event), 'contains')" placeholder="Search keyword" />
+                    </span>
+                </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="code">
+                            <div class="flex justify-content-between align-items-center">
+                              Code
+                              <p-sortIcon field="code"></p-sortIcon>
+                          </div>
+                        </th>
+                        <th pSortableColumn="value">
+                            <div class="flex justify-content-between align-items-center">
+                              Value
+                              <p-sortIcon field="value"></p-sortIcon>
+                          </div>
+                        </th>
+                        <th pSortableColumn="status">
+                            <div class="flex justify-content-between align-items-center">
+                              Status
+                              <p-sortIcon field="status"></p-sortIcon>
+                          </div>
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template class="justify-content-center" pTemplate="body" let-d>
+                    <tr>
+                        <td>{{d.code}}</td>
+                        <td>{{d.value}}</td>
+                        <td>{{d.status}}</td>
+                        <td>
+                            <p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-warning" (click)="showEditForm(d)"></p-button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</p-card>
+

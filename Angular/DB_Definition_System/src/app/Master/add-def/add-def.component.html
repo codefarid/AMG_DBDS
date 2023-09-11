@@ -1,0 +1,76 @@
+<p-card>
+    <div class="flex justify-content-center">
+        <h4 [style.font-weight]="'bold'">Detail Table</h4>
+        
+    </div>
+    <div class="grid">
+        <div class="col-12 ">
+            <div class="container flex align-items-center justify-content-start">
+                <div class="col-3">
+                    <span class="p-float-label">
+                        <p-dropdown class="scalein animation-duration-500" [options]="applications" optionLabel="text" optionValue="value" [filter]="true" filterBy="text" (onChange)="onChangeApp($event)" placeholder="Select Aplication" id="getApp"></p-dropdown>
+                        <label for="getApp">Select Apps!</label>
+                    </span>
+                </div>
+                <div class="col-2">
+                    <span class="p-float-label">
+                        <p-dropdown class="scalein animation-duration-500" [options]="tableOptions" optionLabel="tableName" optionValue="headerId" (onChange)="onChangeTable($event)"  placeholder="Select a Table" id="getTable" [group]="true">
+                            <ng-template let-group pTemplate="group">
+                                <div class="flex align-items-center">
+                                    <!-- <img [class]="'mr-2 pi pi-check'" style="width: 20px" /> -->
+                                    <b><span class="pi pi-check"> {{ group.label }}</span></b>
+                                </div>
+                            </ng-template>
+                        </p-dropdown>
+                        <label for="getTable">Select a Table</label>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="ml-6 scalein animation-duration-500 col-6" *ngIf="idTable">
+            <h6> Displaying Table with ID : {{this.idTable}}</h6>
+        </div>
+        <div class="col-12">
+            <p-table #dt [value]="selectedTable" [loading]="loading" >
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                Field Id
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                Field Name
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                Data Type
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                Max Length
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                Primary Key
+                            </div>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-c>
+                    <tr>
+                        <td class="scalein animation-duration-500" >{{c.fieldId}}</td>
+                        <td class="scalein animation-duration-500" >{{c.fieldName}}</td>
+                        <td class="scalein animation-duration-500" >{{c.datType}}</td>
+                        <td class="scalein animation-duration-500" >{{c.maxLen}}</td>
+                        <td class="scalein animation-duration-500" >{{this.displayPk(c.isPk)}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</p-card>

@@ -1,0 +1,84 @@
+<p-toast key="Message" [baseZIndex]="100"></p-toast>
+
+<p-dialog [header]="modalTitle" [modal]="true" [(visible)]="displayForm">
+    <form [formGroup]="inputForm" (ngSubmit)="submitForm()">
+        <div class="formgrid grid">   
+            <div class="field p-2 ml-2">
+                <p>Category Label</p>
+                <input id="ctText" type="text" pInputText formControlName="ctText"/>
+            </div>
+            <div class="field p-2" *ngIf="isEdit">
+                <p>Status Category?</p>
+                <!-- <p-toggleButton formControlName="stCate" onLabel="active" offLabel="inactive"></p-toggleButton> -->
+                <p-selectButton [options]="stateOptions" formControlName="stCate" optionLabel="label" optionValue="value"></p-selectButton>
+            </div>
+        </div>
+        <div class="">
+            <button pButton pRipple label="Submit Category" class="p-button-success"></button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-card>
+    <div class="flex justify-content-center flex-wrap">
+        <h4 [style.font-weight]="'bold'">Table Categories</h4>
+    </div>
+    <div class="grid">
+        <div class="col-12">
+            <!-- <div class="border-round w-30rem h-7rem m-2 bg-blue-500 font-bold flex flex-wrap justify-content-between gap-2">
+                <div class="flex mt-2">
+                    Total Categories: 3
+                </div>
+                
+                <div class="flex">
+                    <svg height="90" width="auto">
+                      <circle cx="300" cy="100" r="90" stroke="purple" stroke-width="3" fill="purple" />
+                      <circle cx="300" cy="100" r="60" stroke="blue" stroke-width="1" fill="blue" />
+                      <circle cx="300" cy="100" r="30" stroke="purple" stroke-width="3" fill="purple" />
+                    </svg> 
+                </div>
+                
+            </div> -->
+            <button pButton type="button" icon="pi pi-plus" iconPos="left" label="New Categories" (click)="showForm()"></button>
+            <!-- <button pButton type="button" icon="pi pi-send" (click)="goToTemp()"></button> -->
+        </div>
+        <div class="col-12">
+            <p-table #dt [value]="categories" [loading]="loading" >
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                Code
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                Value
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                Created
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex justify-content-between align-items-center">
+                                Action
+                            </div>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-c>
+                    <tr>
+                        <td>{{c.code}}</td>
+                        <td>{{c.label}}</td>
+                        <td>{{c.created}}</td>
+                        <td>
+                            <p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-warning" (click)="showEditForm(c)"></p-button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</p-card>
