@@ -105,19 +105,6 @@ def appendQuery(id):
     
 @query_generator.route('/api/query_generator/getFkeyData',methods=['GET'])
 def sendData():
-    print("""
-                SELECT    
-                AAMTBHAZ1301.AAMTBIDZ1302 AS table_id,
-                AAMTBHAZ1301.AAMCPTBZ1302 AS caption_table,
-                AAMTBHAZ1301.AAMALNMZ1302 AS aplication_name,
-                AAMTBDTZ1301.AAMFEIDZ1302 AS field_id,
-                AAMTBDTZ1301.AAMNMZ1302 AS name_caption
-                FROM
-                AAMTBHAZ1301
-                INNER JOIN 
-                AAMTBDTZ1301 ON AAMTBHAZ1301.AAMTBIDZ1302 = AAMTBDTZ1301.AAMHAIDZ1302
-                where AAMTHSTZ1302 = 'active';
-                """)
     cur_sql.execute("""
                 SELECT    
                 AAMTBHAZ1301.AAMTBIDZ1302 AS table_id,

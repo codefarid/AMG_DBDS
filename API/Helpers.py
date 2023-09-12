@@ -330,7 +330,9 @@ def editQuery(inputNew,id):
                     AAMVLZ1302 as defaultValue,
                     AAMDTZ1302 as dataType,
                     AAMPKZ1302 as isPk,
-                    AAMSTTDZ1301 as 'statusTD'
+                    AAMSTTDZ1301 as 'statusTD',
+                    AAMISFKZ1301 as 'isFK',
+                    AAMFKTOZ1301 as 'isFKto'
                 FROM AAMTBDTZ1301
                 where AAMHAIDZ1302 = %s AND AAMSTTDZ1301 = 'active'
                 """, (id,))
@@ -362,10 +364,21 @@ def editQuery(inputNew,id):
         new_maxLen = inputNew['field'][i]['maxlenField']
         old_datType = old['field_data'][i]['dataType']
         old_maxLen = old['field_data'][i]['defaultValue']
+        new_isFk = inputNew['field'][i]['isFK']['value']
+        old_isFK = old['field_data'][i]['isFK']
+        new_isFKto = inputNew['field'][i]['isFKto']['value']
+        old_isFKto = old['field_data'][i]['isFKto']
         
         if new_datType.upper() != old_datType and str(new_maxLen).upper() != old_maxLen:     
             result_edit_datatype = editDaType(header_id, new_id, new_datType, str(new_maxLen))
             editedCol.append(result_edit_datatype)
+        
+        if new_isFk != '' and new_isFKto != '':    
+            print("Yhes", new_isFKto, new_isFk)
+            if new_isFk != old_isFK and new_isFKto != old_isFKto:
+                editedCol.append(f'ALTER TABLE {header_id} ADD CONSTRAINT FK_{header_id}_{new_isFKto} FOREIGN KEY ({old_id}) REFERENCES {new_isFKto}({new_isFk})')
+        
+        
         
         
         
@@ -392,8 +405,13 @@ def editQuery(inputNew,id):
             newIds = generateIdTDetail(y['fieldNameEdit']['value'],id)
             newDat = y['datTypeField'].upper()
             newMaxVal = y['maxlenField']
+            newIsFK = y['isFK']["value"] if y['isFK']["value"] != '' else '0'
+            newIsFKto = y['isFKto']["value"] if y['isFKto']["value"] != '' else '0'
             newQueries = "ALTER TABLE " + id + " ADD " + newIds + " " + newDat + "(" + str(newMaxVal) + ")"
+            
             editedCol.append(newQueries)
+            if newIsFK != '0' and newIsFKto != '0':
+                editedCol.append(f'ALTER TABLE {header_id} ADD CONSTRAINT FK_{header_id}_{new_isFKto} FOREIGN KEY ({newIds}) REFERENCES {newIsFKto}({newIsFK})')
             
             
     # print(editedCol)

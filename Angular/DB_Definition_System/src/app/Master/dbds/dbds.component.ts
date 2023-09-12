@@ -61,6 +61,7 @@ export class DBDSComponent implements OnInit {
     disableSkipRows = false
     disableFetchOnly = false
     readyToDownloads = false
+    afterDownloads = false
     fkey!: any[];
     editTableDetail: any[] = [];
     fieldIdRemoved: any[] = [];
@@ -69,6 +70,7 @@ export class DBDSComponent implements OnInit {
 
     dropDownJoinTable: DropdownLevel[] = [];
     dropDownTextAndValue: DropdownLevel[] = []
+    dropDownIsFKto: any[] = [];
 
     dictionary: Dictionary[] = [];
     tableNameList: any[] = [];
@@ -81,6 +83,8 @@ export class DBDSComponent implements OnInit {
 
     application: any[] = [];
     filteredAppNames: any[] = [];
+    filteredFKto: any[] = [];
+    filteredFK: any [] =[];
 
     dataType: any[] = [];
 
@@ -154,7 +158,7 @@ export class DBDSComponent implements OnInit {
     }
  
     joinTableSelected($event:any){
-        console.log($event)
+        // console.log($event)
         let a = $event.text
         this.selectedAplications = a
         // console.log(a,"????")
@@ -163,30 +167,32 @@ export class DBDSComponent implements OnInit {
             value: '',
         });
         this.dropDownJoinTable = this.dropDownTextAndValue.filter((el:any) => el.app == a)
-        setTimeout(() => {
+        this.dropDownIsFKto = this.dropDownTextAndValue.filter((el:any) => el.app == a)
+        // setTimeout(() => {
             // this.api.getMaterialInput().subscribe((data: any ) => {
             //     // console.log(this.dropDownJoinTable);
                 
             // },(error) => {
             //     console.log(error)
             // })
-        }, 500);
+        // }, 500);
         
     }
 
     foreignkeySelectedTable(data: any) {
+        // console.log(data)
         this.api.getOneTable(data).subscribe((res) => {
             let e = res.field_data.filter((el:any) => el.statPk == '1')
             this.fkeyStore = e.map((el:any) => {
                 return {"text":el.name_caption, "value":el.field_id}
             })
         },(err) => {
-            console.log(err)
+            // console.log(err)
         })
     }
     
     foreignkeySelectedField(data: any) {
-        console.log(data)
+        // console.log(data)
     }
 
     // foreignKeySelection() {
@@ -204,6 +210,7 @@ export class DBDSComponent implements OnInit {
     //     }
     // }
 
+   
     fourCharSugestions($event:any) {
         let x = $event.text
         setTimeout(() => {
@@ -230,7 +237,7 @@ export class DBDSComponent implements OnInit {
 
             this.api.getAllTable(param).subscribe(
                 (data: any) => {
-                    console.log(data)
+                    // console.log(data)
                     let dataTable = data.result;
                     let fieldsPerTable = data.fields
                     this.tableNameList = dataTable
@@ -262,17 +269,18 @@ export class DBDSComponent implements OnInit {
             setTimeout(() => {
                 this.api.getMaterialInput().subscribe(
                     (data: any) => {
-                        console.log(data)
+                        // console.log(data)
                         this.sugestion = data.sugestion;
                         this.application = data.dropApp;
                         this.categories = data.category;
                         this.dropDownTextAndValue = data.joinTo
+                        this.dropDownIsFKto = data.joinTo
                         this.spinner.hide()
                         this.loadSugestionInit = false
                     },
                     (error) => {
                         this.spinner.hide()
-                        console.log(error);
+                        // console.log(error);
                     }
                 );
             }, 1000);
@@ -295,6 +303,34 @@ export class DBDSComponent implements OnInit {
 
         this.filteredSugestion = filtered;
     }
+
+    filteredFKtoInit(event:any) {
+        let filtered: any[] = [];
+        let query = event.query;
+
+        for (let i = 0; i < this.dropDownIsFKto.length; i++) {
+            let data = this.dropDownIsFKto[i];
+            if (data.text.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+                filtered.push(data);
+            }
+        }
+
+        this.filteredFKto = filtered;
+    }
+
+    filteredFKInit(event:any) {
+        let filtered: any[] = [];
+        let query = event.query;
+        for (let i = 0; i < this.fkeyStore.length; i++) {
+            let data = this.fkeyStore[i];
+            if (data.text.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+                filtered.push(data);
+            }
+        }
+
+        this.filteredFK = filtered;
+    }
+
 
     filterCategory(event: any) {
         let filtered: any[] = [];
@@ -336,11 +372,11 @@ export class DBDSComponent implements OnInit {
     findJoinTo(val: any, app:any) {
         if(val == "None") {
             // this.inputForm.controls['joinTo'].disable();
-            console.log(this.inputForm.controls['joinTo'].getRawValue())
+            // console.log(this.inputForm.controls['joinTo'].getRawValue())
         } else {
             // this.inputForm.controls['joinTo'].enable();
             let x = this.dropDownJoinTable.find(({value}) => value == val)
-            console.log(x,x?.text)
+            // console.log(x,x?.text)
             return x?.text
         }
     }
@@ -393,21 +429,35 @@ export class DBDSComponent implements OnInit {
         return y.value;
     }
 
-    findisFK(val:any) {
-        if(val !== "0") {
-            let x = this.fkeyStore.find(({value}) => value == val)
-            if(!x) {
-                x = {value: val,text:val}
+    findisFK(val:any,hid:any) {
+        let x = this.fkeyStore.find(({value}) => value == val)
+        if(!x) {
+            x = {value:"",text:"None"}
+            if(val !== "0") {
+                let y = this.sugestion.find(({value}) => value === val.slice(0,4))
+                return {value: val,text:y.key}
             }
+            return x
+        } else {
             return x
         }
     }
 
     findIsFKto(val:any,app:any) {
-        this.dropDownJoinTable = this.dropDownTextAndValue.filter((el:any) => el.app == app)
-        let x = this.dropDownJoinTable.find(({value}) => value == val)
-        console.log(x,x?.text)
-        return x
+        const zz = val
+        const zzz  = this.dropDownIsFKto.filter((el:any) => el.app === app)
+        let z = zzz.find(({value}) => value == zz)
+        if(!z){
+            z = {"app":app,"text": "None", "value":""}
+            return z
+        } else {
+            return z
+        }
+        // console.log(this.dropDownJoinTable)
+    }
+    onSelectFKDd(val:any) {
+        console.log(val)
+        this.foreignkeySelectedTable(val)
     }
 
     dropdownValueInit() {
@@ -521,55 +571,55 @@ export class DBDSComponent implements OnInit {
         
         this.api.getOneTable(data.id).subscribe(
             (res) => {
-                console.log(res)
+                // console.log(res)
                 let appName = res.table_data[0].aplication_name
                 let obj = {text:appName}
-                let countField = res.field_data.length
-                let stopCount = 0
+                // let countField = res.field_data.length
+                // let stopCount = 0
                 this.joinTableSelected(obj)
                 // console.log(this.dropDownJoinTable)
                 // let stoped = false
-                for(let is = 0;is < countField ;is++) {
-                    const fieldArray = this.inputForm.get('field') as FormArray;
-                    fieldArray.push(this.createFieldFormGroup());
-                    stopCount += 1
-                }
-                if(countField == stopCount) {                   
-                    this.editTableDetail = res.field_data.map((el: any,i:number) => {
-                        return {
-                            fieldNameEdit: this.findEditFieldNameByValue(el.field_id),
-                            fieldName: this.findFieldNameByKey(el.field_id),
-                            extFname: this.findFieldNameByValue(el.name_caption),
-                            maxLenValue: el.default_value,
-                            datTypeField: el.data_type.toLowerCase(),
-                            isPk: this.findfieldIsPk(el.statPk),
-                            // statTD: el.status !== "0" ? el.status:"",
-                            isFK: el.isFK !== "0" ? this.findisFK(el.isFK) : "",
-                            isFKto: el.isFKto !== "0" ? this.findIsFKto(el.isFKto, appName) : ""//debuging disini besok!!!
-                        };
-                    });
-                    // console.log(this.fieldIdRemoved,"chek rubah sebelum hapus")
-                    this.inputForm.patchValue({
-                        tableName: res.table_data[0].caption_table,
-                        appName: this.findAplicationByValue(
-                            res.table_data[0].aplication_name
-                        ),
-                        isMaster: this.findCategoryByValue(
-                            res.table_data[0].kategori_app
-                        ),
-                        joinTo: res.table_data[0].joinTo,
-                        isExisted: res.table_data[0].isExist,
-                        field: this.editTableDetail,
-                    });
-                    const fieldArr = this.inputForm.get('field') as FormArray;
-                    fieldArr.clear();
-                    this.editTableDetail.forEach((field) => {
-                        fieldArr.push(this.createFieldControl(field));
-                    });
-                }
+                // for(let is = 0;is < countField ;is++) {
+                //     const fieldArray = this.inputForm.get('field') as FormArray;
+                //     fieldArray.push(this.createFieldFormGroup());
+                //     stopCount += 1
+                // }
+                this.editTableDetail = res.field_data.map((el: any,i:number) => {
+                    return {
+                        fieldNameEdit: this.findEditFieldNameByValue(el.field_id),
+                        fieldName: this.findFieldNameByKey(el.field_id),
+                        extFname: this.findFieldNameByValue(el.name_caption),
+                        maxLenValue: el.default_value,
+                        datTypeField: el.data_type.toLowerCase(),
+                        isPk: this.findfieldIsPk(el.statPk),
+                        statTD: el.status !== "0" ? el.status:"",
+                        isFK: this.findisFK(el.isFK,el.header_id),
+                        isFKto: this.findIsFKto(el.isFKto, appName)
+                    };
+                });
+                // console.log(this.fieldIdRemoved,"chek rubah sebelum hapus")
+                this.inputForm.patchValue({
+                    tableName: res.table_data[0].caption_table,
+                    appName: this.findAplicationByValue(
+                        res.table_data[0].aplication_name
+                    ),
+                    isMaster: this.findCategoryByValue(
+                        res.table_data[0].kategori_app
+                    ),
+                    joinTo: res.table_data[0].joinTo,
+                    isExisted: res.table_data[0].isExist,
+                    field: this.editTableDetail,
+                });
+                const fieldArr = this.inputForm.get('field') as FormArray;
+                fieldArr.clear();
+                this.editTableDetail.forEach((field) => {
+                    fieldArr.push(this.createFieldControl(field));
+                });
+                // if(countField == stopCount) {                   
+                // }
             },
             (err) => {
-                console.log(err);
+                // console.log(err);
             }
         );
     }
@@ -577,7 +627,7 @@ export class DBDSComponent implements OnInit {
     showQuery() {
         const userInput = this.inputForm.getRawValue();
         console.log(userInput)
-        console.log(this.fkeyStore)
+        // console.log(this.fkeyStore)
         if (this.inputForm.invalid) {
             this.messageService.add({
                 key: 'Message',
@@ -594,10 +644,10 @@ export class DBDSComponent implements OnInit {
                     (res) => {
                         this.loading = false
                         this.displayQuery = res.queries;
-                        console.log(res)
+                        // console.log(res)
                     },
                     (err) => {
-                        console.log(err);
+                        // console.log(err);
                         this.isLoadingButton = false
                     }
                 );
@@ -605,7 +655,7 @@ export class DBDSComponent implements OnInit {
             } 
             else if(this.isExistingTable == true) {
                 this.api.postPreviewExtQuery(userInput).subscribe((res) => {
-                    console.log(res)
+                    // console.log(res)
                         let temp = res.split('?');
                         for (let i = 1; i < temp.length - 2; i++) {
                             let values = this.checkParse(temp[i])
@@ -613,7 +663,7 @@ export class DBDSComponent implements OnInit {
                         }
                         this.displayQuery = temp.join("")
                 },(err) => {
-                    console.log(err)
+                    // console.log(err)
                     this.messageService.add({
                         severity: 'error',
                         summary: 'Failed',
@@ -625,7 +675,7 @@ export class DBDSComponent implements OnInit {
             if(this.isExistingTable !== true && this.isEdit !== true) {
                 this.api.postPreviewQuery(userInput).subscribe(
                     (res) => {
-                        console.log(res)
+                        // console.log(res)
                         let temp = res.split('?');
 
                         for (let i = 1; i < temp.length - 2; i++) {
@@ -635,7 +685,7 @@ export class DBDSComponent implements OnInit {
                         this.displayQuery = temp.join("")
                     },
                     (err) => {
-                        console.log(err)
+                        // console.log(err)
                         this.isLoadingButton = false
                         this.messageService.add({
                             severity: 'error',
@@ -692,6 +742,8 @@ export class DBDSComponent implements OnInit {
             maxlenField: [Number(field.maxLenValue)],
             datTypeField: [field.datTypeField],
             isPk: [field.isPk],
+            isFKto: [field.isFKto],
+            isFK:[field.isFK],
             statTD:[field.statTD]
         });
     }
@@ -711,7 +763,7 @@ export class DBDSComponent implements OnInit {
     }
 
     setStatTD(index:number,value:string) {
-        console.log('clicked should be change field status from field no = ', index ,"changing value to ", value)
+        // console.log('clicked should be change field status from field no = ', index ,"changing value to ", value)
         const fieldCont = this.inputForm.get('field') as FormArray;
         const fieldG = fieldCont.at(index) as FormGroup;
         const statChange = fieldG.get('statTD')
@@ -719,21 +771,21 @@ export class DBDSComponent implements OnInit {
     }
 
     togleStatusField(data:any,i:any) {
-        console.log(data,i, 'togle status')
+        // console.log(data,i, 'togle status')
         if(data == 'active') {
             this.blockedFields[i] = false
-            console.log("Not Blocked")
+            // console.log("Not Blocked")
             
         } else {
             this.blockedFields[i] = true
-            console.log("Blocked")
+            // console.log("Blocked")
             
         }
         
     }
 
     addField() {
-        console.log("clicked")
+        // console.log("clicked")
         const fieldArray = this.inputForm.get('field') as FormArray;
         fieldArray.push(this.createFieldFormGroup());        
         const newFieldElement = document.getElementById('bawah');        
@@ -760,7 +812,7 @@ export class DBDSComponent implements OnInit {
                 this.fieldIdRemoved.splice(w, 1,'XXXX');
                 this.fieldStatus = false
                 this.blockedFields[index] = false
-                console.log(this.editableDatas,this.fieldStatus, "UNDO")
+                // console.log(this.editableDatas,this.fieldStatus, "UNDO")
                 this.messageService.add({
                     key: 'Message',
                     severity: 'success',
@@ -768,7 +820,7 @@ export class DBDSComponent implements OnInit {
                     detail: "Field Id Removed from deleted list!",
                 });
             } else {
-                console.log("No fields to undo deletion.");
+                // console.log("No fields to undo deletion.");
                 this.messageService.add({
                     key: 'Message',
                     severity: 'error',
@@ -777,7 +829,7 @@ export class DBDSComponent implements OnInit {
                 });
             }
         } else {
-            console.log("No fields to undo deletion.");
+            // console.log("No fields to undo deletion.");
             this.messageService.add({
                 key: 'Message',
                 severity: 'error',
@@ -785,14 +837,14 @@ export class DBDSComponent implements OnInit {
                 detail: "No fields to undo deletion.",
             });
         }
-        console.log(this.fieldIdRemoved)
+        // console.log(this.fieldIdRemoved)
     }
 
     removeField(index: number) {
         const fieldArray = this.inputForm.get('field') as FormArray;
         if(this.isEdit) {
             if(fieldArray.length  <= this.editableDatas[this.editableDatas.length-1].totalField){
-                console.log('cannot remove')
+                // console.log('cannot remove')
                 this.messageService.add({
                     key: 'Message',
                     severity: 'error',
@@ -800,16 +852,16 @@ export class DBDSComponent implements OnInit {
                     detail: "This Input Form Field contain Data that cannot be Deleted!",
                 });
             }else {
-                console.log("remove")
+                // console.log("remove")
                 fieldArray.removeAt(index)
             }
         }else {
-            console.log("remove input")
+            // console.log("remove input")
             fieldArray.removeAt(index)
         }
         // fieldArray.removeAt(index) 
-        console.log(fieldArray.length <= this.editableDatas[this.editableDatas.length-1].totalField)
-        console.log(fieldArray.length,this.editableDatas[this.editableDatas.length-1].totalField,this.isEdit,this.editExistingTable)
+        // console.log(fieldArray.length <= this.editableDatas[this.editableDatas.length-1].totalField)
+        // console.log(fieldArray.length,this.editableDatas[this.editableDatas.length-1].totalField,this.isEdit,this.editExistingTable)
     }
     
     deleteField(index: number) {
@@ -827,10 +879,10 @@ export class DBDSComponent implements OnInit {
             this.fieldIdRemoved = this.fieldIdRemoved.slice(0, this.editableDatas[this.editableDatas.length-1].totalField)
         }
 
-        console.log(this.fieldIdRemoved,fieldArray.controls.length)
+        // console.log(this.fieldIdRemoved,fieldArray.controls.length)
         if (!this.fieldIdRemoved.includes(fieldNameValue) && fieldNameValue !== undefined) {
           this.fieldIdRemoved.splice(index, 1 , fieldNameValue);
-          console.log(index, 1 , fieldNameValue)
+        //   console.log(index, 1 , fieldNameValue)
           this.fieldStatus = true
           this.blockedFields[index] = true
           this.messageService.add({
@@ -839,9 +891,9 @@ export class DBDSComponent implements OnInit {
             summary: "Field Deleted",
             detail: "Field Id Added to deleted list! this will work after submited!",
             });
-          console.log("Field Id Added to deleted list! this will work after submited!");
+        //   console.log("Field Id Added to deleted list! this will work after submited!");
         } else {
-            console.log(!this.fieldIdRemoved.includes(fieldNameValue) && fieldNameValue !== undefined)
+            // console.log(!this.fieldIdRemoved.includes(fieldNameValue) && fieldNameValue !== undefined)
             this.messageService.add({
                 key: 'Message',
                 severity: 'error',
@@ -849,9 +901,9 @@ export class DBDSComponent implements OnInit {
                 detail: 'Field already Deleted! or Empty Field Cannot Be Deleted!',
             });
             // this.blockedFields[index] = false
-            console.log("Field already exists in fieldIdRemoved. Skipping addition.");
+            // console.log("Field already exists in fieldIdRemoved. Skipping addition.");
         }
-        console.log(this.fieldIdRemoved,'>> JIKA SUKSES MENAMBAHKAN ID KE LIST UNTUK DI HAPUS!',this.fieldStatus);
+        // console.log(this.fieldIdRemoved,'>> JIKA SUKSES MENAMBAHKAN ID KE LIST UNTUK DI HAPUS!',this.fieldStatus);
         
     }
 
@@ -871,8 +923,8 @@ export class DBDSComponent implements OnInit {
             this.isLoadingButton = true;
             if(this.editExistingTable == true && this.isEdit == true){
                 setTimeout(() => {
-                    console.log("EDIT TABLE EXISTING")
-                    console.log(this.fieldIdRemoved)
+                    // console.log("EDIT TABLE EXISTING")
+                    // console.log(this.fieldIdRemoved)
                     this.api.putSelectedExtTable(userInput, this.getId).subscribe((res) => {
                         this.displayForm = false;
                         this.fieldIdRemoved = []
@@ -898,8 +950,8 @@ export class DBDSComponent implements OnInit {
             }
             else if (this.isEdit && !this.editExistingTable) {
                 setTimeout(() => {
-                    console.log("EDIT TABLE MASTER")
-                    console.log(this.fieldIdRemoved)
+                    // console.log("EDIT TABLE MASTER")
+                    // console.log(this.fieldIdRemoved)
                     this.api.putSelectedTable(userInput, this.getId).subscribe(
                         (res) => {
                             this.displayForm = false;
@@ -943,7 +995,7 @@ export class DBDSComponent implements OnInit {
                             this.sugestionInit()
                     },
                     (error) => {
-                        console.log(error);
+                        // console.log(error);
                         this.displayForm = true;
                         this.isLoadingButton = false;
                         this.messageService.add({
@@ -972,7 +1024,7 @@ export class DBDSComponent implements OnInit {
                                 this.sugestionInit()
                         },
                         (error) => {
-                            console.log(error);
+                            // console.log(error);
                             this.displayForm = true;
                             this.isLoadingButton = false;
                             this.messageService.add({
@@ -999,12 +1051,12 @@ export class DBDSComponent implements OnInit {
                 const id = data.id;
                 this.api.updateStatusTable(id).subscribe(
                     (res) => {
-                        console.log(res)
+                        // console.log(res)
                         this.loading = false;
                         this.loadDictionary(this.lastTableLazyLoadEvent);
                     },
                     (err) => {
-                        console.log(err);
+                        // console.log(err);
                         this.loadDictionary(this.lastTableLazyLoadEvent);
                         this.loading = false;
                     }
@@ -1028,7 +1080,7 @@ export class DBDSComponent implements OnInit {
         this.displayOneQuery = true;
         this.api.getOneTable(data.id).subscribe(
             (res) => {
-                console.log(res)
+                // console.log(res)
                 this.displayQueryAfter = res.createdQuery.split('?');
                 for (let i = 1; i < this.displayQueryAfter.length - 3; i++) {
                     let values = this.checkParse(this.displayQueryAfter[i])
@@ -1068,7 +1120,7 @@ export class DBDSComponent implements OnInit {
                 this.selectQueryPlayGround()
             },
             (err) => {
-                console.log(err);
+                // console.log(err);
             }
         );
     }
@@ -1106,7 +1158,7 @@ export class DBDSComponent implements OnInit {
             this.displayQuerySelect.push(`OFFSET ${ui.skipinCond} ROWS`)
             this.displayQuerySelect.push(`FETCH FIRST ${ui.fetchOnlyCond} ROWS ONLY`)
         }
-        console.log(this.displayQuerySelect)
+        // console.log(this.displayQuerySelect)
     }
 
     settingsQueryPlayGround() {
@@ -1230,7 +1282,7 @@ export class DBDSComponent implements OnInit {
     }
 
     getDatTypeValidator(event:any) {
-        console.log(event.value,"DATA TYPE FIELD")
+        // console.log(event.value,"DATA TYPE FIELD")
         const val = event.value
         let data = this.dataType.map((obj) => ({
             label: obj.label,
@@ -1240,21 +1292,21 @@ export class DBDSComponent implements OnInit {
         if(filteredItems[0].label == "Exact Numerics" && filteredItems[0].items.value == val){
             if(filteredItems[0].items.value == 'float' || filteredItems[0].items.value == 'real'){
                 this.maxLenValidator = parseFloat(filteredItems[0].items.max)
-                console.log(this.maxLenValidator,"Float Condition")
+                // console.log(this.maxLenValidator,"Float Condition")
             }else {
                 this.maxLenValidator = parseInt((filteredItems[0].items.max).replace(/,/g,""),10)
-                console.log(this.maxLenValidator,"Not Float Condition")
+                // console.log(this.maxLenValidator,"Not Float Condition")
             }
         } else if(filteredItems[0].label == "Approximate Numerics" && filteredItems[0].items.value == val) {
             this.maxLenValidator = parseFloat(filteredItems[0].items.max)
-                console.log(this.maxLenValidator,"Float Condition Approx")
+                // console.log(this.maxLenValidator,"Float Condition Approx")
         } else if(filteredItems[0].label == "Date and Time" && filteredItems[0].items.value == val) {
             if(filteredItems[0].items.value == 'time'){
                 this.maxLenValidator = Math.round(Number(filteredItems[0].items.max.split(":").join("")))
-                console.log(this.maxLenValidator,"Time Condition")
+                // console.log(this.maxLenValidator,"Time Condition")
             } else {
                 this.maxLenValidator = Date.parse(filteredItems[0].items.max)
-                    console.log(this.maxLenValidator,"Date Condition")
+                    // console.log(this.maxLenValidator,"Date Condition")
             }
         } else if(filteredItems[0].label == "Character Strings" && filteredItems[0].items.value == val) {
             if(filteredItems[0].items.value == 'text' || filteredItems[0].items.value == 'ntext'){
@@ -1264,10 +1316,10 @@ export class DBDSComponent implements OnInit {
                 const exponent = parseInt(parts[1].split("-")[0]); 
                 const result = Math.pow(base, exponent) - 1; 
                 this.maxLenValidator = result
-                console.log(this.maxLenValidator,"Text Condition")
+                // console.log(this.maxLenValidator,"Text Condition")
             }else {
                 this.maxLenValidator = parseInt((filteredItems[0].items.max).replace(/,/g,""),10)
-                console.log(this.maxLenValidator,"Normal Condition")
+                // console.log(this.maxLenValidator,"Normal Condition")
             }
         }else if(filteredItems[0].label == "'Binary Strings'" && filteredItems[0].items.value == val) {
             if(filteredItems[0].items.value == 'image'){
@@ -1277,10 +1329,10 @@ export class DBDSComponent implements OnInit {
                 const exponent = parseInt(parts[1].split("-")[0]); 
                 const result = Math.pow(base, exponent) - 1; 
                 this.maxLenValidator = result
-                console.log(this.maxLenValidator,"Text Condition")
+                // console.log(this.maxLenValidator,"Text Condition")
             }else {
                 this.maxLenValidator = parseInt((filteredItems[0].items.max).replace(/,/g,""),10)
-                console.log(this.maxLenValidator,"Normal Condition")
+                // console.log(this.maxLenValidator,"Normal Condition")
             }
         }
     }
@@ -1293,76 +1345,86 @@ export class DBDSComponent implements OnInit {
     }
 
     downloadQueries(){
-        console.log("clicked download");
         this.api.downloadQuerries(this.downloadStore).subscribe((res) => {
-            console.log("berhasil Kirim Data")
             console.log(res)
             if(res.msg == "No Data!"){
-                console.log("ERROR NO DATA INSERTED!")
                 this.messageService.add({
                     key: 'Message',
                     severity: 'error',
                     summary: 'No Data!',
                     detail: 'Failed, send an empty data!',
                 });
-                this.downloadQuery = false
-                // this.downloadLink = res.download_url; // Ambil URL download dari respons API
-
+                // this.downloadQuery = false
                 return 
             }
             this.createdFileName = res.fileName
             this.readyToDownloads = true
-            this.totalStoredQuery = 0
-            this.downloadStore = []
+            // this.totalStoredQuery = 0
+            // this.downloadStore = []
         },(err) => {
-            console.log("gagal download")
+            // console.log("gagal download")
+            console.log(err)
         })
     }
 
     getDownloadQueries(){
-        let obj = {
-            param: this.createdFileName
-        }
-        this.api.getDownloadQuerries(obj).subscribe((res) => {
+        this.api.getDownloadQuerries(this.createdFileName).subscribe((res) => {
             console.log(res)
-            this.totalStoredQuery = 0
-            this.downloadStore = []
-            this.downloadQuery = false
+            // this.totalStoredQuery = 0
+            // this.downloadStore = []
+            // this.downloadQuery = false
             this.readyToDownloads = false
-            setTimeout(() => {
-                this.api.deleteAfterDownloads(obj).subscribe((res) => {
-                    console.log(res)
-                    this.createdFileName = ''
-                    this.messageService.add({
-                        key: 'Message',
-                        severity: 'success',
-                        summary: 'Download success!',
-                        detail: `downloaded!`,
-                    });
-                },(err) => {
-                    console.log(err)
-                })
-            }, 500);
+            this.afterDownloads = true
+            // setTimeout(() => {
+            //     this.api.deleteAfterDownloads(this.createdFileName).subscribe((res) => {
+            //         console.log(res)
+            //         this.createdFileName = ''
+            //         this.messageService.add({
+            //             key: 'Message',
+            //             severity: 'success',
+            //             summary: 'Download success!',
+            //             detail: `downloaded!`,
+            //         });
+            //     },(err) => {
+            //         console.log(err)
+            //     })
+            // }, 500);
         },(err) => {
-            console.log(err)
+            // console.log(err)
             this.messageService.add({
                 key: 'Message',
                 severity: 'error',
                 summary: 'Download Failed!',
                 detail: `Failed, ${err.statusText}!`,
             });
-            this.totalStoredQuery = 0
-            this.downloadStore = []
-            this.downloadQuery = false
-            this.readyToDownloads = false
-            setTimeout(() => {
-                this.api.deleteAfterDownloads(obj).subscribe((res) => {
-                    console.log(res)
-                    this.createdFileName = ''
-                },(err) => {
-                    console.log(err)
-                })
-            }, 500);
+            // this.totalStoredQuery = 0
+            // this.downloadStore = []
+            // this.downloadQuery = false
+            // this.readyToDownloads = false
+            // setTimeout(() => {
+            //     this.api.deleteAfterDownloads(obj).subscribe((res) => {
+            //         // console.log(res)
+            //         this.createdFileName = ''
+            //     },(err) => {
+            //         // console.log(err)
+            //     })
+            // }, 500);
         })
+    }
+
+    doneDownloadButton() {
+            setTimeout(() => {
+                    this.api.deleteAfterDownloads(this.createdFileName).subscribe((res) => {
+                        console.log(res)
+                        this.createdFileName = ''
+                        this.downloadQuery = false
+                        this.readyToDownloads = false
+                        this.afterDownloads = false
+                        this.totalStoredQuery = 0
+                        this.downloadStore = []
+                    },(err) => {
+                        console.log(err)
+                    })
+                }, 500);
     }
 }

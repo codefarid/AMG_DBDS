@@ -71,11 +71,11 @@ export class CategoryComponent implements OnInit {
             user: el.user
           }
         })
-        console.log(data)
+        // console.log(data)
         this.loading = false
       },(err) => {
         this.loading = false
-        console.log(err)
+        // console.log(err)
       })
     }, 1000);
   }
@@ -88,19 +88,19 @@ export class CategoryComponent implements OnInit {
   }
 
   goToTemp() {
-    console.log("clikced")
+    // console.log("clikced")
     this.router.navigate(['/master/temp'])
   }
 
   submitForm(){
     const userInput = this.inputForm.getRawValue()
-    console.log(userInput, this.getId)
+    // console.log(userInput, this.getId)
     if (this.inputForm.invalid) {
       this.messageService.add({ key: 'Message', severity: 'error', summary: 'Submit Form', detail: 'Failed, there is empty data' })
     } else {
       if(this.isEdit) {
         this.api.putCategories(userInput, this.getId).subscribe((res) => {
-          console.log(res)
+          // console.log(res)
           if(res.message == 'Nama Sudah Ada, Buat Nama lain!') {
             this.displayForm = true
             this.messageService.add({ key: 'Message', severity: 'error', summary: "Failed Add New Categories" , detail: res.message })
@@ -112,11 +112,11 @@ export class CategoryComponent implements OnInit {
         }, (err) => {
           this.displayForm = true
           this.messageService.add({ key: 'Message', severity: 'error', summary: "Failed Edit Categories" , detail: 'Failed' })
-          console.log(err)
+          // console.log(err)
         })
       } else {
         this.api.postCategories(userInput).subscribe((res) => {
-          console.log(res)
+          // console.log(res)
           if(res.message == 'Nama Sudah Ada, Buat Nama lain!') {
             this.displayForm = true
             this.messageService.add({ key: 'Message', severity: 'error', summary: "Failed Add New Categories" , detail: res.message })
@@ -153,7 +153,7 @@ export class CategoryComponent implements OnInit {
         stCate: this.togleStatusEdit(cat.status)
       })
     }, (err) => {
-      console.log(err)
+      // console.log(err)
       this.messageService.add({ key: 'Message', severity: 'error', summary: "Failed Get One Category" , detail: err.message })
     })
     

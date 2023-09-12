@@ -106,9 +106,14 @@
                                     <div class="field p-2" *ngIf="!isEdit">
                                         <p>Set as Foreign Key?</p>
                                         <!-- <p-treeSelect class="md:w-20rem w-full" containerStyleClass="w-full" formControlName="isFK" [options]="fkey" [showClear]="true" placeholder="Select Item" (onNodeSelect)="foreignkeySelected($event)"></p-treeSelect> -->
-                                        <p-dropdown class="mb-2 mr-2" formControlName="isFKto" [options]="dropDownJoinTable" optionLabel="text" optionValue="value" placeholder="Select Table Name" (onChange)="foreignkeySelectedTable($event.value)"></p-dropdown>
-                                        <p-dropdown class="mt-2 ml-2" formControlName="isFK" [options]="fkeyStore" optionLabel="text" optionValue="value" placeholder="Select Field Column" (onChange)="foreignkeySelectedField($event.value)"></p-dropdown>
+                                        <p-dropdown id="setFKtoNo{{i+1}}" class="mb-2 mr-2" formControlName="isFKto" [options]="dropDownIsFKto" optionLabel="text" optionValue="value" placeholder="Select Table Name" (onChange)="foreignkeySelectedTable($event.value)"></p-dropdown>
+                                        <p-dropdown id="setIsFKNo{{i+1}}" class="mt-2 ml-2" formControlName="isFK" [options]="fkeyStore" optionLabel="text" optionValue="value" placeholder="Select Field Column" (onChange)="foreignkeySelectedField($event.value)"></p-dropdown>
 
+                                    </div>
+                                    <div class="field p-2" *ngIf="isEdit">
+                                        <p>Edit Foreign Key</p>
+                                        <p-autoComplete id="editFktoNo{{i+1}}" formControlName="isFKto" [suggestions]="filteredFKto" (completeMethod)="filteredFKtoInit($event)" field="text" [dropdown]="true" (onSelect)="onSelectFKDd($event.value)" [showClear]="true"></p-autoComplete>
+                                        <p-autoComplete class="ml-2" id="editFktoNo{{i+1}}" formControlName="isFK" [suggestions]="filteredFK" (completeMethod)="filteredFKInit($event)" field="text" [dropdown]="true" [showClear]="true"></p-autoComplete>
                                     </div>
                                     
                                 </div>
@@ -296,8 +301,9 @@
         <p><b>{{ text }}</b></p>
       </div>
       <br>
-    <p-button icon="pi pi-trash" label="Delete" (onClick)="downloadQueries()"></p-button>
-    <!-- <p-button icon="pi pi-file-import" label="Download" (onClick)="getDownloadQueries()" *ngIf="this.readyToDownloads"></p-button> -->
+    <p-button icon="pi pi-file-import" label="Import Query" (onClick)="downloadQueries()" *ngIf="!this.readyToDownloads && !this.afterDownloads"></p-button>
+    <p-button icon="pi pi-download" label="Download" (onClick)="getDownloadQueries()" *ngIf="this.readyToDownloads"></p-button>
+    <p-button icon="pi pi-trash" label="Delete Query" (onClick)="doneDownloadButton()" *ngIf="this.afterDownloads"></p-button>
     <!-- <a [href]="downloadLink" [download]="createdFileName" class="p-button p-button-success" *ngIf="readyToDownloads" (onClick)="getDownloadQueries()">  
         <i class="pi pi-file-import"></i> Download
     </a> -->

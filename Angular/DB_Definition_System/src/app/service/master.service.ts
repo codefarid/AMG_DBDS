@@ -113,14 +113,14 @@ export class MasterService {
   }
 
   downloadQuerries(data:any): Observable<any> {
-    return this.http.post(`${this.baseURL}/master_dbds/downloads`,data,{headers: this.httpHeaders})
+    return this.http.post(`${this.baseURL}/master_dbds/post/downloads`,data,{headers: this.httpHeaders})
   }
 
-  getDownloadQuerries(parameter:any): Observable<any> {
-    return this.http.get(`${this.baseURL}/master_dbds/downloads`,{headers: this.httpHeaders, params:parameter})
+  getDownloadQuerries(fileName:any): Observable<any> {
+    return this.http.get(`${this.baseURL}/master_dbds/downloads/${fileName}`,{headers: this.httpHeaders})
   }
 
-  deleteAfterDownloads(parameter:any): Observable<any> {
-    return this.http.get(`${this.baseURL}/master_dbds/delete/downloads`,{headers:this.httpHeaders,params:parameter})
+  deleteAfterDownloads(fileName:any): Observable<any> {
+    return this.http.get(`${this.baseURL}/master_dbds/delete/downloads/${fileName}`,{headers:this.httpHeaders})
   }
 }

@@ -111,7 +111,7 @@ export class DictionaryComponent implements OnInit {
     this.api.getOneDictionaries(this.getId).subscribe((res) => {
       
       const d = res.result[0]
-      console.log(d);
+      // console.log(d);
       
       this.inputForm.patchValue({
         code: d.code,
@@ -119,7 +119,7 @@ export class DictionaryComponent implements OnInit {
         stat: this.togleStatusEdit(d.status)
       })
     }, (err) => {
-      console.log(err)
+      // console.log(err)
     })
         
   }
@@ -132,7 +132,7 @@ export class DictionaryComponent implements OnInit {
     } else {
       if(this.isEdit) {
         this.api.putDictionaries(userInput, this.getId).subscribe((res) => {
-          console.log(res)
+          // console.log(res)
           if(res.message == "Nama Sudah Ada, Buat Nama lain!") {
             this.messageService.add({ key: 'Message', severity: 'error', summary: res.message , detail: 'Failed' })
             this.displayForm = true
@@ -143,10 +143,10 @@ export class DictionaryComponent implements OnInit {
           }
           
          }, (err) => {
-          console.log(err)
+          // console.log(err)
           this.displayForm = true
           this.messageService.add({ key: 'Message', severity: 'error', summary: "Failed Edit Dictionary" , detail: 'Failed' })
-          console.log(err)
+          // console.log(err)
         })
       } else {
         this.api.postDictionaries(userInput).subscribe((res) => {
@@ -160,7 +160,7 @@ export class DictionaryComponent implements OnInit {
             this.displayForm = false
           }
         },(err) => {
-          console.log(err)
+          // console.log(err)
           this.displayForm = true
           if(err.name == "HttpErrorResponse") {
             this.messageService.add({ key: 'Message', severity: 'error', summary: "Failed Edit Dictionary" , detail: 'Code Already Exists' })

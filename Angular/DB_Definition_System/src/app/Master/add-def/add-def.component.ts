@@ -43,19 +43,19 @@ export class AddDefComponent implements OnInit {
        })
         // console.log(res:any)
       }, (err:any) => {
-        console.log(err)
+        // console.log(err)
         this.messageService.add({ key: 'Message', severity: 'error', summary: "Failed Fetch Definition" , detail: err.message })
         
       })
     }
 
     fetchTableData(id:string) {
-      console.log(id)
+      // console.log(id)
       this.api.getDetailedFields(id).subscribe((res:any) => {
         // console.log(res:any)
         this.selectedTable = res.fields
       }, (err:any) => {
-        console.log(err)
+        // console.log(err)
         this.messageService.add({ key: 'Message', severity: 'error', summary: "Failed Fetch Definition" , detail: err.message })
       })
       
@@ -68,7 +68,7 @@ export class AddDefComponent implements OnInit {
 
     onChangeApp(event:any) {
       this.filteringApps = event.value
-      console.log(this.filteringApps)
+      // console.log(this.filteringApps)
       this.api.getTableAndFields().subscribe((res:any) => {
         // console.log(res.tables.filter((el:any) => el.app == this.filteringApps))
         let catDict = [{value:'1', text:'Master'},{value:'2', text:'Transaction'},{value:'3', text:'Record'}]
@@ -86,11 +86,11 @@ export class AddDefComponent implements OnInit {
               })
           };
         });
-        console.log(result)
+        // console.log(result)
         // this.tableOptions = res.tables.filter((el:any) => el.app == this.filteringApps)
         this.tableOptions = result
        }, (err:any) => {
-         console.log(err)
+        //  console.log(err)
          this.messageService.add({ key: 'Message', severity: 'error', summary: "Failed Fetch Definition" , detail: err.message })
        })
     }

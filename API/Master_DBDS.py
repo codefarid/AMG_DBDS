@@ -310,7 +310,9 @@ def getOneTable(id):
                 AAMVLZ1302 as default_value,
                 AAMDTZ1302 as data_type,
                 AAMPKZ1302 as statPk,
-                AAMSTTDZ1301 as statusTD
+                AAMSTTDZ1301 as statusTD,
+                AAMISFKZ1301 as isFK,
+                AAMFKTOZ1301 as isFKto
             FROM AAMTBDTZ1301
             where AAMHAIDZ1302 = %s and AAMSTTDZ1301 = 'active'
             """,(id,))
@@ -336,13 +338,15 @@ def getOneTable(id):
                     newDat = y['datTypeField'].upper()
                     newMaxVal = y['maxlenField']
                     statusTD = y['statTD']
+                    isFK = y['isFK']["value"] if y['isFK']["value"] else '0'
+                    isFKto = y['isFKto']['value'] if y['isFKto']['value'] else '0'
                     
                     isPk = '1' if y['isPk'] else '0'
                     
                     cur_sql.execute("""
-                                    INSERT INTO AAMTBDTZ1301 (AAMFEIDZ1302,AAMHAIDZ1302,AAMNMZ1302,AAMVLZ1302,AAMDTZ1302,AAMPKZ1302,AAMEXTDZ1301,AAMCEATZ1302,AAMCETMZ1302,AAMCEUEZ1302,AAMUDATZ1302,AAMUDTMZ1302,AAMUDUEZ1302, AAMSTTDZ1301)
+                                    INSERT INTO AAMTBDTZ1301 (AAMFEIDZ1302,AAMHAIDZ1302,AAMNMZ1302,AAMVLZ1302,AAMDTZ1302,AAMPKZ1302,AAMEXTDZ1301,AAMCEATZ1302,AAMCETMZ1302,AAMCEUEZ1302,AAMUDATZ1302,AAMUDTMZ1302,AAMUDUEZ1302, AAMSTTDZ1301, AAMISFKZ1301 ,AAMFKTOZ1301)
                                     values (%s , %s , %s , %s , %s , %s , %s , %s , %s ,%s, %s, %s,%s,%s);
-                                    """,(newIds,headerId,fieldName,newMaxVal,newDat,isPk,isExist,date, time, user, date, time, user,statusTD))
+                                    """,(newIds,headerId,fieldName,newMaxVal,newDat,isPk,isExist,date, time, user, date, time, user,statusTD,isFK,isFKto))
                     DB_SQL.commit()
             # else:
             #     removeField = oldDatas[newLen : oldLen]
@@ -379,6 +383,8 @@ def getOneTable(id):
                 maxlen = el['maxlenField']
                 isPk = '1' if el['isPk'] else '0'
                 statTD = el['statTD']
+                isFK = el['isFK']["value"]
+                isFkto = el['isFKto']["value"]
                 
                 
                 cur_sql.execute("""
@@ -393,10 +399,12 @@ def getOneTable(id):
                                 AAMSTTDZ1301 = %s,
                                 AAMUDATZ1302 = %s,
                                 AAMUDTMZ1302 = %s,
-                                AAMUDUEZ1302 = %s
+                                AAMUDUEZ1302 = %s,
+                                AAMISFKZ1301 = %s,
+                                AAMFKTOZ1301 = %s
                             WHERE
                                 AAMFEIDZ1302 = %s
-                            """,(headerId,fieldName,maxlen,daType,isPk,isExist,statTD,date, time, user,fieldId))
+                            """,(headerId,fieldName,maxlen,daType,isPk,isExist,statTD,date, time, user,fieldId, isFK,isFKto))
                 DB_SQL.commit()
  
         return jsonify(0)
@@ -414,7 +422,7 @@ def deleteTable(id):
     DB_SQL.commit()
     return jsonify("Status Change!")
 
-@master_dbds.route('/api/master_dbds/downloads',methods=['POST'])
+@master_dbds.route('/api/master_dbds/post/downloads',methods=['POST'])
 def downloadFile():
     data = request.get_json()
     now = datetime.now()
@@ -440,26 +448,28 @@ def downloadFile():
         return jsonify({"msg":"OKE","fileName":nameFile, "download_url":url})
     # if request.method == "GET":
         
-@master_dbds.route('/api/master_dbds/downloads', methods=['GET'])
-def getDownloadFile():
-    try:
-        fn = request.args.get("param")
-        storePath = "./temp"
-        filePath = os.path.join(storePath, fn)
-        if os.path.exists(filePath):
-            return send_file(filePath, as_attachment=True)
-        else:
-            return jsonify({"msg": f"File '{fn}' not found."}), 404    
-    except Exception as e:
-        return jsonify({"msg": str(e)}), 500
+@master_dbds.route('/api/master_dbds/downloads/<fileName>')
+def getDownloadFile(fileName):
+    print(fileName)#debuging disini!! 
+    return jsonify({"msg":"wait"})
+    # return send_file(download_name=upload.filename, as_attachment=True )
+#     try:
+#         fn = request.args.get("param")
+#         storePath = "./temp"
+#         filePath = os.path.join(storePath, fn)
+#         if os.path.exists(filePath):
+#             return send_file(filePath, as_attachment=True)
+#         else:
+#             return jsonify({"msg": f"File '{fn}' not found."}), 404    
+#     except Exception as e:
+#         return jsonify({"msg": str(e)}), 500
 
-@master_dbds.route('/api/master_dbds/delete/downloads',methods=['GET'])
-def deleteFiles():
-    nameFile = request.args.to_dict()
-    fn = nameFile['param']
-    if os.path.exists(f'./temp/{fn}'):
-        os.remove(f'./temp/{fn}')
-        return jsonify({"msg":f"Deleted {fn}"})
+@master_dbds.route('/api/master_dbds/delete/downloads/<fileName>',methods=['GET'])
+def deleteFiles(fileName):
+    print(fileName)
+    if os.path.exists(f'./temp/{fileName}'):
+        os.remove(f'./temp/{fileName}')
+        return jsonify({"msg":f"Deleted {fileName}"})
     else:
         print("The file does not exist")
         return jsonify({"msg":"The file does not exist"})
