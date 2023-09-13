@@ -1,9 +1,10 @@
 import os
-from flask import Blueprint, jsonify, request , send_file,Response
+from flask import Blueprint, jsonify, request , send_file, Response
 from DB import *
 from Helpers import *
 from datetime import datetime
 from Decorators import *
+
 
 master_dbds = Blueprint('master_dbds',__name__)
 
@@ -441,28 +442,48 @@ def downloadFile():
         local = "http://127.0.0.1:5006/"; 
         dbds_test = "http://172.18.178.242:5017/"; 
         if development:
-            url = f'{local}api/master_dbds/downloads?param={nameFile}'
+            url = f'{local}api/master_dbds/downloads/{nameFile}'
         else:
-            url = f'{dbds_test}api/master_dbds/downloads?param={nameFile}'
+            url = f'{dbds_test}api/master_dbds/downloads/{nameFile}'
         
         return jsonify({"msg":"OKE","fileName":nameFile, "download_url":url})
     # if request.method == "GET":
         
 @master_dbds.route('/api/master_dbds/downloads/<fileName>')
 def getDownloadFile(fileName):
-    print(fileName)#debuging disini!! 
-    return jsonify({"msg":"wait"})
-    # return send_file(download_name=upload.filename, as_attachment=True )
-#     try:
-#         fn = request.args.get("param")
-#         storePath = "./temp"
-#         filePath = os.path.join(storePath, fn)
-#         if os.path.exists(filePath):
-#             return send_file(filePath, as_attachment=True)
-#         else:
-#             return jsonify({"msg": f"File '{fn}' not found."}), 404    
-#     except Exception as e:
-#         return jsonify({"msg": str(e)}), 500
+    try:
+        storePath = "./temp"
+        filePath = os.path.join(storePath, fileName)
+        if os.path.exists(filePath):
+            size = os.path.getsize(filePath)
+            capacity = ''
+            divided = 0
+            if size <= 1099511627776:
+                capacity = 'GB'
+                divided = size / ( 1024 * 1024 * 1024) 
+            if size <= 1073741824:
+                capacity = "MB"
+                divided = size / ( 1024 * 1024 ) 
+            if size <= 1048576:
+                capacity = 'KB'
+                divided = size / 1024 
+            if size <= 1024:
+                capacity = "B"
+                divided = size
+            print(round(divided),capacity)
+            def generate():
+                with open(filePath,'rb') as file:
+                    while True:
+                        chunk = file.read(4096)
+                        if not chunk:
+                            break
+                        yield chunk
+            return Response(generate(),content_type='aplication/octet-stream', headers={"Content-Disposition":f"attachment; filename={fileName}"})
+        else:
+            return jsonify({"msg": f"File '{fileName}' not found."}), 404    
+    except Exception as e:
+        print(str(e))
+        return jsonify({"msg": str(e)}), 500
 
 @master_dbds.route('/api/master_dbds/delete/downloads/<fileName>',methods=['GET'])
 def deleteFiles(fileName):

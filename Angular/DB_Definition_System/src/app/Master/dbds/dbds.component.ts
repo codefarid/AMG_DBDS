@@ -10,6 +10,7 @@ import {
 import { MasterService } from 'src/app/service/master.service';
 import { DropdownLevel } from 'src/app/_model/dropdown-value.model';
 import { Dictionary } from 'src/app/_model/dictionary.model';
+import { GlobalConstants } from 'src/app/service/global'
 
 @Component({
     selector: 'app-dbds',
@@ -17,6 +18,7 @@ import { Dictionary } from 'src/app/_model/dictionary.model';
     styleUrls: ['./dbds.component.scss'],
 })
 export class DBDSComponent implements OnInit {
+    baseURL = GlobalConstants.baseURL + 'api'
     isEdit = false;
     isExistingTable = false
     editExistingTable = false
@@ -1368,63 +1370,41 @@ export class DBDSComponent implements OnInit {
     }
 
     getDownloadQueries(){
+        // window.location.assign(`${this.baseURL}/downloads/${this.createdFileName}`)
         this.api.getDownloadQuerries(this.createdFileName).subscribe((res) => {
             console.log(res)
-            // this.totalStoredQuery = 0
-            // this.downloadStore = []
-            // this.downloadQuery = false
             this.readyToDownloads = false
             this.afterDownloads = true
-            // setTimeout(() => {
-            //     this.api.deleteAfterDownloads(this.createdFileName).subscribe((res) => {
-            //         console.log(res)
-            //         this.createdFileName = ''
-            //         this.messageService.add({
-            //             key: 'Message',
-            //             severity: 'success',
-            //             summary: 'Download success!',
-            //             detail: `downloaded!`,
-            //         });
-            //     },(err) => {
-            //         console.log(err)
-            //     })
-            // }, 500);
         },(err) => {
-            // console.log(err)
+            console.log(err)
             this.messageService.add({
                 key: 'Message',
                 severity: 'error',
                 summary: 'Download Failed!',
                 detail: `Failed, ${err.statusText}!`,
             });
-            // this.totalStoredQuery = 0
-            // this.downloadStore = []
-            // this.downloadQuery = false
-            // this.readyToDownloads = false
-            // setTimeout(() => {
-            //     this.api.deleteAfterDownloads(obj).subscribe((res) => {
-            //         // console.log(res)
-            //         this.createdFileName = ''
-            //     },(err) => {
-            //         // console.log(err)
-            //     })
-            // }, 500);
         })
     }
 
     doneDownloadButton() {
-            setTimeout(() => {
-                    this.api.deleteAfterDownloads(this.createdFileName).subscribe((res) => {
-                        console.log(res)
                         this.createdFileName = ''
                         this.downloadQuery = false
                         this.readyToDownloads = false
                         this.afterDownloads = false
                         this.totalStoredQuery = 0
                         this.downloadStore = []
-                    },(err) => {
-                        console.log(err)
-                    })
-                }, 500);
+            // setTimeout(() => {
+            //         this.api.deleteAfterDownloads(this.createdFileName).subscribe((res) => {
+            //             console.log(res)
+            //             this.createdFileName = ''
+            //             this.downloadQuery = false
+            //             this.readyToDownloads = false
+            //             this.afterDownloads = false
+            //             this.totalStoredQuery = 0
+            //             this.downloadStore = []
+            //         },(err) => {
+            //             console.log(err)
+            //         })
+            //     }, 500);
     }
 }

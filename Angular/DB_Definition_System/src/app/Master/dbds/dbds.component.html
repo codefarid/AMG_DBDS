@@ -301,9 +301,10 @@
         <p><b>{{ text }}</b></p>
       </div>
       <br>
-    <p-button icon="pi pi-file-import" label="Import Query" (onClick)="downloadQueries()" *ngIf="!this.readyToDownloads && !this.afterDownloads"></p-button>
-    <p-button icon="pi pi-download" label="Download" (onClick)="getDownloadQueries()" *ngIf="this.readyToDownloads"></p-button>
-    <p-button icon="pi pi-trash" label="Delete Query" (onClick)="doneDownloadButton()" *ngIf="this.afterDownloads"></p-button>
+    <!-- <p-button icon="pi pi-file-import" label="Import Query" (onClick)="downloadQueries()" *ngIf="!this.readyToDownloads && !this.afterDownloads"></p-button>
+    <p-button icon="pi pi-download" label="Download" (onClick)="getDownloadQueries()" *ngIf="this.readyToDownloads">
+    </p-button> -->
+    <p-button icon="pi pi-trash" label="Delete Query" (onClick)="doneDownloadButton()" ></p-button>
     <!-- <a [href]="downloadLink" [download]="createdFileName" class="p-button p-button-success" *ngIf="readyToDownloads" (onClick)="getDownloadQueries()">  
         <i class="pi pi-file-import"></i> Download
     </a> -->

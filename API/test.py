@@ -229,8 +229,8 @@ from Helpers import *
 #      'name_caption': 'Name'
 #      }] 
 
-a = "EXIMT1001"
-b = "EXIMT101"
+# a = "EXIMT1001"
+# b = "EXIMT101"
 
 # def generatedFieldId(string,header_id):
 #     temp1 = ""
@@ -249,17 +249,35 @@ b = "EXIMT101"
 # print(generatedFieldId("NOPEN",a))
 # print(generateIdTDetail("IDNO", a))
 
-ids = "EXIMT1001"
-a = ''
-b = ''
-c = ''
-for i in range(len(ids)):
-    if i < 4:
-        a += ids[i]
-    elif i < 5:
-        b += ids[i]
-    else:
-        c += ids[i]
-if int(c) > 1000:
-    c = int(c) + 100
-print(a,b,c)
+# ids = "EXIMT1001"
+# a = ''
+# b = ''
+# c = ''
+# for i in range(len(ids)):
+#     if i < 4:
+#         a += ids[i]
+#     elif i < 5:
+#         b += ids[i]
+#     else:
+#         c += ids[i]
+# if int(c) > 1000:
+#     c = int(c) + 100
+# print(a,b,c)
+
+size = 109951162777699
+capacity = ''
+divided = 0
+if size <= 1099511627776:
+    capacity = 'GB'
+    divided = size / ( 1024 * 1024 * 1024) 
+if size <= 1073741824:
+    capacity = "MB"
+    divided = size / ( 1024 * 1024 ) 
+if size <= 1048576:
+    capacity = 'KB'
+    divided = size / 1024 
+if size <= 1024:
+    capacity = "B"
+    divided = size
+    
+print(round(divided),capacity)
