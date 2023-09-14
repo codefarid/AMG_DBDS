@@ -425,9 +425,11 @@ def deleteTable(id):
 
 @master_dbds.route('/api/master_dbds/post/downloads',methods=['POST'])
 def downloadFile():
+    token = request.headers['Authorization']
+    user = check_user(token, amg = True)
     data = request.get_json()
     now = datetime.now()
-    nameFile = f'querries-{len(data)}-{now.strftime("%d%m%y-%H%I")}.sql'
+    nameFile = f'{user}-querries-{len(data)}-{now.strftime("%d%m%y-%H%I")}.sql'
     storePath = "./temp"
     filePath = os.path.join(storePath,nameFile)
     if request.method == "POST":

@@ -30,6 +30,7 @@ export class DBDSComponent implements OnInit {
     previewQuery = false;
     showIsjoin = false;
     displayQuery = '';
+    tempTableName = '';
     displayOneQuery = false;
     downloadQuery = false;
     editMasterTable = false
@@ -39,15 +40,19 @@ export class DBDSComponent implements OnInit {
     getId = '';
     totalRecord = 0 ;
     maxLenValidator = 0;
-    totalStoredQuery = 0
+    totalStoredQuery = 0;
+    progresBarVallue = 0;
     loadSugestionInit = false
 
     selectedCategories: any;
     selectedAplications: any;
     selectedSugestions: any;
     createdFileName:any;
+    createdURLdownload:any;
+    loadingQueries = false;
 
     displayQuerySelect: any[] = []
+    storedTempTableName: any[] = []
     columnNameList: any [] = []
     whereOperandList: any[] = []
     orOperanList: any[] = []
@@ -64,6 +69,8 @@ export class DBDSComponent implements OnInit {
     disableFetchOnly = false
     readyToDownloads = false
     afterDownloads = false
+    waitForDelete = false
+    finishProgress = false
     fkey!: any[];
     editTableDetail: any[] = [];
     fieldIdRemoved: any[] = [];
@@ -457,6 +464,7 @@ export class DBDSComponent implements OnInit {
         }
         // console.log(this.dropDownJoinTable)
     }
+
     onSelectFKDd(val:any) {
         console.log(val)
         this.foreignkeySelectedTable(val)
@@ -1080,8 +1088,10 @@ export class DBDSComponent implements OnInit {
         this.displayQuerySelect = []
         this.modalTitle = 'Generated Queries';
         this.displayOneQuery = true;
+        this.loadingQueries = true;
         this.api.getOneTable(data.id).subscribe(
             (res) => {
+                this.loadingQueries = false
                 // console.log(res)
                 this.displayQueryAfter = res.createdQuery.split('?');
                 for (let i = 1; i < this.displayQueryAfter.length - 3; i++) {
@@ -1120,6 +1130,8 @@ export class DBDSComponent implements OnInit {
                     {"label":"LIKE","name":"LIKE"}
                 ]
                 this.selectQueryPlayGround()
+                this.tempTableName = res.table_data[0].caption_table
+                console.log(this.tempTableName)
             },
             (err) => {
                 // console.log(err);
@@ -1339,11 +1351,30 @@ export class DBDSComponent implements OnInit {
         }
     }
 
-    sendToDownloadPage(data:any) {
-        data.map((el:any) => {
-            this.downloadStore.push(el)
-        })
-        this.totalStoredQuery += 1
+    sendToDownloadPage(data:any,type:any) {
+        // console.log(`Tipe : ${type} for ${this.tempTableName}, don't forget to delete tempTable storeTempTable afted finished download`)
+        let find = this.storedTempTableName.find((item) => item == `${type} for ${this.tempTableName}`)
+        if(!find) {
+            this.storedTempTableName.push(`${type} for ${this.tempTableName}`)
+            let comentTable = `-- ${type} for ${this.tempTableName} --`
+            this.downloadStore.push(comentTable)
+            data.map((el:any) => {
+                this.downloadStore.push(el)
+            })
+            this.totalStoredQuery += 1
+            this.displayOneQuery = false
+        } else {
+            console.log(find," >> Ditemukan")
+            console.log("You Have Sent this query before!");
+            this.messageService.add({
+                key: 'Message',
+                severity: 'error',
+                summary: 'Query Already Exist!',
+                detail: 'You Have Sent this query before!',
+            });
+            this.displayOneQuery = true
+            return
+        }
     }
 
     downloadQueries(){
@@ -1361,6 +1392,7 @@ export class DBDSComponent implements OnInit {
             }
             this.createdFileName = res.fileName
             this.readyToDownloads = true
+            this.createdURLdownload = res.download_url
             // this.totalStoredQuery = 0
             // this.downloadStore = []
         },(err) => {
@@ -1370,41 +1402,54 @@ export class DBDSComponent implements OnInit {
     }
 
     getDownloadQueries(){
-        // window.location.assign(`${this.baseURL}/downloads/${this.createdFileName}`)
-        this.api.getDownloadQuerries(this.createdFileName).subscribe((res) => {
-            console.log(res)
             this.readyToDownloads = false
+            this.finishProgress = false
             this.afterDownloads = true
-        },(err) => {
-            console.log(err)
-            this.messageService.add({
-                key: 'Message',
-                severity: 'error',
-                summary: 'Download Failed!',
-                detail: `Failed, ${err.statusText}!`,
-            });
-        })
+            this.waitForDelete = true
+            let interval = setInterval(() => {
+            this.progresBarVallue = this.progresBarVallue + Math.floor(Math.random() * 15) + 1;
+            if (this.progresBarVallue >= 100) {
+                this.progresBarVallue = 100;
+                setTimeout(() => {
+                    clearInterval(interval);
+                    this.doneDownloadButton()
+                }, 1000);
+                }
+            }, 150);
+        // this.api.getDownloadQuerries(this.createdFileName).subscribe((res) => {
+        //     console.log(res)
+        //     this.readyToDownloads = false
+        //     this.afterDownloads = true
+        // },(err) => {
+        //     console.log(err)
+        //     this.messageService.add({
+        //         key: 'Message',
+        //         severity: 'error',
+        //         summary: 'Download Failed!',
+        //         detail: `Failed, ${err.statusText}!`,
+        //     });
+        // })
     }
 
     doneDownloadButton() {
+                        this.finishProgress = true
+            setTimeout(() => {
+                    this.api.deleteAfterDownloads(this.createdFileName).subscribe((res) => {
+                        console.log(res)
                         this.createdFileName = ''
                         this.downloadQuery = false
                         this.readyToDownloads = false
                         this.afterDownloads = false
                         this.totalStoredQuery = 0
+                        this.progresBarVallue = 0
                         this.downloadStore = []
-            // setTimeout(() => {
-            //         this.api.deleteAfterDownloads(this.createdFileName).subscribe((res) => {
-            //             console.log(res)
-            //             this.createdFileName = ''
-            //             this.downloadQuery = false
-            //             this.readyToDownloads = false
-            //             this.afterDownloads = false
-            //             this.totalStoredQuery = 0
-            //             this.downloadStore = []
-            //         },(err) => {
-            //             console.log(err)
-            //         })
-            //     }, 500);
+                        this.tempTableName = ''
+                        this.storedTempTableName = []
+                        this.waitForDelete = false
+                        this.finishProgress = false
+                    },(err) => {
+                        console.log(err)
+                    })
+                }, 2500);
     }
 }

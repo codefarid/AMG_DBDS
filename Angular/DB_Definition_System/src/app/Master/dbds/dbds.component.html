@@ -141,21 +141,27 @@
 <p-dialog [header]="modalTitle" [modal]="true" [(visible)]="displayOneQuery"  [style]="{maxWidth: '65vw'}">
       <p-tabView class="justify-content-center">
         <p-tabPanel header="Select Query">
-            <div *ngFor="let i of this.displayQuerySelect">
-                <p><b>{{i}}</b></p>
+            <p-progressBar mode="indeterminate" [style]="{'height': '6px'}" *ngIf="this.loadingQueries"></p-progressBar>
+            <div id="QueryContentSelect" *ngIf="!this.loadingQueries">
+                <div *ngFor="let i of this.displayQuerySelect">
+                    <p><b>{{i}}</b></p>
+                </div>
             </div>
             <br>
             <!-- <p-button icon="pi pi-replay" label="modified this Query" (onClick)="settingsQueryPlayGround()"></p-button> -->
             <br>
-            <p-button icon="pi pi-send" label="Send Query to Store Page" (onClick)="sendToDownloadPage(this.displayQuerySelect);this.displayOneQuery = false"></p-button>
+            <p-button icon="pi pi-send" label="Send Query to Store Page" (onClick)="sendToDownloadPage(this.displayQuerySelect,'Select Query')"></p-button>
             
         </p-tabPanel>
         <p-tabPanel header="Created Query">
-            <div *ngFor="let text of displayQueryAfter">
-                <p><b>{{ text }}</b></p>
-              </div>
+            <p-progressBar mode="indeterminate" [style]="{'height': '6px'}" *ngIf="this.loadingQueries"></p-progressBar>
+            <div id="QueryContentCreate" *ngIf="!this.loadingQueries">
+                <div *ngFor="let text of displayQueryAfter">
+                    <p><b>{{ text }}</b></p>
+                </div>
+            </div>
             <br>
-            <p-button icon="pi pi-send" label="Send Query to Store Page" (onClick)="sendToDownloadPage(this.displayQueryAfter);this.displayOneQuery = false"></p-button>
+            <p-button icon="pi pi-send" label="Send Query to Store Page" (onClick)="sendToDownloadPage(this.displayQueryAfter,'Create Query')"></p-button>
             
         </p-tabPanel>
         <p-tabPanel header="Costumized Select Query" class="grid">
@@ -296,15 +302,34 @@
         
     </p-tabView>
 </p-dialog>
-<p-dialog header="Stored Querries" [(visible)]="downloadQuery" [breakpoints]="{'960px': '75vw'}" [style]="{width: '65vw'}" [resizable]="false">
-    <div *ngFor="let text of downloadStore">
-        <p><b>{{ text }}</b></p>
-      </div>
+<p-dialog header="Stored Querries" class="justify-content-center align-center" [(visible)]="downloadQuery" [breakpoints]="{'960px': '75vw'}" [style]="{width: '50vw'}" [resizable]="false">
+    <div id="LoadingBar" >
+        <p-progressBar [value]="progresBarVallue" *ngIf="this.waitForDelete && !this.finishProgress"></p-progressBar>
+    </div>
+    <div id="QueryContent" *ngIf="!this.waitForDelete">
+        <div *ngFor="let text of downloadStore">
+            <p><b>{{ text }}</b></p>
+          </div>
+    </div>
       <br>
-    <!-- <p-button icon="pi pi-file-import" label="Import Query" (onClick)="downloadQueries()" *ngIf="!this.readyToDownloads && !this.afterDownloads"></p-button>
-    <p-button icon="pi pi-download" label="Download" (onClick)="getDownloadQueries()" *ngIf="this.readyToDownloads">
+    <div id="callCheckMark" class="flex justify-content-center" *ngIf="this.finishProgress" >
+        <img class="flex align-items-center justify-content-center" src="assets/icon_apps/checkMark.svg" alt="checkMark" width="200" height="200">
+    </div>
+    <div id="textMsG" class="flex justify-content-center" *ngIf="this.finishProgress" >
+        <h4 class="mt-4 flex align-items-center justify-content-center">
+            <b>Progress Finished!</b>
+        </h4>
+    </div>
+    <div id="ButtonSection" *ngIf="!this.finishProgress">
+        <p-button icon="pi pi-file-import" label="Import Query" (onClick)="downloadQueries()" *ngIf="!this.readyToDownloads && !this.afterDownloads"></p-button>
+        <a href="{{this.createdURLdownload}}" *ngIf="this.readyToDownloads">
+            <p-button icon="pi pi-download" label="Download" (onClick)="getDownloadQueries()" *ngIf="this.readyToDownloads">
+            </p-button>
+        </a>
+        <!-- <p-button icon="pi pi-trash" label="Delete Query" (onClick)="doneDownloadButton()" *ngIf="this.afterDownloads"></p-button> -->
+    </div>
+    <!-- <p-button icon="pi pi-download" label="Download" (onClick)="getDownloadQueries()" *ngIf="this.readyToDownloads">
     </p-button> -->
-    <p-button icon="pi pi-trash" label="Delete Query" (onClick)="doneDownloadButton()" ></p-button>
     <!-- <a [href]="downloadLink" [download]="createdFileName" class="p-button p-button-success" *ngIf="readyToDownloads" (onClick)="getDownloadQueries()">  
         <i class="pi pi-file-import"></i> Download
     </a> -->
