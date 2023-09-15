@@ -1,4 +1,5 @@
 from DB import *
+import re
 
 def recreateObj(obj):
     wy = [data for data in obj['field'] if data['statTD'] == 'active']
@@ -72,128 +73,95 @@ def detectStatTD(obj,headerId):
     
     return emberQuery
 
+def getTableNameFromDB(first,second):
+    db = ""
+    if test == True:
+        db = "TestAMGAPPS"
+    else:
+        db = "AMGAPPS"
+        
+    cur_sql.execute(f"""
+                    use {db}
+                    SELECT TABLE_NAME
+                    FROM INFORMATION_SCHEMA.TABLES
+                    WHERE TABLE_TYPE='BASE TABLE'
+                    order by TABLE_NAME ASC
+                    """)
+    t = []
+    for row in cur_sql:
+        t.append(dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])))
+    # print(t,len(t))
+    storeList = []    
+    for i in t:
+        if first + second in i["TABLE_NAME"]:
+            storeList.append(i["TABLE_NAME"])
+            # print(i["TABLE_NAME"]," >  YHES!!")
+    if len(storeList) > 0:
+        # print(storeList)
+        def extract_number(s):
+            return int(re.search(r'\d+',s).group())
+        def get_number_only(s):
+            return int(''.join(filter(str.isdigit,s)))
+        
+        hasil = max(storeList, key=lambda x:(x.startswith(f'{first}{second}') and x[len(f'{first}{second}'):].isdigit(),extract_number(x)))
+        number_aja = get_number_only(hasil) 
+        return hasil , number_aja
+    else:
+        return None
+    
+def getTableNameFromInternal(first,second):
+    cur_sql.execute("""
+                    use TestAMGAPPS
+                    select AAMTBIDZ1302 as 'TABLE_NAME' from AAMTBHAZ1301 
+                    """)
+    t = []
+    for row in cur_sql:
+        t.append(dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])))
+    # print(t,len(t))
+    storeList = []    
+    for i in t:
+        if first + second in i["TABLE_NAME"]:
+            storeList.append(i["TABLE_NAME"])
+            # print(i["TABLE_NAME"]," >  YHES!!")
+    if len(storeList) > 0:
+        # print(storeList)
+        def extract_number(s):
+            return int(re.search(r'\d+',s).group())
+        def get_number_only(s):
+            return int(''.join(filter(str.isdigit,s)))
+        
+        hasil = max(storeList, key=lambda x:(x.startswith(f'{first}{second}') and x[len(f'{first}{second}'):].isdigit(),extract_number(x)))
+        number_aja = get_number_only(hasil) 
+        return hasil , number_aja
+    else:
+        return None
+
 def generateIdHeader(obj):
     firstStr = obj['appName']['value']
-   
     midStr = obj['isMaster']['key'][0]
     
-    kategori = obj['isMaster']['value']
-    appName = obj['appName']['text']
+    higestValueFromDB = getTableNameFromDB(firstStr,midStr)
+    higestValueFromInternal = getTableNameFromInternal(firstStr,midStr)
     
-    result = firstStr + midStr
+    a = higestValueFromDB[1] if higestValueFromDB != None else 0
+    b = higestValueFromInternal[1] if higestValueFromInternal != None else 0
     
-    
-    if obj['joinTo'] and obj['joinTo'] != 'None':
-        a = obj['joinTo'][0:-1]
-        b = int(obj['joinTo'][-1]) + 1
-        result = a + str(b)
-        cur_sql.execute("""
-                        select 
-                        AAMTBIDZ1302 as table_id ,  
-                            AAMCPTBZ1302 as caption_table,
-                            AAMALIDZ1302 as aplication_id,
-                            AAMALNMZ1302 as aplication_name,
-                            AAMKTAPZ1302 as kategori_app
-                        from AAMTBHAZ1301
-                        """)
-        checkData = []
-        for row in cur_sql:
-            checkData.append(dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])))
-        # print(checkData)
-        for el in checkData:
-            if el['table_id'] == result:
-                reGenerate = el['table_id'][0:-1] + str(int(el['table_id'][-1]) + 1)
-                result = reGenerate
-                return result
-        return result
-            
+        
+    if obj['joinTo'] and obj['joinTo'] != None:
+        def get_number_only(s):
+            return int(''.join(filter(str.isdigit,s)))
+        getNumber = get_number_only(obj['joinTo'])
+        print(getNumber + 1)
+        return f'{firstStr}{midStr}{getNumber + 1}'
     else:
-        cur_sql.execute("""
-                        Select
-                            AAMTBIDZ1302 as table_id
-                        From AAMTBHAZ1301
-                        Where AAMALNMZ1302 = '{appName}' and AAMKTAPZ1302 = '{kategori}'
-                        order by len(AAMTBIDZ1302) asc
-                        """.format(appName=appName,kategori=kategori))
-        t = []
-        for row in cur_sql:
-            t.append(dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])))
-            
-        # print(t[-1],'TTT')        
-        # cur_sql.execute("""
-        #                 Select TOP 1
-        #                     AAMTBIDZ1302 as table_id ,  
-        #                     AAMCPTBZ1302 as caption_table,
-        #                     AAMALIDZ1302 as aplication_id,
-        #                     AAMALNMZ1302 as aplication_name,
-        #                     AAMKTAPZ1302 as kategori_app
-        #                 From AAMTBHAZ1301
-        #                 Where AAMALNMZ1302 = '{appName}' and AAMKTAPZ1302 = '{kategori}'
-        #                 ORDER by AAMUDTMZ1302 DESC
-        #                 """.format(appName=appName,kategori=kategori))
-        # k = cur_sql.fetchone()
-        print(t)
-        if len(t) > 0:
-            k = t[-1]["table_id"]
+        lastStr = 0
+        if a > b:
+            lastStr = a
+        elif a < b:
+            lastStr = b
         else:
-            k = None
-        if k:
-            print(k)
-            ids = k
-            temp1 = ''
-            temp2 = ''
-            temp3 = ''
-            for i in range(len(ids)):
-                if i < 4:
-                    temp1 += ids[i]
-                elif i < 5:
-                    temp2 += ids[i]
-                else:
-                    temp3 += ids[i]
-            temp4 = int(temp3) + 1
-            temp5 = [temp1,temp2,str(temp4)]
-            # print("".join(temp5),' >>>>')
-            # print(int(temp5) + 10)
-            # if len(ids) <= 6:
-            #     mid = int(ids[3:5]) + 10
-            #     last = 1
-            #     result += str(mid) + str(last)
-            #     return result
-            # elif len(ids) <= 8:
-            #     mid = int(ids[5:7]) + 10
-            #     last = 1
-            #     result += str(mid) + str(last)
-            #     return result
-            return "".join(temp5)
-        else:
-            getMidNumb = str(10)
-            getLastNumb = str(1)
-        
-        
-            result += getMidNumb + getLastNumb
-        # check duplicated 
-        cur_sql.execute("""
-                        select 
-                        AAMTBIDZ1302 as table_id ,  
-                            AAMCPTBZ1302 as caption_table,
-                            AAMALIDZ1302 as aplication_id,
-                            AAMALNMZ1302 as aplication_name,
-                            AAMKTAPZ1302 as kategori_app
-                        from AAMTBHAZ1301
-                        """)
-        checkData = []
-        for row in cur_sql:
-            checkData.append(dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])))
-        if checkData:
-            for el in checkData:
-                if el['table_id'] == result:
-                    reGenerate = el['table_id'][0:-1] + str(int(el['table_id'][-1]) + 1)
-                    result = reGenerate
-                    return result
-                else:
-                    return result
-        else:
-            return result
+            lastStr = a
+        return f'{firstStr}{midStr}{lastStr + 101}'
 
 def generateIdTDetail(input, headerId):
     temp1 = ""

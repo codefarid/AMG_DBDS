@@ -14,14 +14,7 @@
                 </div>
                 <div class="col-2">
                     <span class="p-float-label">
-                        <p-dropdown class="scalein animation-duration-500" [options]="tableOptions" optionLabel="tableName" optionValue="headerId" (onChange)="onChangeTable($event)"  placeholder="Select a Table" id="getTable" [group]="true">
-                            <ng-template let-group pTemplate="group">
-                                <div class="flex align-items-center">
-                                    <!-- <img [class]="'mr-2 pi pi-check'" style="width: 20px" /> -->
-                                    <b><span class="pi pi-check"> {{ group.label }}</span></b>
-                                </div>
-                            </ng-template>
-                        </p-dropdown>
+                        <p-dropdown class="scalein animation-duration-500" [options]="tableOptions" optionLabel="label" optionValue="value" (onChange)="onChangeTable($event)"  placeholder="Select a Table" id="getTable"></p-dropdown>
                         <label for="getTable">Select a Table</label>
                     </span>
                 </div>

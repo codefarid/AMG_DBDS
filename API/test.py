@@ -2,282 +2,141 @@ from DB import *
 import os
 import json
 import pprint
+import re
 
 from collections import defaultdict
-from Helpers import *
+# from Helpers import *
 
+data = {
+    "tableName": "sss",
+    "extTableName": None,
+    "isMaster": {
+        "key": "Transaction",
+        "status": "active",
+        "value": "2"
+    },
+    "extName": None,
+    "appName": {
+        "text": "EXIM SYSTEM",
+        "value": "AA"
+    },
+    "joinTo": "",
+    "status": None,
+    "isExisted": None,
+    "field": [
+        {
+            "fieldNameEdit": "",
+            "extFname": "",
+            "fieldName": {
+                "key": "Valuta",
+                "status": "active",
+                "value": "VALT"
+            },
+            "datTypeField": "varchar",
+            "maxlenField": 50,
+            "isPk": True,
+            "isFK": "",
+            "isFKto": "",
+            "statTD": "active"
+        }
+    ]
+}
 
-
-# dataSB = [{
-#             "key": '0',
-#             "label": 'Document Purchase 2',
-#             "data": 'DOMSM201',
-#             "icon": 'pi pi-fw pi-table',
-#             "children": [
-#                 {
-#                     "key": '0-0',
-#                     "label": 'Field Key',
-#                     "data": 'DFFKM201',
-#                     "icon": 'pi pi-fw pi-server'
-#                 },
-#                 {
-#                     "key": '0-1',
-#                     "label": 'Home',
-#                     "data": 'QCDTM201',
-#                     "icon": 'pi pi-fw pi-server'
-#                 }
-#             ]
-#         },
-#           ]
-
-# cur_sql.execute("""
-#                 SELECT    
-#                 AAMTBHAZ1301.AAMTBIDZ1302 AS table_id,
-#                 AAMTBHAZ1301.AAMCPTBZ1302 AS caption_table,
-#                 AAMTBHAZ1301.AAMALNMZ1302 AS aplication_name,
-#                 AAMTBDTZ1301.AAMFEIDZ1302 AS field_id,
-#                 AAMTBDTZ1301.AAMNMZ1302 AS name_caption
-#                 FROM
-#                 AAMTBHAZ1301
-#                 INNER JOIN 
-#                 AAMTBDTZ1301 ON AAMTBHAZ1301.AAMTBIDZ1302 = AAMTBDTZ1301.AAMHAIDZ1302
-#                 where AAMTHSTZ1302 = 'active';
-#                 """)
-# rawData = []
-# for row in cur_sql:
-#     rawData.append(dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])))
-# counter = 0
-# counter2= 0
-# dataSB = []
-# for el in rawData:
-#     existingItem = next((item for item in dataSB if item["data"] == el["table_id"] and item["label"] == el["caption_table"]), None)
-#     # print(existingItem)
-#     if existingItem:
-#         counter2 += 1
-#         secNum = int(existingItem["children"][-1]["key"].split("-")[1])
-#         existingItem['children'].append({
-#                     "key": f'{existingItem["key"]}-{secNum + 1}',
-#                     "label": el['name_caption'],
-#                     "data": el['field_id'],
-#                     "icon": 'pi pi-fw pi-server'
-#                 })
-#     else:
-#         counter2 += 1
-#         dataSB.append({
-#             "key": f'{counter}',
-#             "label": el['caption_table'],
-#             "data": el['table_id'],
-#             "icon": 'pi pi-fw pi-table',
-#             "app": el['aplication_name'],
-#             "children": [{
-#                     "key": f'{counter}-{0}',
-#                     "label": el['name_caption'],
-#                     "data": el['field_id'],
-#                     "icon": 'pi pi-fw pi-server'
-#                 }]})
-#         # counter2 = 0
-#     counter += 1
-#     counter2 = 0
-
-# pprint.pprint(dataSB)
-# b1 = [
-#     {'document_id': '600006519', 'posting_date': '08/09/2023', 'nama_barang': 'CSB LOR SIZE 610x47.5x85', 'user': 'santoso', 'status': '1'},
-#     {'document_id': '600006521', 'posting_date': '08/09/2023', 'nama_barang': 'PLYWOOD BACK SIDE 15 MM 520X1000 MM', 'user': 'santoso', 'status': '1'},
-#     {'document_id': '600006519', 'posting_date': '08/09/2023', 'nama_barang': 'PLYWOOD BOTTOM SIDE 15 MM 710X850 MM', 'user': 'santoso', 'status': '1'},
-#     {'document_id': '600006522', 'posting_date': '09/09/2023', 'nama_barang': 'ACSB LOR SIZE 610x47.5x85', 'user': 'santoso', 'status': '1'},
-#     {'document_id': '600006523', 'posting_date': '09/09/2023', 'nama_barang': 'APLYWOOD BACK SIDE 15 MM 520X1000 MM', 'user': 'santoso', 'status': '1'},
-#     {'document_id': '600006522', 'posting_date': '09/09/2023', 'nama_barang': 'APLYWOOD BOTTOM SIDE 15 MM 710X850 MM', 'user': 'santoso', 'status': '1'}
-# ]
-
-# # result = [
-# #     {   
-# #         'posting_date': '08/09/2023',
-# #         "document_id": "600006519",
-# #         "item_name": [
-# #             "CSB LOR SIZE 610x47.5x85",
-# #             "PLYWOOD BOTTOM SIDE 15 MM 710X850 MM"
-# #         ], 
-# #         'user': 'santoso', 
-# #         'status': '1'
-# #     },
-# #     {   
-# #         'posting_date': '08/09/2023',
-# #         "document_id": "600006521",
-# #         "item_name": [
-# #             "PLYWOOD BACK SIDE 15 MM 520X1000 MM"
-# #         ], 
-# #         'user': 'santoso', 
-# #         'status': '1'
-# #     },
-# #     {   
-# #         'posting_date': '09/09/2023',
-# #         "document_id": "600006525",
-# #         "item_name": [
-# #             "SP - Catridge filter 10 in 1 micron/Z92",
-# #             "PLYWOOD BOTTOM SIDE 15 MM 520X1000 MM"
-# #         ], 
-# #         'user': 'santoso', 
-# #         'status': '1'
-# #     },
-# #     {   
-# #         'posting_date': '09/09/2023',
-# #         "document_id": "600006523",
-# #         "item_name": [
-# #             "TISSUE ROL NICE/Z92",
-# #             "Mouse"
-# #         ], 
-# #         'user': 'santoso', 
-# #         'status': '1'
-# #     }
-# # ]
-# result = []
-# for el in b1:
-#     existingItem = next((item for item in result if item["posting_date"] == el["posting_date"] and item["user"] == el["user"] and item["status"] == el["status"]), None)
-#     # print(existingItem)
-#     if existingItem:
-#         existingDocument = next((doc for doc in existingItem["items"] if doc["document_id"] == el["document_id"]), None)
-#         if existingDocument:
-#             existingDocument["item_name"].append(el["nama_barang"])
-#         else:
-#             existingItem["items"].append({
-#                 "document_id": el["document_id"],
-#                 "item_name": [el["nama_barang"]],
-#             })
-#     else:
-#         result.append({
-#             "posting_date": el["posting_date"],
-#             "user": el["user"],
-#             "status": el["status"],
-#             "items": [
-#                 {
-#                     "document_id": el["document_id"],
-#                     "item_name": [el["nama_barang"]],
-#                 }
-#             ],
-#         })
-
-# # pprint.pprint(result)
-# # print(rawData)
-# [{
-#     'table_id': 'DOMSM201',
-#     'caption_table': 'Document Purchase 2', 
-#     'field_id': 'DFFKM201', 
-#     'header_id': 'DOMSM201', 
-#     'name_caption': 'Field Key'
-#     }, 
-#  {
-#      'table_id': 'DOMSM201',
-#      'caption_table': 'Document Purchase 2',
-#      'field_id': 'QCDTM201', 
-#      'header_id': 'DOMSM201', 
-#      'name_caption': 'Quality Control Date'
-#      },
-#  {
-#      'table_id': 'DOMSM202', 
-#      'caption_table': 'Purchase Document',
-#      'field_id': 'DCNAM202', 
-#      'header_id': 'DOMSM202',
-#      'name_caption': 'Document Name'
-#      }, 
-#  {
-#      'table_id': 'DOMSM202',
-#      'caption_table': 'Purchase Document', 
-#      'field_id': 'PDNAM201', 
-#      'header_id': 'DOMSM202',
-#      'name_caption': 'Purchase Discount Name'
-#      }, 
-#  {
-#      'table_id': 'DOMSM202',
-#      'caption_table': 'Purchase Document',
-#      'field_id': 'PRDNM202', 
-#      'header_id': 'DOMSM202',
-#      'name_caption': 'Purchase Request No'
-#      }, 
-#  {
-#      'table_id': 'DOMSM401',
-#      'caption_table': 'Document Purchase 2',
-#      'field_id': 'DFFKM401',
-#      'header_id': 'DOMSM401',
-#      'name_caption': 'Field Key'
-#      }, 
-#  {
-#      'table_id': 'DOMSM401',
-#      'caption_table': 'Document Purchase 2',
-#      'field_id': 'QCDTM401',
-#      'header_id': 'DOMSM401',
-#      'name_caption': 'Quality Control Date'
-#      }, 
-#  {
-#      'table_id': 'EXIMM101',
-#      'caption_table': 'Exim',
-#      'field_id': 'CAPTM101',
-#      'header_id': 'EXIMM101',
-#      'name_caption': 'Calibration Periode Type'
-#     }, 
-#  {
-#      'table_id': 'EXIMM101',
-#      'caption_table': 'Exim', 
-#      'field_id': 'DCCOM101',
-#      'header_id': 'EXIMM101',
-#      'name_caption': 'Document Code'
-#      }, 
-#  {
-#      'table_id': 'EXIMM101',
-#      'caption_table': 'Exim',
-#      'field_id': 'NAMEM101',
-#      'header_id': 'EXIMM101',
-#      'name_caption': 'Name'
-#      }] 
-
-# a = "EXIMT1001"
-# b = "EXIMT101"
-
-# def generatedFieldId(string,header_id):
-#     temp1 = ""
-#     temp2 = ""
-#     temp4 = ""
-#     for i in range(len(header_id)):
-#         if i < 4:
-#             temp1 += header_id[i]
-#         elif i < 5:
-#             temp4 += header_id[i]
-#         else:
-#             temp2 += header_id[i]
-#     temp3 = [temp1, temp4, temp2]
-#     result = f"{string}{temp3[1]}{temp3[2]}"
-#     return result
-# print(generatedFieldId("NOPEN",a))
-# print(generateIdTDetail("IDNO", a))
-
-# ids = "EXIMT1001"
-# a = ''
-# b = ''
-# c = ''
-# for i in range(len(ids)):
-#     if i < 4:
-#         a += ids[i]
-#     elif i < 5:
-#         b += ids[i]
-#     else:
-#         c += ids[i]
-# if int(c) > 1000:
-#     c = int(c) + 100
-# print(a,b,c)
-
-size = 109951162777699
-capacity = ''
-divided = 0
-if size <= 1099511627776:
-    capacity = 'GB'
-    divided = size / ( 1024 * 1024 * 1024) 
-if size <= 1073741824:
-    capacity = "MB"
-    divided = size / ( 1024 * 1024 ) 
-if size <= 1048576:
-    capacity = 'KB'
-    divided = size / 1024 
-if size <= 1024:
-    capacity = "B"
-    divided = size
+def getTableNameFromDB(first,second):
+    db = ""
+    if test == True:
+        db = "TestAMGAPPS"
+    else:
+        db = "AMGAPPS"
+        
+    cur_sql.execute(f"""
+                    use {db}
+                    SELECT TABLE_NAME
+                    FROM INFORMATION_SCHEMA.TABLES
+                    WHERE TABLE_TYPE='BASE TABLE'
+                    order by TABLE_NAME ASC
+                    """)
+    t = []
+    for row in cur_sql:
+        t.append(dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])))
+    # print(t,len(t))
+    storeList = []    
+    for i in t:
+        if first + second in i["TABLE_NAME"]:
+            storeList.append(i["TABLE_NAME"])
+            # print(i["TABLE_NAME"]," >  YHES!!")
+    if len(storeList) > 0:
+        # print(storeList)
+        def extract_number(s):
+            return int(re.search(r'\d+',s).group())
+        def get_number_only(s):
+            return int(''.join(filter(str.isdigit,s)))
+        
+        hasil = max(storeList, key=lambda x:(x.startswith(f'{first}{second}') and x[len(f'{first}{second}'):].isdigit(),extract_number(x)))
+        number_aja = get_number_only(hasil) 
+        return hasil , number_aja
+    else:
+        return None
     
-print(round(divided),capacity)
+def getTableNameFromInternal(first,second):
+    cur_sql.execute("""
+                    use TestAMGAPPS
+                    select AAMTBIDZ1302 as 'TABLE_NAME' from AAMTBHAZ1301 
+                    """)
+    t = []
+    for row in cur_sql:
+        t.append(dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])))
+    # print(t,len(t))
+    storeList = []    
+    for i in t:
+        if first + second in i["TABLE_NAME"]:
+            storeList.append(i["TABLE_NAME"])
+            # print(i["TABLE_NAME"]," >  YHES!!")
+    if len(storeList) > 0:
+        # print(storeList)
+        def extract_number(s):
+            return int(re.search(r'\d+',s).group())
+        def get_number_only(s):
+            return int(''.join(filter(str.isdigit,s)))
+        
+        hasil = max(storeList, key=lambda x:(x.startswith(f'{first}{second}') and x[len(f'{first}{second}'):].isdigit(),extract_number(x)))
+        number_aja = get_number_only(hasil) 
+        return hasil , number_aja
+    else:
+        return None
+
+def generateIdHeader(obj):
+    firstStr = obj['appName']['value']
+    midStr = obj['isMaster']['key'][0]
+    
+    higestValueFromDB = getTableNameFromDB(firstStr,midStr)
+    higestValueFromInternal = getTableNameFromInternal(firstStr,midStr)
+    
+    a = higestValueFromDB[1] if higestValueFromDB != None else 0
+    b = higestValueFromInternal[1] if higestValueFromInternal != None else 0
+    
+        
+    if obj['joinTo'] and obj['joinTo'] != None:
+        def get_number_only(s):
+            return int(''.join(filter(str.isdigit,s)))
+        getNumber = get_number_only(obj['joinTo'])
+        print(getNumber + 1)
+        return f'{firstStr}{midStr}{getNumber + 1}'
+    else:
+        lastStr = 0
+        if a > b:
+            lastStr = a
+        elif a < b:
+            lastStr = b
+        else:
+            lastStr = a
+        return f'{firstStr}{midStr}{lastStr + 101}'
+        
+    
+   
+print(generateIdHeader(data))
+
+# ow = "EXIMT901"
+
+# if "EXIM" in ow:
+#     print("YHES")

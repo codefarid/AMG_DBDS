@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { AuthService } from '../service/auth.service';
 import { LayoutService } from "./service/app.layout.service";
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
     selector: 'app-topbar',
@@ -9,9 +10,11 @@ import { LayoutService } from "./service/app.layout.service";
 })
 export class AppTopBarComponent {
 
+    jwtHelper = new JwtHelperService()
     appName = 'DB Definition System'
     items!: MenuItem[];
     user: any
+    
 
     @ViewChild('menubutton') menuButton!: ElementRef;
 
@@ -25,8 +28,10 @@ export class AppTopBarComponent {
         private authService: AuthService
     ){
         // this.user = authService.user
-        // console.log(authService)
-        this.user = "Santoso"
+        const token = localStorage.getItem("token")
+        const decode = this.jwtHelper.decodeToken(token)
+        this.user = decode.name
+        // this.user = "Santoso"
     }
 
     logout(){

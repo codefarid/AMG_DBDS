@@ -123,4 +123,8 @@ export class MasterService {
   deleteAfterDownloads(fileName:any): Observable<any> {
     return this.http.get(`${this.baseURL}/master_dbds/delete/downloads/${fileName}`,{headers:this.httpHeaders})
   }
+
+  getFilteringApp(appName:any):Observable<any> {
+    return this.http.get(`${this.baseURL}/master_dbds/${appName}`,{headers:this.httpHeaders})
+  }
 }

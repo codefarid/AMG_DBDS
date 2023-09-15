@@ -49,6 +49,7 @@ export class DBDSComponent implements OnInit {
     selectedSugestions: any;
     createdFileName:any;
     createdURLdownload:any;
+    filteredApplications:any;
     loadingQueries = false;
 
     displayQuerySelect: any[] = []
@@ -77,6 +78,7 @@ export class DBDSComponent implements OnInit {
     fkeyStore: any[] = [];
     downloadStore: any[] = [];
 
+
     dropDownJoinTable: DropdownLevel[] = [];
     dropDownTextAndValue: DropdownLevel[] = []
     dropDownIsFKto: any[] = [];
@@ -97,7 +99,6 @@ export class DBDSComponent implements OnInit {
 
     dataType: any[] = [];
 
-    
     lastTableLazyLoadEvent! : LazyLoadEvent;
     inputForm!: FormGroup;
     inputForm2!: FormGroup;
@@ -167,25 +168,15 @@ export class DBDSComponent implements OnInit {
     }
  
     joinTableSelected($event:any){
-        // console.log($event)
         let a = $event.text
         this.selectedAplications = a
-        // console.log(a,"????")
         this.dropDownJoinTable.unshift({
             text: 'No',
             value: '',
         });
         this.dropDownJoinTable = this.dropDownTextAndValue.filter((el:any) => el.app == a)
         this.dropDownIsFKto = this.dropDownTextAndValue.filter((el:any) => el.app == a)
-        // setTimeout(() => {
-            // this.api.getMaterialInput().subscribe((data: any ) => {
-            //     // console.log(this.dropDownJoinTable);
-                
-            // },(error) => {
-            //     console.log(error)
-            // })
-        // }, 500);
-        
+       
     }
 
     foreignkeySelectedTable(data: any) {
@@ -230,6 +221,7 @@ export class DBDSComponent implements OnInit {
     }
 
     loadDictionary(event:LazyLoadEvent) {
+        // console.log(event)
         this.loading = true;
         this.lastTableLazyLoadEvent = event;
         this.sugestionInit()
@@ -241,7 +233,8 @@ export class DBDSComponent implements OnInit {
                 'dataBefore' : event.first,
                 'orderBy' : "AAMCEATZ1302",
                 'orderMethod' : sortMethod, 
-                'globalFilter' :  event.globalFilter
+                'globalFilter' :  event.globalFilter,
+                'filteredApp': this.filteredApplications
             }
 
             this.api.getAllTable(param).subscribe(
@@ -259,7 +252,6 @@ export class DBDSComponent implements OnInit {
                 },
                 (error) => {
                     this.loading = false;
-                    // this.auth.notAuthorized(error.status, error.error)
                     this.messageService.add({
                         key: 'Message',
                         severity: 'error',
@@ -269,6 +261,33 @@ export class DBDSComponent implements OnInit {
                 }
             );
         }, 5000);
+    }
+    filterAppdisplay(str:any) {
+        console.log(str)
+        this.loading = true;
+        setTimeout(() => {
+            this.api.getFilteringApp(str.value).subscribe((data)=> {
+                // console.log(data)
+                let dataTable = data.result;
+                        let fieldsPerTable = data.fields
+                        this.tableNameList = dataTable
+                        this.dictionary = dataTable.map((data:any) => {
+                            let fields = fieldsPerTable.find((field:any) => field.headerId === data.id);
+                            return { ...data, ...fields };
+                          });
+                        this.totalRecord = data.totalRecord
+                        this.loading = false;
+            },(err) =>{
+                // console.log(err)
+                this.loading = false;
+                this.messageService.add({
+                    key: 'Message',
+                    severity: 'error',
+                    summary: 'Reload Data',
+                    detail: 'Failed',
+                });
+            })
+        }, 3000);
     }
 
     sugestionInit() {
@@ -636,8 +655,7 @@ export class DBDSComponent implements OnInit {
 
     showQuery() {
         const userInput = this.inputForm.getRawValue();
-        console.log(userInput)
-        // console.log(this.fkeyStore)
+        // console.log(userInput)
         if (this.inputForm.invalid) {
             this.messageService.add({
                 key: 'Message',

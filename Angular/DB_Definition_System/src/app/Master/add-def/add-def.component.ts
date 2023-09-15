@@ -77,18 +77,24 @@ export class AddDefComponent implements OnInit {
           return {
             label: category.text,
             value: category.value,
-            items: a.filter((item:any) => item.categories === category.value)
-              .map((item:any )=> {
-                return {
-                  headerId: item.headerId,
-                  tableName: item.tableName
-                };
-              })
+            // items: a.filter((item:any) => item.categories === category.value)
+            //   .map((item:any )=> {
+            //     return {
+            //       headerId: item.headerId,
+            //       tableName: item.tableName
+            //     };
+            //   })
           };
         });
-        // console.log(result)
+        
+        let sss = a.map((el:any) => {
+          return {
+            label:el.tableName,
+            value:el.headerId
+          }
+        })
         // this.tableOptions = res.tables.filter((el:any) => el.app == this.filteringApps)
-        this.tableOptions = result
+        this.tableOptions = sss
        }, (err:any) => {
         //  console.log(err)
          this.messageService.add({ key: 'Message', severity: 'error', summary: "Failed Fetch Definition" , detail: err.message })

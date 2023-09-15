@@ -51,6 +51,8 @@ def index():
             where = '''
                     WHERE AAMTHSTZ1302 = 'active'
                     '''
+        if param['filteredApp'] != 'null':
+            where = f'''WHERE AAMALNMZ1302 = '{param['filteredApp']}' and AAMTHSTZ1302 = 'active' '''
         cur_sql.execute("""
                     SELECT 
                         COUNT(*) AS totalData
@@ -180,6 +182,47 @@ def index():
         DB_SQL.commit()
         return jsonify(0)
 
+@master_dbds.route('/api/master_dbds/<string:appName>')
+def filterByApp(appName):
+    query = ''
+    if appName != 'null':
+        query = f"""
+                        Select 
+                                AAMTBIDZ1302 as 'id',
+                                AAMCPTBZ1302 as 'caption',
+                                AAMQESRZ1302 as 'query',
+                                AAMTHSTZ1302 as 'status',
+                                AAMEXTTZ1301 as 'isExisting',
+                                AAMALNMZ1302 as 'aplication',
+                                AAMKTAPZ1302 as 'categories',
+                                AAMJOINZ1302 as 'joined'
+                                from AAMTBHAZ1301
+                        WHERE AAMALNMZ1302 = '{appName}' and AAMTHSTZ1302 = 'active'
+                        """
+    else:
+        query = """
+                        Select 
+                                AAMTBIDZ1302 as 'id',
+                                AAMCPTBZ1302 as 'caption',
+                                AAMQESRZ1302 as 'query',
+                                AAMTHSTZ1302 as 'status',
+                                AAMEXTTZ1301 as 'isExisting',
+                                AAMALNMZ1302 as 'aplication',
+                                AAMKTAPZ1302 as 'categories',
+                                AAMJOINZ1302 as 'joined'
+                                from AAMTBHAZ1301
+                        WHERE AAMTHSTZ1302 = 'active'
+                        """
+    
+    cur_sql.execute(query)
+    results = []
+    for row in cur_sql:
+        results.append(dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])))
+
+    getFields = getFieldsPerTable(results)
+
+    totalData = len(results)
+    return jsonify({ "totalRecord": totalData, "result":results, "fields":getFields})
     
 @master_dbds.route('/api/master_dbds/<string:id>', methods=['GET', 'PUT'])
 # @check_for_token
