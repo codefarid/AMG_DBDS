@@ -112,24 +112,21 @@ def getTableNameFromDB(first,second):
 def getTableNameFromInternal(first,second):
     cur_sql.execute("""
                     use TestAMGAPPS
-                    select AAMTBIDZ1302 as 'TABLE_NAME' from AAMTBHAZ1301 
+                    select AAMTBIDZ1302 as 'TABLE_NAME' from AAMTBHAZ1301
+                    where AAMTHSTZ1302 = 'active'
                     """)
     t = []
     for row in cur_sql:
         t.append(dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])))
-    # print(t,len(t))
     storeList = []    
     for i in t:
         if first + second in i["TABLE_NAME"]:
             storeList.append(i["TABLE_NAME"])
-            # print(i["TABLE_NAME"]," >  YHES!!")
     if len(storeList) > 0:
-        # print(storeList)
         def extract_number(s):
             return int(re.search(r'\d+',s).group())
         def get_number_only(s):
             return int(''.join(filter(str.isdigit,s)))
-        
         hasil = max(storeList, key=lambda x:(x.startswith(f'{first}{second}') and x[len(f'{first}{second}'):].isdigit(),extract_number(x)))
         number_aja = get_number_only(hasil) 
         return hasil , number_aja
@@ -151,17 +148,22 @@ def generateIdHeader(obj):
         def get_number_only(s):
             return int(''.join(filter(str.isdigit,s)))
         getNumber = get_number_only(obj['joinTo'])
-        print(getNumber + 1)
         return f'{firstStr}{midStr}{getNumber + 1}'
     else:
-        lastStr = 0
+        selectedHeaderId = ''
         if a > b:
-            lastStr = a
+            selectedHeaderId = higestValueFromDB[0]
         elif a < b:
-            lastStr = b
+            selectedHeaderId = higestValueFromInternal[0]
         else:
-            lastStr = a
-        return f'{firstStr}{midStr}{lastStr + 101}'
+            selectedHeaderId = higestValueFromDB[0]            
+            
+        def get_number_only(s):
+            return int(''.join(filter(str.isdigit,s)))
+        val = get_number_only(selectedHeaderId[:-2])
+        
+
+        return f'{firstStr}{midStr}{val + 1}01'
 
 def generateIdTDetail(input, headerId):
     temp1 = ""
@@ -342,7 +344,6 @@ def editQuery(inputNew,id):
             editedCol.append(result_edit_datatype)
         
         if new_isFk != '' and new_isFKto != '':    
-            print("Yhes", new_isFKto, new_isFk)
             if new_isFk != old_isFK and new_isFKto != old_isFKto:
                 editedCol.append(f'ALTER TABLE {header_id} ADD CONSTRAINT FK_{header_id}_{new_isFKto} FOREIGN KEY ({old_id}) REFERENCES {new_isFKto}({new_isFk})')
         

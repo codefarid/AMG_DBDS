@@ -78,6 +78,7 @@ def index():
     
     if request.method == 'POST':
         data = request.get_json()
+        # print(data,'>>>> ')
         getQuery = postQuery(data)
         # print(getQuery)
         return jsonify(getQuery)

@@ -4,7 +4,7 @@
             <div class="field p-2" *ngIf="!isExistingTable">
                 <p>Select Category</p>
                 <!-- <p-selectButton id="isMasterTable" formControlName="isMaster" [options]="stateOptions" optionLabel="label" optionValue="value" styleClass="w-full"></p-selectButton> -->
-                <p-autoComplete formControlName="isMaster" [suggestions]="filteredCategories" (completeMethod)="filterCategory($event)" [forceSelection]="true" field="key" [dropdown]="true"></p-autoComplete>
+                <p-autoComplete formControlName="isMaster" [suggestions]="filteredCategories" [(ngModel)]="selectedCategories" (completeMethod)="filterCategory($event)" [forceSelection]="true" field="key" [dropdown]="true"></p-autoComplete>
             </div>
             <div class="field p-2" *ngIf="!isExistingTable">
                 <p>Insert Table Name</p>

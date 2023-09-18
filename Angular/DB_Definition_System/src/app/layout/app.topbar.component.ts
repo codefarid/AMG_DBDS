@@ -28,11 +28,15 @@ export class AppTopBarComponent {
         private authService: AuthService
     ){
         // this.user = authService.user
-        const token = localStorage.getItem("token")
+        const token = this.getToken()
         const decode = this.jwtHelper.decodeToken(token)
         this.user = decode.name
         // this.user = "Santoso"
     }
+
+    getToken(): string {
+        return localStorage.getItem('token') || '';
+     }
 
     logout(){
         this.authService.logout();

@@ -125,6 +125,10 @@ export class MasterService {
   }
 
   getFilteringApp(appName:any):Observable<any> {
-    return this.http.get(`${this.baseURL}/master_dbds/${appName}`,{headers:this.httpHeaders})
+    return this.http.get(`${this.baseURL}/master_dbds/dropdown/${appName}`,{headers:this.httpHeaders})
+  }
+
+  getDropdownTableDB(appName:any):Observable <any> {
+    return this.http.get(`${this.baseURL}/master_dbds/fetch/${appName}`, {headers:this.httpHeaders})
   }
 }

@@ -168,7 +168,9 @@ export class DBDSComponent implements OnInit {
     }
  
     joinTableSelected($event:any){
+        this.spinner.show()
         let a = $event.text
+        let b = $event.value
         this.selectedAplications = a
         this.dropDownJoinTable.unshift({
             text: 'No',
@@ -176,6 +178,29 @@ export class DBDSComponent implements OnInit {
         });
         this.dropDownJoinTable = this.dropDownTextAndValue.filter((el:any) => el.app == a)
         this.dropDownIsFKto = this.dropDownTextAndValue.filter((el:any) => el.app == a)
+        let found = this.selectedCategories.key[0]
+        let c = b + found
+        this.api.getDropdownTableDB(c).subscribe((res) => {
+            let data = res.data.map((el:any) => {
+                let obj = {"app":a, "text": `Table Name From DB ${el.TABLE_NAME}`, "value":el.TABLE_NAME}
+                return obj
+            })
+            for(let i = 0 ; i < data.length;i++) {
+                let find = this.dropDownJoinTable.find((el) => {
+                    return el.value === data[i].value
+                })
+                if(!find) {
+                    this.dropDownJoinTable.push(data[i])
+                } else {
+                    console.log(find)
+                }
+            }
+            this.spinner.hide()
+        },(err) => {
+            this.spinner.hide()
+            console.log(err)
+        })
+        // console.log(this.dropDownJoinTable)
        
     }
 
@@ -237,9 +262,11 @@ export class DBDSComponent implements OnInit {
                 'filteredApp': this.filteredApplications
             }
 
+            // console.log(param);
+            
             this.api.getAllTable(param).subscribe(
                 (data: any) => {
-                    // console.log(data)
+                    console.log(data)
                     let dataTable = data.result;
                     let fieldsPerTable = data.fields
                     this.tableNameList = dataTable
@@ -251,6 +278,7 @@ export class DBDSComponent implements OnInit {
                     this.loading = false;
                 },
                 (error) => {
+                    console.log(error)
                     this.loading = false;
                     this.messageService.add({
                         key: 'Message',
@@ -655,7 +683,8 @@ export class DBDSComponent implements OnInit {
 
     showQuery() {
         const userInput = this.inputForm.getRawValue();
-        // console.log(userInput)
+        this.spinner.show()
+        console.log(userInput)
         if (this.inputForm.invalid) {
             this.messageService.add({
                 key: 'Message',
@@ -666,16 +695,18 @@ export class DBDSComponent implements OnInit {
             return;
         } else {
             if (this.isEdit == true) {
-                this.loading = true
+                // this.loading = true
                 
                 this.api.editPreviewQuery(userInput, this.getId).subscribe(
                     (res) => {
                         this.loading = false
                         this.displayQuery = res.queries;
                         // console.log(res)
+                        this.spinner.hide()
                     },
                     (err) => {
                         // console.log(err);
+                        this.spinner.hide()
                         this.isLoadingButton = false
                     }
                 );
@@ -684,6 +715,7 @@ export class DBDSComponent implements OnInit {
             else if(this.isExistingTable == true) {
                 this.api.postPreviewExtQuery(userInput).subscribe((res) => {
                     // console.log(res)
+                        this.spinner.hide()
                         let temp = res.split('?');
                         for (let i = 1; i < temp.length - 2; i++) {
                             let values = this.checkParse(temp[i])
@@ -692,6 +724,7 @@ export class DBDSComponent implements OnInit {
                         this.displayQuery = temp.join("")
                 },(err) => {
                     // console.log(err)
+                    this.spinner.hide()
                     this.messageService.add({
                         severity: 'error',
                         summary: 'Failed',
@@ -703,7 +736,7 @@ export class DBDSComponent implements OnInit {
             if(this.isExistingTable !== true && this.isEdit !== true) {
                 this.api.postPreviewQuery(userInput).subscribe(
                     (res) => {
-                        // console.log(res)
+                        this.spinner.hide()
                         let temp = res.split('?');
 
                         for (let i = 1; i < temp.length - 2; i++) {
@@ -713,7 +746,7 @@ export class DBDSComponent implements OnInit {
                         this.displayQuery = temp.join("")
                     },
                     (err) => {
-                        // console.log(err)
+                        this.spinner.hide()
                         this.isLoadingButton = false
                         this.messageService.add({
                             severity: 'error',
@@ -1102,6 +1135,7 @@ export class DBDSComponent implements OnInit {
     }
 
     viewOneQueries(data: any) {
+        console.log(data)
         this.settingsQueryPlayGround()
         this.displayQuerySelect = []
         this.modalTitle = 'Generated Queries';
@@ -1109,8 +1143,8 @@ export class DBDSComponent implements OnInit {
         this.loadingQueries = true;
         this.api.getOneTable(data.id).subscribe(
             (res) => {
+                console.log(res)
                 this.loadingQueries = false
-                // console.log(res)
                 this.displayQueryAfter = res.createdQuery.split('?');
                 for (let i = 1; i < this.displayQueryAfter.length - 3; i++) {
                     let values = this.checkParse(this.displayQueryAfter[i])
@@ -1152,7 +1186,7 @@ export class DBDSComponent implements OnInit {
                 console.log(this.tempTableName)
             },
             (err) => {
-                // console.log(err);
+                console.log(err);
             }
         );
     }

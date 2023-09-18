@@ -182,7 +182,7 @@ def index():
         DB_SQL.commit()
         return jsonify(0)
 
-@master_dbds.route('/api/master_dbds/<string:appName>')
+@master_dbds.route('/api/master_dbds/dropdown/<string:appName>')
 def filterByApp(appName):
     query = ''
     if appName != 'null':
@@ -225,7 +225,6 @@ def filterByApp(appName):
     return jsonify({ "totalRecord": totalData, "result":results, "fields":getFields})
     
 @master_dbds.route('/api/master_dbds/<string:id>', methods=['GET', 'PUT'])
-# @check_for_token
 def getOneTable(id):
     token = request.headers['Authorization']
     appCode = decrypt_text(request.headers['App'].encode())
@@ -302,7 +301,7 @@ def getOneTable(id):
         result4 += ')?'
         
         result_dict = {'table_data': result1, 'field_data': result2, 'selecQuery': result3,'createdQuery':result4}
-    
+        # print(result_dict)
         return jsonify(result_dict)
     
     if request.method == 'PUT':
@@ -367,16 +366,7 @@ def getOneTable(id):
         if oldLen != newLen:
             if oldLen < newLen:
                 newFields = data['field'][oldLen: newLen]
-                # print(newFields,"????????????????")
                 for y in newFields:
-                    # if y['extFname']['key']:
-                    #     fieldName =  y['extFname']['key']
-                    # else:
-                    #     fieldName = y['extFname']
-                    # if y['editFieldName']['value']:
-                    #     newIds = generateIdTDetail(y['fieldNameEdit']['value'], id)
-                    # else:
-                    #     newIds = y['fieldName'].upper()
                     newIds = generateIdTDetail(y['fieldNameEdit']['value'], id)
                     fieldName = y['fieldNameEdit']['key']
                     newDat = y['datTypeField'].upper()
@@ -392,34 +382,8 @@ def getOneTable(id):
                                     values (%s , %s , %s , %s , %s , %s , %s , %s , %s ,%s, %s, %s,%s,%s);
                                     """,(newIds,headerId,fieldName,newMaxVal,newDat,isPk,isExist,date, time, user, date, time, user,statusTD,isFK,isFKto))
                     DB_SQL.commit()
-            # else:
-            #     removeField = oldDatas[newLen : oldLen]
-            #     for x in removeField:
-            #         removedId = x['field_id']
-            #         cur_sql.execute("""
-            #                         UPDATE AAMTBDTZ1301
-            #                         SET 
-            #                             AAMSTTDZ1301 = 'inactive'
-            #                         WHERE 
-            #                             AAMFEIDZ1302 = '{ids}'
-            #                         """.format(ids=removedId))
-            #         DB_SQL.commit()
-                    
-                # print(removeField,'?? PUT REMOVE FIELD Master TABLE')
         else:
             for el in data['field']:
-                # print(el,"<><><><><><")
-                # fieldName = ''
-                # fieldId = ''
-                # if el['extFname']['key']:
-                #     fieldName = el['extFname']['key']
-                # else:
-                #     fieldName = el['fieldName']['key']
-                    
-                # if el['fieldName']['value']:
-                #     fieldId = el['fieldName']['value'].upper()
-                # else:
-                #     fieldId = el['fieldName'].upper()
                 fieldId = generateIdTDetail(el['fieldNameEdit']['value'], id)
                 fieldName = el['fieldNameEdit']['key']
                     
@@ -453,11 +417,8 @@ def getOneTable(id):
  
         return jsonify(0)
                 
-
 @master_dbds.route('/api/master_dbds/<string:id>', methods=['DELETE'])
 def deleteTable(id):
-    # if '1' not in auth_page[1:]:
-        #     return jsonify({'message': 'Not Authorized'}), 401
     cur_sql.execute("""
                     UPDATE AAMTBHAZ1301
                     SET AAMTHSTZ1302 = 'inactive' 
@@ -465,6 +426,29 @@ def deleteTable(id):
                     """, (id,))
     DB_SQL.commit()
     return jsonify("Status Change!")
+
+@master_dbds.route('/api/master_dbds/fetch/<string:appName>',methods=['GET'])
+def getDDbyApp(appName):
+    db = ""
+    if test == True:
+        db = "TestAMGAPPS"
+    else:
+        db = "AMGAPPS"
+        
+    cur_sql.execute(f"""
+                    use {db}
+                    SELECT TABLE_NAME
+                    FROM INFORMATION_SCHEMA.TABLES
+                    WHERE TABLE_TYPE='BASE TABLE' 
+                    AND TABLE_NAME LIKE '%{appName}%'
+                    order by TABLE_NAME ASC
+                    """)
+    t = []
+    for row in cur_sql:
+        t.append(dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])))
+    
+    return jsonify({"msg":"wait",'data':t})
+
 
 @master_dbds.route('/api/master_dbds/post/downloads',methods=['POST'])
 def downloadFile():
