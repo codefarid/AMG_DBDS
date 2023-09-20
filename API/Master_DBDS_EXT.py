@@ -44,10 +44,16 @@ def index():
         else:
             appName = data['appName']['text']
             
-            if len(headerId) == 8:
-                getCate = headerId[4]
-            if len(headerId) == 6:
-                getCate = headerId[2]
+            # if len(headerId) == 8:
+            #     getCate = headerId[4]
+            # if len(headerId) == 6:
+            #     getCate = headerId[2]
+            def getAlpha(s):
+                return ''.join(filter(str.isalpha,s))
+
+            print(getAlpha("EXIMT901")[-1])
+            
+            getCate = getAlpha(headerId)[-1]
             getQuery = postExtQuery(data)
             
             

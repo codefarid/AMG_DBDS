@@ -94,6 +94,7 @@ export class DBDSComponent implements OnInit {
 
     application: any[] = [];
     filteredAppNames: any[] = [];
+    filteredJoinTo: any[] = [];
     filteredFKto: any[] = [];
     filteredFK: any [] =[];
 
@@ -123,9 +124,9 @@ export class DBDSComponent implements OnInit {
         this.dropdownValueInit();
         this.fieldIdRemoved = []
         this.inputForm = this.fb.group({
-            tableName: ['',],
+            tableName: [''],
             extTableName: [''],
-            isMaster: [false,],
+            isMaster: [false,Validators.required],
             extName: [''],
             appName: [''],
             joinTo: [''],
@@ -167,39 +168,70 @@ export class DBDSComponent implements OnInit {
         return $event.target.value
     }
  
-    joinTableSelected($event:any){
-        this.spinner.show()
-        let a = $event.text
-        let b = $event.value
-        this.selectedAplications = a
-        this.dropDownJoinTable.unshift({
-            text: 'No',
-            value: '',
-        });
-        this.dropDownJoinTable = this.dropDownTextAndValue.filter((el:any) => el.app == a)
-        this.dropDownIsFKto = this.dropDownTextAndValue.filter((el:any) => el.app == a)
-        let found = this.selectedCategories.key[0]
-        let c = b + found
-        this.api.getDropdownTableDB(c).subscribe((res) => {
-            let data = res.data.map((el:any) => {
-                let obj = {"app":a, "text": `Table Name From DB ${el.TABLE_NAME}`, "value":el.TABLE_NAME}
-                return obj
-            })
-            for(let i = 0 ; i < data.length;i++) {
-                let find = this.dropDownJoinTable.find((el) => {
-                    return el.value === data[i].value
+    joinTableSelected($event:any,type:any){
+        let a = ''
+        let b = ''
+        let found = ''
+        let c = ''
+        // console.log(type,$event)
+
+        if(this.selectedAplications && this.selectedCategories) {
+            this.spinner.show()
+            a = this.selectedAplications.text
+            b = this.selectedAplications.value
+            this.dropDownJoinTable.unshift({
+                text: 'No',
+                value: '',
+            });
+            this.dropDownJoinTable = this.dropDownTextAndValue.filter((el:any) => el.app == a)
+            this.dropDownIsFKto = this.dropDownTextAndValue.filter((el:any) => el.app == a)
+            found = this.selectedCategories.key[0]
+            c = b + found
+            this.api.getDropdownTableDB(c).subscribe((res) => {
+                let data = res.data.map((el:any) => {
+                    let obj = {"app":a, "text": `Table Name From DB ${el.TABLE_NAME}`, "value":el.TABLE_NAME}
+                    return obj
                 })
-                if(!find) {
-                    this.dropDownJoinTable.push(data[i])
-                } else {
-                    console.log(find)
+                for(let i = 0 ; i < data.length;i++) {
+                    let find = this.dropDownJoinTable.find((el) => {
+                        return el.value === data[i].value
+                    })
+                    if(!find) {
+                        this.dropDownJoinTable.push(data[i])
+                    } 
+                    
                 }
-            }
-            this.spinner.hide()
-        },(err) => {
-            this.spinner.hide()
-            console.log(err)
-        })
+                this.spinner.hide()
+            },(err) => {
+                this.spinner.hide()
+                console.log(err)
+            })
+        }
+        if(type == 'Edit') {
+            this.spinner.show()
+            a = $event.text
+            b = $event.value
+            found = $event.key[0]
+            c = b + found
+            this.api.getDropdownTableDB(c).subscribe((res) => {
+                let data = res.data.map((el:any) => {
+                    let obj = {"app":a, "text": `Table Name From DB ${el.TABLE_NAME}`, "value":el.TABLE_NAME}
+                    return obj
+                })
+                for(let i = 0 ; i < data.length;i++) {
+                    let find = this.dropDownJoinTable.find((el) => {
+                        return el.value === data[i].value
+                    })
+                    if(!find) {
+                        this.dropDownJoinTable.push(data[i])
+                    }
+                }
+                this.spinner.hide()
+            },(err) => {
+                this.spinner.hide()
+                console.log(err)
+            })
+        }
         // console.log(this.dropDownJoinTable)
        
     }
@@ -291,7 +323,7 @@ export class DBDSComponent implements OnInit {
         }, 5000);
     }
     filterAppdisplay(str:any) {
-        console.log(str)
+        
         this.loading = true;
         setTimeout(() => {
             this.api.getFilteringApp(str.value).subscribe((data)=> {
@@ -416,12 +448,33 @@ export class DBDSComponent implements OnInit {
         this.filteredAppNames = filtered;
     }
 
+    filterJoinToName(event:any) {
+        let filtered:any[]=[];
+        let query = event.query;
+
+        for(let i = 0 ;i < this.dropDownJoinTable.length;i++) {
+            let data = this.dropDownJoinTable[i]
+            let og = {"app":"S", "text": `Table Name From DB `, "value":""}
+            if (data.text.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+                filtered.push(data);
+            }
+        }
+        this.filteredJoinTo = filtered
+    }
+
     findCategoryByValue(val: any) {
         return this.categories.find(({ value }) => value == val);
     }
 
     findAplicationByValue(val: any) {
         const x = this.application.find(({ text }) => text == val);
+        return x
+    }
+
+    findJoinToByValue(val:any) {
+        // console.log(this.dropDownTextAndValue)
+        const x = this.dropDownTextAndValue.find(({value}) => value == val)
+        // console.log(x,val)
         return x
     }
 
@@ -628,19 +681,17 @@ export class DBDSComponent implements OnInit {
         
         this.api.getOneTable(data.id).subscribe(
             (res) => {
-                // console.log(res)
+                console.log(res)
                 let appName = res.table_data[0].aplication_name
-                let obj = {text:appName}
-                // let countField = res.field_data.length
-                // let stopCount = 0
-                this.joinTableSelected(obj)
-                // console.log(this.dropDownJoinTable)
-                // let stoped = false
-                // for(let is = 0;is < countField ;is++) {
-                //     const fieldArray = this.inputForm.get('field') as FormArray;
-                //     fieldArray.push(this.createFieldFormGroup());
-                //     stopCount += 1
-                // }
+                let cateApp = res.table_data[0].kategori_app
+                let findApps = this.application.find(({text}) => text == appName)
+                let findCate = this.categories.find(({value}) => value == cateApp)
+                let obj = {
+                    text:findApps.text,
+                    value:findApps.value,
+                    key:findCate.key,
+                }
+                this.joinTableSelected(obj,"Edit")
                 this.editTableDetail = res.field_data.map((el: any,i:number) => {
                     return {
                         fieldNameEdit: this.findEditFieldNameByValue(el.field_id),
@@ -663,7 +714,7 @@ export class DBDSComponent implements OnInit {
                     isMaster: this.findCategoryByValue(
                         res.table_data[0].kategori_app
                     ),
-                    joinTo: res.table_data[0].joinTo,
+                    joinTo: this.findJoinToByValue(res.table_data[0].joinTo),
                     isExisted: res.table_data[0].isExist,
                     field: this.editTableDetail,
                 });
@@ -685,27 +736,23 @@ export class DBDSComponent implements OnInit {
         const userInput = this.inputForm.getRawValue();
         this.spinner.show()
         console.log(userInput)
-        if (this.inputForm.invalid) {
+        if(this.inputForm.get("field")?.value.length == 0) {
+            this.spinner.hide()
             this.messageService.add({
                 key: 'Message',
                 severity: 'error',
                 summary: 'Submit Form',
-                detail: 'Failed, there is empty data',
+                detail: 'Failed, Fields Cannot be empty!',
             });
-            return;
         } else {
             if (this.isEdit == true) {
-                // this.loading = true
-                
                 this.api.editPreviewQuery(userInput, this.getId).subscribe(
                     (res) => {
                         this.loading = false
                         this.displayQuery = res.queries;
-                        // console.log(res)
                         this.spinner.hide()
                     },
                     (err) => {
-                        // console.log(err);
                         this.spinner.hide()
                         this.isLoadingButton = false
                     }
@@ -714,8 +761,6 @@ export class DBDSComponent implements OnInit {
             } 
             else if(this.isExistingTable == true) {
                 this.api.postPreviewExtQuery(userInput).subscribe((res) => {
-                    // console.log(res)
-                        this.spinner.hide()
                         let temp = res.split('?');
                         for (let i = 1; i < temp.length - 2; i++) {
                             let values = this.checkParse(temp[i])
@@ -723,7 +768,6 @@ export class DBDSComponent implements OnInit {
                         }
                         this.displayQuery = temp.join("")
                 },(err) => {
-                    // console.log(err)
                     this.spinner.hide()
                     this.messageService.add({
                         severity: 'error',
@@ -734,65 +778,96 @@ export class DBDSComponent implements OnInit {
                 })
             }
             if(this.isExistingTable !== true && this.isEdit !== true) {
-                this.api.postPreviewQuery(userInput).subscribe(
-                    (res) => {
-                        this.spinner.hide()
-                        let temp = res.split('?');
-
-                        for (let i = 1; i < temp.length - 2; i++) {
-                            let values = this.checkParse(temp[i])
-                            temp[i] = values + ','
-                        }
-                        this.displayQuery = temp.join("")
-                    },
-                    (err) => {
-                        this.spinner.hide()
-                        this.isLoadingButton = false
-                        this.messageService.add({
-                            severity: 'error',
-                            summary: 'Failed',
-                            detail: 'Gagal Generate Query!',
-                        });
-                    }
-                );
-            }
-        }
-        
-        setTimeout(() => {
-            this.confirmationService.confirm({
-                header: 'Preview Query',
-                message: this.displayQuery,
-                icon: 'pi pi-server',
-                accept: () => {
-                    this.submitForm();
+                if(this.inputForm.get("tableName")?.value === null) {
                     this.messageService.add({
-                        severity: 'info',
-                        summary: 'Confirmed',
-                        detail: 'You have accepted',
+                        key: 'Message',
+                        severity: 'error',
+                        summary: 'Submit Form',
+                        detail: 'Failed, Table Name Cannot be empty!',
                     });
-                },
-                reject: (type: any) => {
-                    this.isLoadingButton = false
-                    this.loading = false
-                    switch (type) {
-                        case ConfirmEventType.REJECT:
+                    this.spinner.hide()
+                    return
+                } else {
+                    let fieldLength = this.inputForm.get("field")?.value.length
+                    for(let i = 0 ; i < fieldLength;i++) {
+                        let validateDaType = this.inputForm.get("field")?.value[i].datTypeField
+                        if (validateDaType === '') {
+                            this.messageService.add({
+                                key: 'Message',
+                                severity: 'error',
+                                summary: 'Submit Form',
+                                detail: `Failed, Data Type at Field No.${i+1} Cannot be Empty!`,
+                            });
+                            this.spinner.hide()
+                            return
+                        }
+                    }
+
+                    this.api.postPreviewQuery(userInput).subscribe(
+                        (res) => {
+                            this.spinner.hide()
+                            let temp = res.split('?');
+                            for (let i = 1; i < temp.length - 2; i++) {
+                                let values = this.checkParse(temp[i])
+                                temp[i] = values + ','
+                            }
+                            this.displayQuery = temp.join("")
+                        },
+                        (err) => {
+                            this.spinner.hide()
+                            this.isLoadingButton = false
                             this.messageService.add({
                                 severity: 'error',
-                                summary: 'Rejected',
-                                detail: 'You have rejected',
+                                summary: 'Failed',
+                                detail: 'Gagal Generate Query!',
                             });
-                            break;
-                        case ConfirmEventType.CANCEL:
+                        }
+                    );
+                }
+            }
+            if(this.displayQuery) {
+                this.spinner.hide()
+
+                setTimeout(() => {
+                    this.confirmationService.confirm({
+                        header: 'Preview Query',
+                        message: this.displayQuery,
+                        icon: 'pi pi-server',
+                        accept: () => {
+                            this.submitForm();
                             this.messageService.add({
-                                severity: 'warn',
-                                summary: 'Cancelled',
-                                detail: 'You have cancelled',
+                                severity: 'info',
+                                summary: 'Confirmed',
+                                detail: 'You have accepted',
                             });
-                            break;
-                    }
-                },
-            });
-        }, 500);
+                        },
+                        reject: (type: any) => {
+                            this.isLoadingButton = false
+                            this.loading = false
+                            switch (type) {
+                                case ConfirmEventType.REJECT:
+                                    this.messageService.add({
+                                        severity: 'error',
+                                        summary: 'Rejected',
+                                        detail: 'You have rejected',
+                                    });
+                                    break;
+                                case ConfirmEventType.CANCEL:
+                                    this.messageService.add({
+                                        severity: 'warn',
+                                        summary: 'Cancelled',
+                                        detail: 'You have cancelled',
+                                    });
+                                    break;
+                            }
+                        },
+                    });
+                }, 500);
+            }
+        } 
+
+        
+        
     }
 
     createFieldControl(field: any): FormGroup {

@@ -143,11 +143,11 @@ def generateIdHeader(obj):
     a = higestValueFromDB[1] if higestValueFromDB != None else 0
     b = higestValueFromInternal[1] if higestValueFromInternal != None else 0
     
-        
-    if obj['joinTo'] and obj['joinTo'] != None:
+
+    if obj['joinTo'] is not None:
         def get_number_only(s):
             return int(''.join(filter(str.isdigit,s)))
-        getNumber = get_number_only(obj['joinTo'])
+        getNumber = get_number_only(obj['joinTo']['value'])
         return f'{firstStr}{midStr}{getNumber + 1}'
     else:
         selectedHeaderId = ''
@@ -166,18 +166,9 @@ def generateIdHeader(obj):
         return f'{firstStr}{midStr}{val + 1}01'
 
 def generateIdTDetail(input, headerId):
-    temp1 = ""
-    temp2 = ""
-    temp4 = ""
-    for i in range(len(headerId)):
-        if i < 4:
-            temp1 += headerId[i]
-        elif i < 5:
-            temp4 += headerId[i]
-        else:
-            temp2 += headerId[i]
-    temp3 = [temp1, temp4, temp2]
-    result = f"{input}{temp3[1]}{temp3[2]}"
+    def get_number_only(s):
+            return int(''.join(filter(str.isdigit,s)))
+    result = f"{input}{get_number_only(headerId)}"
     # print(result,'>>>>>>')
     return result
  
@@ -316,12 +307,12 @@ def editQuery(inputNew,id):
         old_id = old['field_data'][i]['fieldId']
         header_id = old['field_data'][i]['headerId']
         
-        if len(header_id) == 8:
-            isMaster = header_id[4:5]  
-            lastNumber = header_id[5:8]
-        if len(header_id) == 6 :
-            isMaster = header_id[2:4]
-            lastNumber = header_id[4:7]
+        # if len(header_id) == 8:
+        #     isMaster = header_id[4:5]  
+        #     lastNumber = header_id[5:8]
+        # if len(header_id) == 6 :
+        #     isMaster = header_id[2:4]
+        #     lastNumber = header_id[4:7]
         getNewInputId =  generateIdTDetail(inputNew['field'][i]['fieldNameEdit']['value'], header_id)
         if old_id != getNewInputId:
             new_id = generateIdTDetail(inputNew['field'][i]['fieldNameEdit']['value'], header_id)
@@ -374,18 +365,16 @@ def editQuery(inputNew,id):
             newIds = generateIdTDetail(y['fieldNameEdit']['value'],id)
             newDat = y['datTypeField'].upper()
             newMaxVal = y['maxlenField']
-            newIsFK = y['isFK']["value"] if y['isFK']["value"] != '' else '0'
-            newIsFKto = y['isFKto']["value"] if y['isFKto']["value"] != '' else '0'
+            print(y["isFK"], type(y['isFK']),">>>> isFKto",y['isFK'] != '')
+            newIsFK = y['isFK']["value"] if y['isFK'] != '' else '0'
+            newIsFKto = y['isFKto']["value"] if y['isFKto'] != '' else '0'
             newQueries = "ALTER TABLE " + id + " ADD " + newIds + " " + newDat + "(" + str(newMaxVal) + ")"
             
             editedCol.append(newQueries)
             if newIsFK != '0' and newIsFKto != '0':
                 editedCol.append(f'ALTER TABLE {header_id} ADD CONSTRAINT FK_{header_id}_{new_isFKto} FOREIGN KEY ({newIds}) REFERENCES {newIsFKto}({newIsFK})')
             
-            
-    # print(editedCol)
     if editedCol:
-        # editedCol.append("<<")
         hasil = "\n".join(editedCol)
     else:
         hasil = "No Change Detected!"
@@ -426,12 +415,12 @@ def editExtQuery(inputNew,id):
         old_id = old['field_data'][i]['fieldId']
         header_id = old['field_data'][i]['headerId']
 
-        if len(header_id) == 8:
-            isMaster = header_id[4:5]  
-            lastNumber = header_id[5:8]
-        if len(header_id) == 6 :
-            isMaster = header_id[2:4]
-            lastNumber = header_id[4:7]
+        # if len(header_id) == 8:
+        #     isMaster = header_id[4:5]  
+        #     lastNumber = header_id[5:8]
+        # if len(header_id) == 6 :
+        #     isMaster = header_id[2:4]
+        #     lastNumber = header_id[4:7]
         getNewInputId =  inputNew['field'][i]['fieldName']['value']
         if old_id != getNewInputId:
             new_id = inputNew['field'][i]['fieldName']['value']
@@ -449,10 +438,6 @@ def editExtQuery(inputNew,id):
             result_edit_datatype = editDaType(header_id, new_id, new_datType, str(new_maxLen))
             editedCol.append(result_edit_datatype)
         
-        
-        
-
-    
     newInputLen = len(inputNew['field'])
     oldLen = len(result2)
     
@@ -460,7 +445,7 @@ def editExtQuery(inputNew,id):
         newFields = inputNew['field'][oldLen : newInputLen]
         # jika newFields len <= 1 newFields['field'][0]['fieldName]
         for y in newFields:
-            print(newFields,';;;;;lskdkajsjdja;;;;;')
+            # print(newFields,';;;;;lskdkajsjdja;;;;;')
             newIds = y['fieldName'].upper()
             newDat = y['datTypeField'].upper()
             newMaxVal = y['maxlenField']

@@ -35,8 +35,6 @@ def index():
         auth_page = list(auth_page)
         user = check_user(token, amg = True)
     if request.method == 'GET':
-        # if auth_page[0] != '1':
-        #     return jsonify({'message': 'Not Authorized'}), 401
         param = request.args.to_dict()
         where = ''
         
@@ -104,9 +102,6 @@ def index():
         return jsonify(data)
     
     if request.method == "POST":
-        # if '1' not in auth_page[1:]:
-        #     return jsonify({'message': 'Not Authorized'}), 401
-        
         data = request.get_json()
         
         
@@ -123,7 +118,7 @@ def index():
         checkData = []
         for row in cur_sql:
             checkData.append(dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])))
-        # print(checkData)
+
         for el in checkData:
             if headerId == el['table_id']:
                 cur_sql.execute("""
@@ -135,12 +130,9 @@ def index():
                 while headerId in existingIds:
                     gg = headerId[0:-1] + str(int(headerId[-1]) + 1)
                     headerId = gg
-            
-        print(headerId,"SINI IIIIII")
         
         date = datetime.now()
         time = date.strftime("%H%M")
-        # user = "santoso"
         date = date.strftime("%Y%m%d")
         isExist = '0'
         appName = data['appName']['text']
@@ -162,7 +154,6 @@ def index():
             (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
             """,(headerId, data['tableName'], appId, appName,kategori, getQuery ,status,joinTo, date, time, user, date, time, user, isExist))
 
-        # DB_SQL.commit()
 
         for el in data['field']:
             fieldName = el['fieldName']['key']
