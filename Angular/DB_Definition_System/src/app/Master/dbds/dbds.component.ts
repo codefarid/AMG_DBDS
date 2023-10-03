@@ -158,6 +158,7 @@ export class DBDSComponent implements OnInit {
             skipinCond:[''],
             fetchOnlyCond:[''],
         })
+        console.log(this.filteredApplications)
     }
 
     get fieldControls() {
@@ -323,7 +324,8 @@ export class DBDSComponent implements OnInit {
         }, 5000);
     }
     filterAppdisplay(str:any) {
-        
+        console.log(str.value)
+        this.filteredApplications = str.value
         this.loading = true;
         setTimeout(() => {
             this.api.getFilteringApp(str.value).subscribe((data)=> {
@@ -648,6 +650,9 @@ export class DBDSComponent implements OnInit {
         this.modalTitle = 'Create a new Table';
         this.inputForm.reset();
         this.displayForm = true;
+        this.inputForm.patchValue({
+            appName: this.findAplicationByValue(this.filteredApplications)
+        })
         const fieldArr = this.inputForm.get('field') as FormArray;
         fieldArr.clear();
     }
@@ -660,6 +665,9 @@ export class DBDSComponent implements OnInit {
         this.modalTitle = 'Insert an Existing Table';
         this.inputForm.reset();
         this.displayForm = true;
+        this.inputForm.patchValue({
+            appName: this.findAplicationByValue(this.filteredApplications)
+        })
         const fieldArr = this.inputForm.get('field') as FormArray;
         fieldArr.clear();
     }
@@ -732,103 +740,139 @@ export class DBDSComponent implements OnInit {
         );
     }
 
-    showQuery() {
-        const userInput = this.inputForm.getRawValue();
+    // showQuery() {
+    //     const userInput = this.inputForm.getRawValue();
+    //     this.spinner.show()
+    //     console.log(userInput)
+    //     if(this.inputForm.get("field")?.value.length == 0) {
+    //         this.spinner.hide()
+    //         this.messageService.add({
+    //             key: 'Message',
+    //             severity: 'error',
+    //             summary: 'Submit Form',
+    //             detail: 'Failed, Fields Cannot be empty!',
+    //         });
+    //     } else {
+    //         if (this.isEdit == true) {
+    //             this.api.editPreviewQuery(userInput, this.getId).subscribe(
+    //                 (res) => {
+    //                     this.loading = false
+    //                     this.displayQuery = res.queries;
+    //                     this.spinner.hide()
+    //                 },
+    //                 (err) => {
+    //                     this.spinner.hide()
+    //                     this.isLoadingButton = false
+    //                 }
+    //             );
+                
+    //         } 
+    //         else if(this.isExistingTable == true) {
+    //             this.api.postPreviewExtQuery(userInput).subscribe((res) => {
+    //                     let temp = res.split('?');
+    //                     for (let i = 1; i < temp.length - 2; i++) {
+    //                         let values = this.checkParse(temp[i])
+    //                         temp[i] = values + ','
+    //                     }
+    //                     this.displayQuery = temp.join("")
+    //             },(err) => {
+    //                 this.spinner.hide()
+    //                 this.messageService.add({
+    //                     severity: 'error',
+    //                     summary: 'Failed',
+    //                     detail: 'Gagal Generate Query!',
+    //                 });
+    //                 this.isLoadingButton = false
+    //             })
+    //         }
+    //         // if(this.isExistingTable !== true && this.isEdit !== true) {
+    //         //     if(this.inputForm.get("tableName")?.value === null) {
+    //         //         this.messageService.add({
+    //         //             key: 'Message',
+    //         //             severity: 'error',
+    //         //             summary: 'Submit Form',
+    //         //             detail: 'Failed, Table Name Cannot be empty!',
+    //         //         });
+    //         //         this.spinner.hide()
+    //         //         return
+    //         //     } else {
+    //         //         let fieldLength = this.inputForm.get("field")?.value.length
+    //         //         for(let i = 0 ; i < fieldLength;i++) {
+    //         //             let validateDaType = this.inputForm.get("field")?.value[i].datTypeField
+    //         //             if (validateDaType === '') {
+    //         //                 this.messageService.add({
+    //         //                     key: 'Message',
+    //         //                     severity: 'error',
+    //         //                     summary: 'Submit Form',
+    //         //                     detail: `Failed, Data Type at Field No.${i+1} Cannot be Empty!`,
+    //         //                 });
+    //         //                 this.spinner.hide()
+    //         //                 return
+    //         //             }
+    //         //         }
+
+    //         //         this.api.postPreviewQuery(userInput).subscribe(
+    //         //             (res) => {
+    //         //                 this.spinner.hide()
+    //         //                 let temp = res.split('?');
+    //         //                 for (let i = 1; i < temp.length - 2; i++) {
+    //         //                     let values = this.checkParse(temp[i])
+    //         //                     temp[i] = values + ','
+    //         //                 }
+    //         //                 this.displayQuery = temp.join("")
+    //         //             },
+    //         //             (err) => {
+    //         //                 this.spinner.hide()
+    //         //                 this.isLoadingButton = false
+    //         //                 this.messageService.add({
+    //         //                     severity: 'error',
+    //         //                     summary: 'Failed',
+    //         //                     detail: 'Gagal Generate Query!',
+    //         //                 });
+    //         //             }
+    //         //         );
+    //         //     }
+    //         // }
+    //     } 
+    // }
+
+    showQueryA(){
         this.spinner.show()
-        console.log(userInput)
-        if(this.inputForm.get("field")?.value.length == 0) {
-            this.spinner.hide()
+        console.log("CLICKED !! Show regular query")
+        const userInput = this.inputForm.getRawValue()
+        if(this.inputForm.get("tableName")?.value === null) {
             this.messageService.add({
                 key: 'Message',
                 severity: 'error',
                 summary: 'Submit Form',
-                detail: 'Failed, Fields Cannot be empty!',
+                detail: 'Failed, Table Name Cannot be empty!',
             });
+            this.spinner.hide()
+            console.log("TABLE NAME VALUE EMPTY !!")
         } else {
-            if (this.isEdit == true) {
-                this.api.editPreviewQuery(userInput, this.getId).subscribe(
-                    (res) => {
-                        this.loading = false
-                        this.displayQuery = res.queries;
-                        this.spinner.hide()
-                    },
-                    (err) => {
-                        this.spinner.hide()
-                        this.isLoadingButton = false
-                    }
-                );
-                
-            } 
-            else if(this.isExistingTable == true) {
-                this.api.postPreviewExtQuery(userInput).subscribe((res) => {
-                        let temp = res.split('?');
-                        for (let i = 1; i < temp.length - 2; i++) {
-                            let values = this.checkParse(temp[i])
-                            temp[i] = values + ','
-                        }
-                        this.displayQuery = temp.join("")
-                },(err) => {
-                    this.spinner.hide()
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Failed',
-                        detail: 'Gagal Generate Query!',
-                    });
-                    this.isLoadingButton = false
-                })
-            }
-            if(this.isExistingTable !== true && this.isEdit !== true) {
-                if(this.inputForm.get("tableName")?.value === null) {
+            let fieldLength = this.inputForm.get("field")?.value.length
+            for(let i = 0 ; i < fieldLength;i++) {
+                let validateDaType = this.inputForm.get("field")?.value[i].datTypeField
+                if (validateDaType === '') {
                     this.messageService.add({
                         key: 'Message',
                         severity: 'error',
                         summary: 'Submit Form',
-                        detail: 'Failed, Table Name Cannot be empty!',
+                        detail: `Failed, Data Type at Field No.${i+1} Cannot be Empty!`,
                     });
                     this.spinner.hide()
-                    return
-                } else {
-                    let fieldLength = this.inputForm.get("field")?.value.length
-                    for(let i = 0 ; i < fieldLength;i++) {
-                        let validateDaType = this.inputForm.get("field")?.value[i].datTypeField
-                        if (validateDaType === '') {
-                            this.messageService.add({
-                                key: 'Message',
-                                severity: 'error',
-                                summary: 'Submit Form',
-                                detail: `Failed, Data Type at Field No.${i+1} Cannot be Empty!`,
-                            });
-                            this.spinner.hide()
-                            return
-                        }
-                    }
-
-                    this.api.postPreviewQuery(userInput).subscribe(
-                        (res) => {
-                            this.spinner.hide()
-                            let temp = res.split('?');
-                            for (let i = 1; i < temp.length - 2; i++) {
-                                let values = this.checkParse(temp[i])
-                                temp[i] = values + ','
-                            }
-                            this.displayQuery = temp.join("")
-                        },
-                        (err) => {
-                            this.spinner.hide()
-                            this.isLoadingButton = false
-                            this.messageService.add({
-                                severity: 'error',
-                                summary: 'Failed',
-                                detail: 'Gagal Generate Query!',
-                            });
-                        }
-                    );
                 }
             }
-            if(this.displayQuery) {
-                this.spinner.hide()
-
-                setTimeout(() => {
+            
+            this.api.postPreviewQuery(userInput).subscribe(
+                (res) => {
+                    let temp = res.split('?');
+                    for (let i = 1; i < temp.length - 2; i++) {
+                        let values = this.checkParse(temp[i])
+                        temp[i] = values + ','
+                    }
+                    this.displayQuery = temp.join("")
+                    this.spinner.hide()
                     this.confirmationService.confirm({
                         header: 'Preview Query',
                         message: this.displayQuery,
@@ -862,12 +906,188 @@ export class DBDSComponent implements OnInit {
                             }
                         },
                     });
-                }, 500);
-            }
-        } 
+                },
+                (err) => {
+                    this.spinner.hide()
+                    this.isLoadingButton = false
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Failed',
+                        detail: 'Gagal Generate Query!',
+                    });
+                }
+            );
+        }
+    }
 
-        
-        
+    showQueryEdit(){
+        console.log("CLICKED !! Show Editing Query")
+        this.spinner.show()
+        const userInput = this.inputForm.getRawValue()
+        if(this.inputForm.get("tableName")?.value === null) {
+            this.messageService.add({
+                key: 'Message',
+                severity: 'error',
+                summary: 'Submit Form',
+                detail: 'Failed, Table Name Cannot be empty!',
+            });
+            this.spinner.hide()
+            console.log("TABLE NAME VALUE EMPTY !!")
+        } else {
+            let fieldLength = this.inputForm.get("field")?.value.length
+            for(let i = 0 ; i < fieldLength;i++) {
+                let validateDaType = this.inputForm.get("field")?.value[i].datTypeField
+                if (validateDaType === '') {
+                    this.messageService.add({
+                        key: 'Message',
+                        severity: 'error',
+                        summary: 'Submit Form',
+                        detail: `Failed, Data Type at Field No.${i+1} Cannot be Empty!`,
+                    });
+                    this.spinner.hide()
+                }
+            }
+            
+            this.api.editPreviewQuery(userInput,this.getId).subscribe(
+                (res) => {
+                    // let temp = res.split('?');
+                    // for (let i = 1; i < temp.length - 2; i++) {
+                    //     let values = this.checkParse(temp[i])
+                    //     temp[i] = values + ','
+                    // }
+                    this.displayQuery = res.queries;
+                    this.spinner.hide()
+
+
+                    this.confirmationService.confirm({
+                        header: 'Preview Query',
+                        message: this.displayQuery,
+                        icon: 'pi pi-server',
+                        accept: () => {
+                            this.submitForm();
+                            this.messageService.add({
+                                severity: 'info',
+                                summary: 'Confirmed',
+                                detail: 'You have accepted',
+                            });
+                        },
+                        reject: (type: any) => {
+                            this.isLoadingButton = false
+                            this.loading = false
+                            switch (type) {
+                                case ConfirmEventType.REJECT:
+                                    this.messageService.add({
+                                        severity: 'error',
+                                        summary: 'Rejected',
+                                        detail: 'You have rejected',
+                                    });
+                                    break;
+                                case ConfirmEventType.CANCEL:
+                                    this.messageService.add({
+                                        severity: 'warn',
+                                        summary: 'Cancelled',
+                                        detail: 'You have cancelled',
+                                    });
+                                    break;
+                            }
+                        },
+                    });
+                },
+                (err) => {
+                    this.spinner.hide()
+                    this.isLoadingButton = false
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Failed',
+                        detail: 'Gagal Generate Query!',
+                    });
+                }
+            );
+        }
+    }
+
+    showQueryExisting(){
+        this.spinner.show()
+        console.log("CLICKED !! Show Existing Query")
+        const userInput = this.inputForm.getRawValue()
+        if(this.inputForm.get("tableName")?.value === null) {
+            this.messageService.add({
+                key: 'Message',
+                severity: 'error',
+                summary: 'Submit Form',
+                detail: 'Failed, Table Name Cannot be empty!',
+            });
+            this.spinner.hide()
+            console.log("TABLE NAME VALUE EMPTY !!")
+        } else {
+            let fieldLength = this.inputForm.get("field")?.value.length
+            for(let i = 0 ; i < fieldLength;i++) {
+                let validateDaType = this.inputForm.get("field")?.value[i].datTypeField
+                if (validateDaType === '') {
+                    this.messageService.add({
+                        key: 'Message',
+                        severity: 'error',
+                        summary: 'Submit Form',
+                        detail: `Failed, Data Type at Field No.${i+1} Cannot be Empty!`,
+                    });
+                    this.spinner.hide()
+                }
+            }
+            
+            this.api.postPreviewExtQuery(userInput).subscribe(
+                (res) => {
+                    let temp = res.split('?');
+                    for (let i = 1; i < temp.length - 2; i++) {
+                        let values = this.checkParse(temp[i])
+                        temp[i] = values + ','
+                    }
+                    this.displayQuery = temp.join("")
+                    this.spinner.hide()
+                    this.confirmationService.confirm({
+                        header: 'Preview Query',
+                        message: this.displayQuery,
+                        icon: 'pi pi-server',
+                        accept: () => {
+                            this.submitForm();
+                            this.messageService.add({
+                                severity: 'info',
+                                summary: 'Confirmed',
+                                detail: 'You have accepted',
+                            });
+                        },
+                        reject: (type: any) => {
+                            this.isLoadingButton = false
+                            this.loading = false
+                            switch (type) {
+                                case ConfirmEventType.REJECT:
+                                    this.messageService.add({
+                                        severity: 'error',
+                                        summary: 'Rejected',
+                                        detail: 'You have rejected',
+                                    });
+                                    break;
+                                case ConfirmEventType.CANCEL:
+                                    this.messageService.add({
+                                        severity: 'warn',
+                                        summary: 'Cancelled',
+                                        detail: 'You have cancelled',
+                                    });
+                                    break;
+                            }
+                        },
+                    });
+                },
+                (err) => {
+                    this.spinner.hide()
+                    this.isLoadingButton = false
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Failed',
+                        detail: 'Gagal Generate Query!',
+                    });
+                }
+            );
+        }
     }
 
     createFieldControl(field: any): FormGroup {

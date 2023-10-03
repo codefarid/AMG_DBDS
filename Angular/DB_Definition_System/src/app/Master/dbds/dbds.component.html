@@ -20,7 +20,7 @@
             </div>
             <div class="field p-2">
                 <p>Select Application</p>
-                <p-autoComplete [forceSelection]="true" formControlName="appName" [suggestions]="filteredAppNames" [(ngModel)]="selectedAplications" (completeMethod)="filterAppName($event)" field="text" [dropdown]="true" (onSelect)="joinTableSelected($event,'App')"></p-autoComplete>
+                <p-autoComplete [forceSelection]="true" formControlName="appName" [suggestions]="filteredAppNames" (completeMethod)="filterAppName($event)" field="text" [dropdown]="true" (onSelect)="joinTableSelected($event,'App')"></p-autoComplete>
                 <!-- <p-dropdown [options]="application" formControlName="appName" optionLabel="text" optionValue="value" styleClass="w-full" placeholder="" (onClick)="joinTableSelected($event)"></p-dropdown> -->
             </div>
             <div class="field p-2" *ngIf="isEdit">
@@ -38,10 +38,8 @@
         </div>
         
         <div class="col-12" >
-            <div class="col-8" id="toButtonAdd">
+            <div class="col-8">
                 <h6>Create Field!</h6>
-                <p-button label="Add Field" icon="pi pi-plus" (click)="addField()" [attr.aria-label]="'Add Field'"></p-button>
-                
             </div>
             <div class="col-8">
                 <div formArrayName="field">
@@ -130,16 +128,20 @@
                   </div>
                 </div>
             </div>
-            
+            <div class="col-8" id="toButtonAdd">
+                <p-button label="Add Field" icon="pi pi-plus" (click)="addField()" [attr.aria-label]="'Add Field'"></p-button>
+            </div>
         </div>
         
         <div class="col-12">
             <!-- <p-button class="p-2" type="submit" label="Submit" icon="pi pi-check"></p-button> -->
-            <p-button (click)="showQuery()" icon="pi pi-external-link" label="Submit" [loading]="loading"></p-button>
-            <p-button class="ml-2" icon="pi pi-chevron-up" label="Scrolls to top" (click)="toTop()"></p-button>
+            <p-button (click)="showQueryEdit()" icon="pi pi-external-link" label="Submit" [loading]="loading" *ngIf="this.isEdit == true"></p-button>
+            <p-button (click)="showQueryExisting()" icon="pi pi-external-link" label="Submit" [loading]="loading" *ngIf="this.isExistingTable == true"></p-button>
+            <p-button (click)="showQueryA()" icon="pi pi-external-link" label="Submit" [loading]="loading" *ngIf="this.isExistingTable !== true && this.isEdit !== true"></p-button>
+            <!-- <p-button class="ml-2" icon="pi pi-chevron-up" label="Scrolls to top" (click)="toTop()"></p-button> -->
         </div>
     </form>
-    <div id="bawah"></div>
+    <!-- <div id="bawah"></div> -->
     </p-dialog>
 <p-dialog [header]="modalTitle" [modal]="true" [(visible)]="displayOneQuery"  [style]="{maxWidth: '65vw'}">
       <p-tabView class="justify-content-center">
@@ -359,7 +361,7 @@
             [filterDelay]="1" [loading]="loading" dataKey="id" [totalRecords]="totalRecord">                   
             <ng-template pTemplate="caption">
                 <div class="flex">
-                    <p-dropdown class="mr-auto" [options]="application" [(ngModel)]="this.filteredApplications" optionLabel="text" optionValue="text" placeholder="Filter By App" [showClear]="true" (onChange)="filterAppdisplay($event)"></p-dropdown>
+                    <p-dropdown class="mr-auto" [options]="application" placeholder="Filter By Apps" optionLabel="text" optionValue="text" [showClear]="true" (onChange)="filterAppdisplay($event)"></p-dropdown>
                     <span class="p-input-icon-left ml-auto">
                         <i class="pi pi-search"></i>
                         <input pInputText type="text" (input)="dt.filterGlobal(getEventValue($event), 'contains')" placeholder="Search keyword" />

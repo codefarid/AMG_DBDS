@@ -156,20 +156,26 @@ def generateIdHeader(obj):
         elif a < b:
             selectedHeaderId = higestValueFromInternal[0]
         else:
-            selectedHeaderId = higestValueFromDB[0]            
-            
-        def get_number_only(s):
-            return int(''.join(filter(str.isdigit,s)))
-        val = get_number_only(selectedHeaderId[:-2])
+            selectedHeaderId = 0          
         
+        if isinstance(selectedHeaderId, int):
+            val = selectedHeaderId
+        else:
+            def get_number_only(s):
+                return int(''.join(filter(str.isdigit,s)))
+            val = get_number_only(selectedHeaderId[:-2])
+            
 
         return f'{firstStr}{midStr}{val + 1}01'
 
 def generateIdTDetail(input, headerId):
     def get_number_only(s):
             return int(''.join(filter(str.isdigit,s)))
-    result = f"{input}{get_number_only(headerId)}"
-    # print(result,'>>>>>>')
+    
+    def getCateg(s):
+        return str(''.join(filter(str.isalpha,s)))[-1]
+            
+    result = f"{input}{getCateg(headerId)}{get_number_only(headerId)}"
     return result
  
 def postQuery(obj):
