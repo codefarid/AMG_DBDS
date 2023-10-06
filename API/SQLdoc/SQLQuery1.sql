@@ -375,3 +375,8 @@ ALTER TABLE EXIMT301 DROP CONSTRAINT FK_IDETT301
 DROP TABLE EXIMT301
 
 select * from EXIMT301
+
+use TestAMGAPPS
+use TestAMGAPPS
+                    select AAMTBIDZ1302 as 'TABLE_NAME' from AAMTBHAZ1301
+                    where AAMTHSTZ1302 = 'active'

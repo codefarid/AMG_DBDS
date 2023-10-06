@@ -371,7 +371,7 @@ def editQuery(inputNew,id):
             newIds = generateIdTDetail(y['fieldNameEdit']['value'],id)
             newDat = y['datTypeField'].upper()
             newMaxVal = y['maxlenField']
-            print(y["isFK"], type(y['isFK']),">>>> isFKto",y['isFK'] != '')
+            # print(y["isFK"], type(y['isFK']),">>>> isFKto",y['isFK'] != '')
             newIsFK = y['isFK']["value"] if y['isFK'] != '' else '0'
             newIsFKto = y['isFKto']["value"] if y['isFKto'] != '' else '0'
             newQueries = "ALTER TABLE " + id + " ADD " + newIds + " " + newDat + "(" + str(newMaxVal) + ")"
