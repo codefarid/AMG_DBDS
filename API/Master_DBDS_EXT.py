@@ -35,7 +35,7 @@ def index():
         getName = data['extName']
         
         cur_sql.execute("""
-                        Select AAMTBIDZ1302 as caption from AAMTBHAZ1301 where AAMTBIDZ1302 = '{ids}'
+                        Select TBIDM1701 as caption from AAM1701 where TBIDM1701 = '{ids}'
                         """.format(ids = headerId))
         
         rows = cur_sql.fetchall()
@@ -59,8 +59,8 @@ def index():
             
             
             cur_sql.execute("""
-                            Select AAMCAVAZ1302 as 'code' 
-                            From AAMTCATEZ1301 where AAMCKEYZ1302 like '%{kat}%'
+                            Select CANOM1601 as 'code' 
+                            From AAM1601 where CANAM1601 like '%{kat}%'
                             """.format(kat = getCate))
             kategori = cur_sql.fetchone()[0]
             msg = {
@@ -81,7 +81,7 @@ def index():
             
               
             cur_sql.execute("""
-                                INSERT INTO AAMTBHAZ1301 (AAMTBIDZ1302,AAMCPTBZ1302,AAMALIDZ1302,AAMALNMZ1302,AAMKTAPZ1302,AAMQESRZ1302,AAMTHSTZ1302,AAMJOINZ1302,AAMEXTTZ1301,AAMCEATZ1302,AAMCETMZ1302,AAMCEUEZ1302,AAMUDATZ1302,AAMUDTMZ1302,AAMUDUEZ1302)
+                                INSERT INTO AAM1701 (TBIDM1701,CPTBM1701,APNOM1701,APNAM1701,KTAPM1701,QESRM1701,STATM1701,JOINM1701,EXTTM1701,CRDTM1701,CRTMM1701,CRUSM1701,UPDTM1701,UPTIM1701,UPUSM1701)
                                 values 
                                 (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                                 """,(headerId, getName, appId, appName,kategori, getQuery ,status,joinTo, isExist, date, time, user, date, time, user))
@@ -100,13 +100,9 @@ def index():
                     daType = el['datTypeField'].upper()
                     maxVal = el['maxlenField']
                     isPk = '1' if el['isPk'] else '0'
-                    print("""
-                                    INSERT INTO AAMTBDTZ1301 (AAMFEIDZ1302,AAMHAIDZ1302,AAMNMZ1302,AAMVLZ1302,AAMDTZ1302,AAMPKZ1302,AAMEXTDZ1301,AAMCEATZ1302,AAMCETMZ1302,AAMCEUEZ1302,AAMUDATZ1302,AAMUDTMZ1302,AAMUDUEZ1302,AAMSTTDZ1301)
-                                    values (%s , %s , %s , %s , %s ,%s, %s , %s , %s , %s , %s, %s,%s,%s);
-                                    """,(fieldId,headerId,fieldName,maxVal,daType,isPk,isExist ,date, time, user, date, time, user,status))
                         
                     cur_sql.execute("""
-                                    INSERT INTO AAMTBDTZ1301 (AAMFEIDZ1302,AAMHAIDZ1302,AAMNMZ1302,AAMVLZ1302,AAMDTZ1302,AAMPKZ1302,AAMEXTDZ1301,AAMCEATZ1302,AAMCETMZ1302,AAMCEUEZ1302,AAMUDATZ1302,AAMUDTMZ1302,AAMUDUEZ1302,AAMSTTDZ1301)
+                                    INSERT INTO AAM1801 (FEIDM1801,HEIDM1801,NMCAM1801,DEVAM1801,DATYM1801,ISPKM1801,EXTDM1801,CRDTM1801,CRTMM1801,CRUSM1801,UPDTM1801,UPTIM1801,UPUSM1801,STATM1801)
                                     values (%s , %s , %s , %s , %s ,%s, %s , %s , %s , %s , %s, %s,%s,%s);
                                     """,(fieldId,headerId,fieldName,maxVal,daType,isPk,isExist ,date, time, user, date, time, user,status))
                     
@@ -161,32 +157,33 @@ def putExtTable(id):
         
         cur_sql.execute("""
             SELECT
-                AAMTBIDZ1302 as table_id ,
-                AAMCPTBZ1302 as caption_table,
-                AAMALIDZ1302 as aplication_id,
-                AAMALNMZ1302 as aplication_name,        
-                AAMKTAPZ1302 as kategori_app,
-                AAMQESRZ1302 as query_string,
-                AAMJOINZ1302 as joinTo ,
-                AAMEXTTZ1301 as isExist 
-            from AAMTBHAZ1301
-            where AAMTBIDZ1302 = %s
+                TBIDM1701 as table_id ,
+                CPTBM1701 as caption_table,
+                APNOM1701 as aplication_id,
+                APNAM1701 as aplication_name,        
+                KTAPM1701 as kategori_app,
+                QESRM1701 as query_string,
+                JOINM1701 as joinTo ,
+                EXTTM1701 as isExist 
+            from AAM1701
+            where TBIDM1701 = %s
             """, (id,))
         result1 = [dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])) for row in cur_sql]
 
         
         cur_sql.execute("""
             SELECT 
-                AAMFEIDZ1302 as field_id,
-                AAMHAIDZ1302 as header_id,
-                AAMNMZ1302 as name_caption,
-                AAMVLZ1302 as default_value,
-                AAMDTZ1302 as data_type,
-                AAMPKZ1302 as statPk,
-                AAMEXTDZ1301 as isExistField,
-                AAMSTTDZ1301 as 'statTD'
-            FROM AAMTBDTZ1301
-            where AAMHAIDZ1302 = %s AND AAMSTTDZ1301 = 'active'
+                FEIDM1801 as field_id,
+                HEIDM1801 as header_id,
+                NMCAM1801 as name_caption,
+                DEVAM1801 as default_value,
+                DATYM1801 as data_type,
+                ISPKM1801 as statPk,
+                EXTDM1801 
+                as isExistField,
+                STATM1801 as 'statTD'
+            FROM AAM1801
+            where HEIDM1801 = %s AND STATM1801 = 'active'
             """,(id,))
         result2 = [dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])) for row in cur_sql]
 
@@ -219,34 +216,34 @@ def putExtTable(id):
         
         
         cur_sql.execute("""
-                UPDATE AAMTBHAZ1301
+                UPDATE AAM1701
                 SET
-                    AAMCPTBZ1302 = %s,
-                    AAMALIDZ1302 = %s,
-                    AAMALNMZ1302 = %s,        
-                    AAMKTAPZ1302 = %s,
-                    AAMQESRZ1302 = %s,
-                    AAMTHISZ1301 = %s,
-                    AAMUDATZ1302 = %s,
-                    AAMUDTMZ1302 = %s,
-                    AAMUDUEZ1302 = %s
+                    CPTBM1701 = %s,
+                    APNOM1701 = %s,
+                    APNAM1701 = %s,        
+                    KTAPM1701 = %s,
+                    QESRM1701 = %s,
+                    HISTM1701 = %s,
+                    UPDTM1701 = %s,
+                    UPTIM1701 = %s,
+                    UPUSM1701 = %s
                 WHERE
-                    AAMTBIDZ1302 = %s
+                    TBIDM1701 = %s
                 """,(data['tableName'], appId, appName, kategori, newCreatedQuery, editedQuery, date, time, user,headerId))
         
         DB_SQL.commit()
         
         cur_sql.execute("""
             SELECT 
-                AAMFEIDZ1302 as field_id,
-                AAMHAIDZ1302 as header_id,
-                AAMNMZ1302 as name_caption,
-                AAMVLZ1302 as default_value,
-                AAMDTZ1302 as data_type,
-                AAMPKZ1302 as statPk,
-                AAMSTTDZ1301 as 'statTD'
-            FROM AAMTBDTZ1301
-            where AAMHAIDZ1302 = %s AND AAMSTTDZ1301 = 'active'
+                FEIDM1801 as field_id,
+                HEIDM1801 as header_id,
+                NMCAM1801 as name_caption,
+                DEVAM1801 as default_value,
+                DATYM1801 as data_type,
+                ISPKM1801 as statPk,
+                STATM1801 as 'statTD'
+            FROM AAM1801
+            where HEIDM1801 = %s AND STATM1801 = 'active'
             """,(id,))
         oldDatas = [dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])) for row in cur_sql]
         oldLen = len(oldDatas)
@@ -268,7 +265,7 @@ def putExtTable(id):
                     isPk = '1' if y['isPk'] else '0'
                     
                     cur_sql.execute("""
-                                    INSERT INTO AAMTBDTZ1301 (AAMFEIDZ1302,AAMHAIDZ1302,AAMNMZ1302,AAMVLZ1302,AAMDTZ1302,AAMPKZ1302,AAMEXTDZ1301,AAMCEATZ1302,AAMCETMZ1302,AAMCEUEZ1302,AAMUDATZ1302,AAMUDTMZ1302,AAMUDUEZ1302, AAMSTTDZ1301)
+                                    INSERT INTO AAM1801 (FEIDM1801,HEIDM1801,NMCAM1801,DEVAM1801,DATYM1801,ISPKM1801,EXTDM1801,CRDTM1801,CRTMM1801,CRUSM1801,UPDTM1801,UPTIM1801,UPUSM1801, STATM1801)
                                     values (%s , %s , %s , %s , %s , %s , %s , %s , %s ,%s, %s, %s,%s, %s);
                                     """,(newIds,headerId,fieldName,newMaxVal,newDat,isPk,isExist,date, time, user, date, time, user,stat))
                     DB_SQL.commit()
@@ -278,11 +275,11 @@ def putExtTable(id):
                 for x in removeField:
                     removedId = x['field_id']
                     cur_sql.execute("""
-                                    UPDATE AAMTBDTZ1301
+                                    UPDATE AAM1801
                                     SET 
-                                        AAMSTTDZ1301 = 'inactive'
+                                        STATM1801 = 'inactive'
                                     WHERE 
-                                        AAMFEIDZ1302 = '{ids}'
+                                        FEIDM1801 = '{ids}'
                                     """.format(ids=removedId))
                     DB_SQL.commit()
                     
@@ -310,20 +307,20 @@ def putExtTable(id):
                 statTD = el['statTD']
                 
                 cur_sql.execute("""
-                            UPDATE AAMTBDTZ1301
+                            UPDATE AAM1801
                             SET
-                                AAMHAIDZ1302 = %s,
-                                AAMNMZ1302 = %s,        
-                                AAMVLZ1302 = %s,
-                                AAMDTZ1302 = %s,
-                                AAMPKZ1302 = %s,
-                                AAMEXTDZ1301 = %s,
-                                AAMSTTDZ1301 = %s,
-                                AAMUDATZ1302 = %s,
-                                AAMUDTMZ1302 = %s,
-                                AAMUDUEZ1302 = %s
+                                HEIDM1801 = %s,
+                                NMCAM1801 = %s,        
+                                DEVAM1801 = %s,
+                                DATYM1801 = %s,
+                                ISPKM1801 = %s,
+                                EXTDM1801 = %s,
+                                STATM1801 = %s,
+                                UPDTM1801 = %s,
+                                UPTIM1801 = %s,
+                                UPUSM1801 = %s
                             WHERE
-                                AAMFEIDZ1302 = %s
+                                FEIDM1801 = %s
                             """,(headerId,fieldName,maxlen,daType,isPk,isExist,statTD,date, time, user,fieldId))
                 DB_SQL.commit()
  

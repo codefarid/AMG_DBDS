@@ -13,15 +13,15 @@ module_id = 3
 def checkColumn(alias):
     match alias:
         case 'code':
-            return 'AAMTBCOZ1302'
+            return 'TBNOM1501'
         case 'value':
-            return 'AAMTDEFZ1302'
+            return 'TBDEM1501'
         case 'user':
-            return 'AAMCUDEZ1302'
+            return 'CRUSM1501'
         case 'status':
-            return 'AAMDSTAZ1302'
+            return 'STATM1501'
         
-    return 'AAMTBCOZ1302'
+    return 'TBNOM1501'
         
 @master_dictionaries.route('/api/master_dictionaries', methods=['GET','POST'])
 # @check_for_token
@@ -41,15 +41,15 @@ def index():
         where = ''
         
         if param['globalFilter'] != 'null':
-            where = '''WHERE AAMTBCOZ1302 like '%{filter}%' OR
-                            AAMTDEFZ1302 like '%{filter}%' OR
-                            AAMCUDEZ1302 like '%{filter}%' OR
-                            AAMDSTAZ1302 like '%{filter}%'
+            where = '''WHERE TBNOM1501 like '%{filter}%' OR
+                            TBDEM1501 like '%{filter}%' OR
+                            CRUSM1501 like '%{filter}%' OR
+                            STATM1501 like '%{filter}%'
                     '''.format(filter = param['globalFilter'])
         cur_sql.execute("""
                         Select 
                             COUNT(*) as totalData
-                        From AAMTBDEZ1301 {where}
+                        From AAM1501 {where}
                         """.format(where = where))
         
         totalData = cur_sql.fetchone()[0]
@@ -60,11 +60,11 @@ def index():
         
         cur_sql.execute("""
                         SELECT 
-                            AAMTBCOZ1302 as code, 
-                            AAMTDEFZ1302 as value, 
-                            AAMCUDEZ1302 as 'user', 
-                            AAMDSTAZ1302 as 'status' 
-                        FROM AAMTBDEZ1301 {where}
+                            TBNOM1501 as code, 
+                            TBDEM1501 as value, 
+                            CRUSM1501 as 'user', 
+                            STATM1501 as 'status' 
+                        FROM AAM1501 {where}
                         ORDER BY {col} {method}
                         OFFSET {before} ROWS
                         FETCH NEXT {totalData} ROWS ONLY;
@@ -106,7 +106,7 @@ def index():
         
         
         cur_sql.execute("""
-                                Select AAMTDEFZ1302 as caption from AAMTBDEZ1301 where AAMTDEFZ1302 = '{names}'
+                                Select TBDEM1501 as caption from AAM1501 where TBDEM1501 = '{names}'
                                 """.format(names =  value))
         rows = cur_sql.fetchone()        
         
@@ -122,7 +122,7 @@ def index():
             return jsonify({'message':"Nama Sudah Ada, Buat Nama lain!"})
         else:
             cur_sql.execute("""
-                                            INSERT INTO AAMTBDEZ1301 (AAMTBCOZ1302 , AAMTDEFZ1302, AAMDADEZ1302, AAMTIDEZ1302, AAMCUDEZ1302, AAMUDDEZ1302, AAMUTDEZ1302, AAMUUDEZ1302, AAMDSTAZ1302)
+                                            INSERT INTO AAM1501 (TBNOM1501 , TBDEM1501, CRDTM1501, CRTMM1501, CRUSM1501, UPDTM1501, UPTIM1501, UPUSM1501,STATM1501)
                                             VALUES ( %s, %s, %s ,%s ,%s, %s, %s ,%s ,%s)
                                             """, (code, value, date, time, user, date, time, user, status))
             DB_SQL.commit()
@@ -144,11 +144,11 @@ def editDict(id):
     if request.method == "GET":
         cur_sql.execute("""
                         select 
-                            AAMTBCOZ1302 as 'code', 
-                            AAMTDEFZ1302 as 'value', 
-                            AAMDSTAZ1302 as 'status' 
-                        from AAMTBDEZ1301
-                        where AAMTBCOZ1302 = %s
+                            TBNOM1501 as 'code', 
+                            TBDEM1501 as 'value', 
+                            STATM1501 as 'status' 
+                        from AAM1501
+                        where TBNOM1501 = %s
                         """, (id,))
         results = []
         for row in cur_sql:
@@ -176,7 +176,7 @@ def editDict(id):
         # user = 'santoso'
         
         cur_sql.execute("""
-                                Select AAMTDEFZ1302 as caption from AAMTBDEZ1301 where AAMTDEFZ1302 = '{names}'
+                                Select TBDEM1501 as caption from AAM1501 where TBDEM1501 = '{names}'
                                 """.format(names =  value))
         rows = cur_sql.fetchone()
         
@@ -191,14 +191,14 @@ def editDict(id):
         #     return jsonify({'message':"Nama Sudah Ada, Buat Nama lain!"})
         # else:
         cur_sql.execute("""
-                            UPDATE AAMTBDEZ1301
+                            UPDATE AAM1501
                             SET
-                                AAMTDEFZ1302 = %s,
+                                TBDEM1501 = %s,
                                 AAMUDDEZ1302 = %s,
                                 AAMUTDEZ1302 = %s,
                                 AAMUUDEZ1302 = %s,
-                                AAMDSTAZ1302= %s
-                            WHERE AAMTBCOZ1302 = %s
+                                STATM1501= %s
+                            WHERE TBNOM1501 = %s
                             """, ( value, date, time, user, status,code))
         DB_SQL.commit()
               

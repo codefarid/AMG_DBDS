@@ -24,7 +24,13 @@ def index():
     # user = check_user(token, amg = True)
     if request.method == 'GET':
         cur_sql.execute("""
-                        select AAMCAVAZ1302 as code , AAMCKEYZ1302 as label, AAMDACAZ1302 as 'created', AAMUSCAZ1302 as 'user', AAMCSTAZ1302 as status from AAMTCATEZ1301
+                        select
+                        CANOM1601 as code ,
+                        CANAM1601 as label,
+                        CRDTM1601 as 'created',
+                        CRUSM1601 as 'user', 
+                        STATM1601 as status 
+                        from AAM1601
                         """)
         results = []
         for row in cur_sql:
@@ -44,7 +50,10 @@ def index():
         status = "active"
         
         cur_sql.execute("""
-                                Select TOP 1 AAMCAVAZ1302 as 'value' from AAMTCATEZ1301 order by AAMCAVAZ1302 DESC
+                                Select TOP 1 
+                                CANOM1601 as 'value' 
+                                from AAM1601
+                                order by CANOM1601 DESC
                                 """)
         categories = cur_sql.fetchone()
         if categories:
@@ -53,7 +62,11 @@ def index():
             newVal = str(1)
         
         cur_sql.execute("""
-                                Select AAMCKEYZ1302 as code from AAMTCATEZ1301 where AAMCKEYZ1302 like '%{names}%'
+                                Select 
+                                CANOM1601 as code 
+                                from 
+                                AAM1601 
+                                where CANOM1601 like '%{names}%'
                                 """.format(names =  category))
         rows = cur_sql.fetchone()
         
@@ -66,7 +79,7 @@ def index():
             duplicated_name = ['']       
                    
             cur_sql.execute("""
-                                INSERT INTO AAMTCATEZ1301( AAMCAVAZ1302, AAMCKEYZ1302, AAMDACAZ1302, AAMTACAZ1302, AAMUSCAZ1302, AAMUDACZ1302,  AAMUTACZ1302, AAMUUSCZ1302, AAMCSTAZ1302)
+                                INSERT INTO AAM1601( CANAM1601, CANOM1601, CRDTM1601, CRTMM1601, CRUSM1601, UPDTM1601,  UPTIM1601, UPUSM1601, STATM1601)
                                 VALUES (%s, %s, %s ,%s ,%s, %s ,%s ,%s, %s)
                                 """,(newVal, category,date,time,user,date,time,user, status))
             DB_SQL.commit()
@@ -76,8 +89,8 @@ def index():
 def putCate(id):
     if request.method == "GET":
         cur_sql.execute("""
-                        select AAMCKEYZ1302 as label, AAMCSTAZ1302 as status from AAMTCATEZ1301
-                        where AAMCAVAZ1302 = %s
+                        select CANOM1601 as label, STATM1601 as status from AAM1601
+                        where CANAM1601 = %s
                         """, (id,))
         results = []
         for row in cur_sql:
@@ -97,7 +110,7 @@ def putCate(id):
         status = data['stCate']
         
         # cur_sql.execute("""
-        #                         Select AAMCKEYZ1302 as code from AAMTCATEZ1301 where AAMCKEYZ1302 = '{names}'
+        #                         Select CANOM1601 as code from AAM1601 where CANOM1601 = '{names}'
         #                         """.format(names =  category))
         # rows = cur_sql.fetchone()
         
@@ -110,14 +123,14 @@ def putCate(id):
         #     return jsonify({'message':"Nama Sudah Ada, Buat Nama lain!"})
         # else:
         cur_sql.execute("""
-                            UPDATE AAMTCATEZ1301
+                            UPDATE AAM1601
                             SET
-                                AAMCKEYZ1302 = %s,
-                                AAMUDACZ1302 = %s,
-                                AAMUTACZ1302 = %s,
-                                AAMUUSCZ1302 = %s,
-                                AAMCSTAZ1302= %s
-                            WHERE AAMCAVAZ1302 = %s
+                                CANOM1601 = %s,
+                                UPDTM1601 = %s,
+                                UPTIM1601 = %s,
+                                UPUSM1601 = %s,
+                                STATM1601= %s
+                            WHERE CANAM1601 = %s
                             """,(category,date,time,user,status, id))
         DB_SQL.commit()
             

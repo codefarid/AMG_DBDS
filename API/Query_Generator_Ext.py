@@ -32,9 +32,9 @@ def index():
         
         cur_sql.execute("""
                         SELECT
-                        AAMTBCOZ1302 as 'value',
-                        AAMTDEFZ1302 as 'key'
-                        FROM AAMTBDEZ1301
+                        TBNOM1501 as 'value',
+                        TBDEM1501 as 'key'
+                        FROM AAM1501
                         """) 
         
         sugestionField = []
@@ -43,9 +43,9 @@ def index():
         
         cur_sql.execute("""
                         SELECT 
-                            AAMCAVAZ1302 as 'value',
-                            AAMCKEYZ1302 as 'key'
-                        FROM AAMTCATEZ1301
+                            CANOM1601 as 'value',
+                            CANAM1601 as 'key'
+                        FROM AAM1601
                         """)
         category = []
         for row in cur_sql:
@@ -53,10 +53,10 @@ def index():
                     
         cur_sql.execute("""
                         Select 
-                            AAMTBIDZ1302 as 'value' ,
-                            AAMCPTBZ1302 as 'text'
-                        FROM AAMTBHAZ1301
-                        where AAMTHSTZ1302 = 'active'
+                            TBIDM1701 as 'value' ,
+                            CPTBM1701 as 'text'
+                        FROM AAM1701
+                        where STATM1701 = 'active'
                         """)
         joinTo = []
         for row in cur_sql:

@@ -11,15 +11,15 @@ master_dbds = Blueprint('master_dbds',__name__)
 def checkColumn(alias):
     match alias:
         case 'id':
-            return 'AAMTBIDZ1302'
+            return 'TBIDM1701'
         case 'caption':
-            return 'AAMCPTBZ1302'
+            return 'CPTBM1701'
         case 'query':
-            return 'AAMQESRZ1302'
+            return 'QESRM1701'
         case 'status':
-            return 'AAMTHSTZ1302'
+            return 'STATM1701'
         
-    return 'AAMTBIDZ1302'
+    return 'TBIDM1701'
 
 module_id = 1
 
@@ -40,38 +40,38 @@ def index():
         
         if param['globalFilter'] != 'null':
             where = '''WHERE
-                            AAMTHSTZ1302 = 'active' AND
-                            (AAMTBIDZ1302 like '%{filter}%' OR
-                            AAMCPTBZ1302 like '%{filter}%' OR
-                            AAMQESRZ1302 like '%{filter}%')  
+                            STATM1701 = 'active' AND
+                            (TBIDM1701 like '%{filter}%' OR
+                            CPTBM1701 like '%{filter}%' OR
+                            QESRM1701 like '%{filter}%')  
                     '''.format(filter = param['globalFilter'])
         else:
             where = '''
-                    WHERE AAMTHSTZ1302 = 'active'
+                    WHERE STATM1701 = 'active'
                     '''
         if param['filteredApp'] != 'null':
-            where = f'''WHERE AAMALNMZ1302 = '{param['filteredApp']}' and AAMTHSTZ1302 = 'active' '''
+            where = f'''WHERE APNAM1701 = '{param['filteredApp']}' and STATM1701 = 'active' '''
         cur_sql.execute("""
                     SELECT 
                         COUNT(*) AS totalData
                     FROM {table} {where}
-                """.format(table='AAMTBHAZ1301', where=where))
+                """.format(table='AAM1701', where=where))
 
         totalData = cur_sql.fetchone()[0]
-        orderByCol = "LEN(AAMTBIDZ1302)"#checkColumn(param['orderBy'])
+        orderByCol = "LEN(TBIDM1701)"#checkColumn(param['orderBy'])
         orderByMethod = "ASC"#param['orderMethod']
         
         cur_sql.execute("""
                         Select 
-                            AAMTBIDZ1302 as 'id',
-                            AAMCPTBZ1302 as 'caption',
-                            AAMQESRZ1302 as 'query',
-                            AAMTHSTZ1302 as 'status',
-                            AAMEXTTZ1301 as 'isExisting',
-                            AAMALNMZ1302 as 'aplication',
-                            AAMKTAPZ1302 as 'categories',
-                            AAMJOINZ1302 as 'joined'
-                            from AAMTBHAZ1301 
+                            TBIDM1701 as 'id',
+                            CPTBM1701 as 'caption',
+                            QESRM1701 as 'query',
+                            STATM1701 as 'status',
+                            EXTTM1701 as 'isExisting',
+                            APNAM1701 as 'aplication',
+                            KTAPM1701 as 'categories',
+                            JOINM1701 as 'joined'
+                            from AAM1701 
                             {where}
                         ORDER BY {col} {method}
                         OFFSET {before} ROWS
@@ -108,12 +108,12 @@ def index():
         headerId = generateIdHeader(data)
         cur_sql.execute("""
                         select 
-                        AAMTBIDZ1302 as table_id ,  
-                            AAMCPTBZ1302 as caption_table,
-                            AAMALIDZ1302 as aplication_id,
-                            AAMALNMZ1302 as aplication_name,
-                            AAMKTAPZ1302 as kategori_app
-                        from AAMTBHAZ1301
+                        TBIDM1701 as table_id ,  
+                            CPTBM1701 as caption_table,
+                            APNOM1701 as aplication_id,
+                            APNAM1701 as aplication_name,
+                            KTAPM1701 as kategori_app
+                        from AAM1701
                         """)
         checkData = []
         for row in cur_sql:
@@ -122,8 +122,8 @@ def index():
         for el in checkData:
             if headerId == el['table_id']:
                 cur_sql.execute("""
-                                SELECT AAMTBIDZ1302 AS table_id
-                                FROM AAMTBHAZ1301
+                                SELECT TBIDM1701 AS table_id
+                                FROM AAM1701
                                 """)
                 existingIds = [row[0] for row in cur_sql]
                 
@@ -149,9 +149,8 @@ def index():
 
 
         cur_sql.execute("""
-            INSERT INTO AAMTBHAZ1301 (AAMTBIDZ1302,AAMCPTBZ1302,AAMALIDZ1302,AAMALNMZ1302,AAMKTAPZ1302,AAMQESRZ1302,AAMTHSTZ1302,AAMJOINZ1302,AAMCEATZ1302,AAMCETMZ1302,AAMCEUEZ1302,AAMUDATZ1302,AAMUDTMZ1302,AAMUDUEZ1302 ,AAMEXTTZ1301)
-            values 
-            (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            INSERT INTO AAM1701 (TBIDM1701,CPTBM1701,APNOM1701,APNAM1701,KTAPM1701,QESRM1701,STATM1701,JOINM1701,CRDTM1701,CRTMM1701,CRUSM1701,UPDTM1701,UPTIM1701,UPUSM1701)
+            values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
             """,(headerId, data['tableName'], appId, appName,kategori, getQuery ,status,joinTo, date, time, user, date, time, user, isExist))
 
 
@@ -166,7 +165,7 @@ def index():
             status = 'active'
 
             cur_sql.execute("""
-                INSERT INTO AAMTBDTZ1301 (AAMFEIDZ1302,AAMHAIDZ1302,AAMNMZ1302,AAMVLZ1302,AAMDTZ1302,AAMPKZ1302,AAMEXTDZ1301,AAMCEATZ1302,AAMCETMZ1302,AAMCEUEZ1302,AAMUDATZ1302,AAMUDTMZ1302,AAMUDUEZ1302,AAMSTTDZ1301,AAMISFKZ1301,AAMFKTOZ1301)
+                INSERT INTO AAM1801 (FEIDM1801,HEIDM1801,NMCAM1801,DEVAM1801,DATYM1801,ISPKM1801,EXTDM1801,CRDTM1801,CRTMM1801,CRUSM1801,UPDTM1801,UPTIM1801,UPUSM1801,STATM1801,ISFKM1801,FKTOM1801)
                 values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
                 """,(fieldId,headerId,fieldName,maxVal,daType,isPk,isExist,date, time, user, date, time, user,status,isFK,isFKto))
 
@@ -179,30 +178,30 @@ def filterByApp(appName):
     if appName != 'null':
         query = f"""
                         Select 
-                                AAMTBIDZ1302 as 'id',
-                                AAMCPTBZ1302 as 'caption',
-                                AAMQESRZ1302 as 'query',
-                                AAMTHSTZ1302 as 'status',
-                                AAMEXTTZ1301 as 'isExisting',
-                                AAMALNMZ1302 as 'aplication',
-                                AAMKTAPZ1302 as 'categories',
-                                AAMJOINZ1302 as 'joined'
-                                from AAMTBHAZ1301
-                        WHERE AAMALNMZ1302 = '{appName}' and AAMTHSTZ1302 = 'active'
+                                TBIDM1701 as 'id',
+                                CPTBM1701 as 'caption',
+                                QESRM1701 as 'query',
+                                STATM1701 as 'status',
+                                EXTTM1701 as 'isExisting',
+                                APNAM1701 as 'aplication',
+                                KTAPM1701 as 'categories',
+                                JOINM1701 as 'joined'
+                                from AAM1701
+                        WHERE APNAM1701 = '{appName}' and STATM1701 = 'active'
                         """
     else:
         query = """
                         Select 
-                                AAMTBIDZ1302 as 'id',
-                                AAMCPTBZ1302 as 'caption',
-                                AAMQESRZ1302 as 'query',
-                                AAMTHSTZ1302 as 'status',
-                                AAMEXTTZ1301 as 'isExisting',
-                                AAMALNMZ1302 as 'aplication',
-                                AAMKTAPZ1302 as 'categories',
-                                AAMJOINZ1302 as 'joined'
-                                from AAMTBHAZ1301
-                        WHERE AAMTHSTZ1302 = 'active'
+                                TBIDM1701 as 'id',
+                                CPTBM1701 as 'caption',
+                                QESRM1701 as 'query',
+                                STATM1701 as 'status',
+                                EXTTM1701 as 'isExisting',
+                                APNAM1701 as 'aplication',
+                                KTAPM1701 as 'categories',
+                                JOINM1701 as 'joined'
+                                from AAM1701
+                        WHERE STATM1701 = 'active'
                         """
     
     cur_sql.execute(query)
@@ -237,34 +236,34 @@ def getOneTable(id):
         
         cur_sql.execute("""
             SELECT
-                AAMTBIDZ1302 as table_id ,
-                AAMCPTBZ1302 as caption_table,
-                AAMALIDZ1302 as aplication_id,
-                AAMALNMZ1302 as aplication_name,        
-                AAMKTAPZ1302 as kategori_app,
-                AAMQESRZ1302 as query_string,
-                AAMJOINZ1302 as joinTo ,
-                AAMEXTTZ1301 as isExist 
-            from AAMTBHAZ1301
-            where AAMTBIDZ1302 = %s
+                TBIDM1701 as table_id ,
+                CPTBM1701 as caption_table,
+                APNOM1701 as aplication_id,
+                APNAM1701 as aplication_name,        
+                KTAPM1701 as kategori_app,
+                QESRM1701 as query_string,
+                JOINM1701 as joinTo ,
+                EXTTM1701 as isExist 
+            from AAM1701
+            where TBIDM1701 = %s
             """, (id,))
         result1 = [dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])) for row in cur_sql]
 
         
         cur_sql.execute("""
             SELECT 
-                AAMFEIDZ1302 as field_id,
-                AAMHAIDZ1302 as header_id,
-                AAMNMZ1302 as name_caption,
-                AAMVLZ1302 as default_value,
-                AAMDTZ1302 as data_type,
-                AAMPKZ1302 as statPk,
-                AAMEXTDZ1301 as isExistField,
+                FEIDM1801 as field_id,
+                HEIDM1801 as header_id,
+                NMCAM1801 as name_caption,
+                DEVAM1801 as default_value,
+                DATYM1801 as data_type,
+                ISPKM1801 as statPk,
+                EXTDM1801 as isExistField,
                 AAMSTTDZ1301 as status,
                 AAMISFKZ1301 as isFK,
                 AAMFKTOZ1301 as isFKto
-            FROM AAMTBDTZ1301
-            where AAMHAIDZ1302 = %s AND AAMSTTDZ1301 = 'active'
+            FROM AAM1801
+            where HEIDM1801 = %s AND STATM1801 = 'active'
             """,(id,))
         result2 = [dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])) for row in cur_sql]
         
@@ -319,36 +318,36 @@ def getOneTable(id):
         
         
         cur_sql.execute("""
-                UPDATE AAMTBHAZ1301
+                UPDATE AAM1701
                 SET
-                    AAMCPTBZ1302 = %s,
-                    AAMALIDZ1302 = %s,
-                    AAMALNMZ1302 = %s,        
-                    AAMKTAPZ1302 = %s,
-                    AAMQESRZ1302 = %s,
-                    AAMTHISZ1301 = %s,
-                    AAMUDATZ1302 = %s,
-                    AAMUDTMZ1302 = %s,
-                    AAMUDUEZ1302 = %s
+                    CPTBM1701 = %s,
+                    APNOM1701 = %s,
+                    APNAM1701 = %s,        
+                    KTAPM1701 = %s,
+                    QESRM1701 = %s,
+                    HISTM1701 = %s,
+                    UPDTM1701 = %s,
+                    UPTIM1701 = %s,
+                    UPUSM1701 = %s
                 WHERE
-                    AAMTBIDZ1302 = %s
+                    TBIDM1701 = %s
                 """,(data['tableName'], appId, appName, kategori, newCreatedQuery, editedQuery, date, time, user,headerId))
         
         DB_SQL.commit()
         
         cur_sql.execute("""
             SELECT 
-                AAMFEIDZ1302 as field_id,
-                AAMHAIDZ1302 as header_id,
-                AAMNMZ1302 as name_caption,
-                AAMVLZ1302 as default_value,
-                AAMDTZ1302 as data_type,
-                AAMPKZ1302 as statPk,
-                AAMSTTDZ1301 as statusTD,
-                AAMISFKZ1301 as isFK,
-                AAMFKTOZ1301 as isFKto
-            FROM AAMTBDTZ1301
-            where AAMHAIDZ1302 = %s and AAMSTTDZ1301 = 'active'
+                FEIDM1801 as field_id,
+                HEIDM1801 as header_id,
+                NMCAM1801 as name_caption,
+                DEVAM1801 as default_value,
+                DATYM1801 as data_type,
+                ISPKM1801 as statPk,
+                STATM1801 as statusTD,
+                ISFKM1801 as isFK,
+                FKTOM1801 as isFKto
+            FROM AAM1801
+            where HEIDM1801 = %s and STATM1801 = 'active'
             """,(id,))
         oldDatas = [dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])) for row in cur_sql]
         oldLen = len(oldDatas)
@@ -369,7 +368,7 @@ def getOneTable(id):
                     isPk = '1' if y['isPk'] else '0'
                     
                     cur_sql.execute("""
-                                    INSERT INTO AAMTBDTZ1301 (AAMFEIDZ1302,AAMHAIDZ1302,AAMNMZ1302,AAMVLZ1302,AAMDTZ1302,AAMPKZ1302,AAMEXTDZ1301,AAMCEATZ1302,AAMCETMZ1302,AAMCEUEZ1302,AAMUDATZ1302,AAMUDTMZ1302,AAMUDUEZ1302, AAMSTTDZ1301, AAMISFKZ1301 ,AAMFKTOZ1301)
+                                    INSERT INTO AAM1801 (FEIDM1801,HEIDM1801,NMCAM1801,DEVAM1801,DATYM1801,ISPKM1801,EXTDM1801,CRDTM1801,CRTMM1801,CRUSM1801,UPDTM1801,UPTIM1801,UPUSM1801, STATM1801, ISFKM1801,FKTOM1801)
                                     values (%s , %s , %s , %s , %s , %s , %s , %s , %s ,%s, %s, %s,%s,%s);
                                     """,(newIds,headerId,fieldName,newMaxVal,newDat,isPk,isExist,date, time, user, date, time, user,statusTD,isFK,isFKto))
                     DB_SQL.commit()
@@ -387,22 +386,22 @@ def getOneTable(id):
                 
                 
                 cur_sql.execute("""
-                            UPDATE AAMTBDTZ1301
+                            UPDATE AAM1801
                             SET
-                                AAMHAIDZ1302 = %s,
-                                AAMNMZ1302 = %s,        
-                                AAMVLZ1302 = %s,
-                                AAMDTZ1302 = %s,
-                                AAMPKZ1302 = %s,
-                                AAMEXTDZ1301 = %s,
-                                AAMSTTDZ1301 = %s,
-                                AAMUDATZ1302 = %s,
-                                AAMUDTMZ1302 = %s,
-                                AAMUDUEZ1302 = %s,
-                                AAMISFKZ1301 = %s,
-                                AAMFKTOZ1301 = %s
+                                HEIDM1801 = %s,
+                                NMCAM1801 = %s,        
+                                DEVAM1801 = %s,
+                                DATYM1801 = %s,
+                                ISPKM1801 = %s,
+                                EXTDM1801 = %s,
+                                STATM1801 = %s,
+                                UPDTM1801 = %s,
+                                UPTIM1801 = %s,
+                                UPUSM1801 = %s,
+                                ISFKM1801 = %s,
+                                FKTOM1801 = %s
                             WHERE
-                                AAMFEIDZ1302 = %s
+                                FEIDM1801 = %s
                             """,(headerId,fieldName,maxlen,daType,isPk,isExist,statTD,date, time, user,fieldId, isFK,isFKto))
                 DB_SQL.commit()
  
@@ -411,9 +410,9 @@ def getOneTable(id):
 @master_dbds.route('/api/master_dbds/<string:id>', methods=['DELETE'])
 def deleteTable(id):
     cur_sql.execute("""
-                    UPDATE AAMTBHAZ1301
-                    SET AAMTHSTZ1302 = 'inactive' 
-                    WHERE AAMTBIDZ1302 = %s
+                    UPDATE AAM1701
+                    SET STATM1701 = 'inactive' 
+                    WHERE TBIDM1701 = %s
                     """, (id,))
     DB_SQL.commit()
     return jsonify("Status Change!")

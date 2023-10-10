@@ -32,10 +32,10 @@ def index():
         
         cur_sql.execute("""
                         SELECT
-                        AAMTBCOZ1302 as 'value',
-                        AAMTDEFZ1302 as 'key',
-                        AAMDSTAZ1302 as 'status' 
-                        FROM AAMTBDEZ1301 where AAMDSTAZ1302 = 'active' or AAMDSTAZ1302 = 'on'
+                        TBNOM1501 as 'value',
+                        TBDEM1501 as 'key',
+                        STATM1501 as 'status' 
+                        FROM AAM1501 where STATM1501 = 'active' or STATM1501 = 'on'
                         """) 
         
         sugestionField = []
@@ -44,10 +44,10 @@ def index():
         
         cur_sql.execute("""
                         SELECT 
-                            AAMCAVAZ1302 as 'value',
-                            AAMCKEYZ1302 as 'key',
-                            AAMCSTAZ1302 as status
-                        FROM AAMTCATEZ1301 where AAMCSTAZ1302 = 'active'
+                            CANOM1601 as 'value',
+                            CANAM1601 as 'key',
+                            STATM1601 as 'status'
+                        FROM AAM1601 where STATM1601 = 'active'
                         """)
         category = []
         for row in cur_sql:
@@ -55,11 +55,11 @@ def index():
           
         cur_sql.execute("""
                         Select 
-                            AAMTBIDZ1302 as 'value' ,
-                            AAMCPTBZ1302 as 'text',
-                            AAMALNMZ1302 as 'app'
-                        From AAMTBHAZ1301
-                            Where AAMTHSTZ1302 = 'active'
+                            TBIDM1701 as 'value' ,
+                            CPTBM1701 as 'text',
+                            APNAM1701 as 'app'
+                        From AAM1701
+                            Where STATM1701 = 'active'
                         """)
         joinTo = []
         for row in cur_sql:
@@ -106,16 +106,16 @@ def appendQuery(id):
 def sendData():
     cur_sql.execute("""
                 SELECT    
-                AAMTBHAZ1301.AAMTBIDZ1302 AS table_id,
-                AAMTBHAZ1301.AAMCPTBZ1302 AS caption_table,
-                AAMTBHAZ1301.AAMALNMZ1302 AS aplication_name,
-                AAMTBDTZ1301.AAMFEIDZ1302 AS field_id,
-                AAMTBDTZ1301.AAMNMZ1302 AS name_caption
+                AAM1701.TBIDM1701 AS table_id,
+                AAM1701.CPTBM1701 AS caption_table,
+                AAM1701.APNAM1701 AS aplication_name,
+                AAM1801.FEIDM1801 AS field_id,
+                AAM1801.NMCAM1801 AS name_caption
                 FROM
-                AAMTBHAZ1301
+                AAM1701
                 INNER JOIN 
-                AAMTBDTZ1301 ON AAMTBHAZ1301.AAMTBIDZ1302 = AAMTBDTZ1301.AAMHAIDZ1302
-                where AAMTHSTZ1302 = 'active';
+                AAM1801 ON AAM1701.TBIDM1701 = AAM1801.AAMHAIDZ1302
+                where STATM1701 = 'active';
                 """)
     rawData = []
     for row in cur_sql:

@@ -34,11 +34,11 @@ def index():
         
         cur_sql.execute("""
                         Select 
-                            AAMTBIDZ1302 as headerId ,
-                            AAMCPTBZ1302 as tableName,
-                            AAMALNMZ1302 as app,
-                            AAMKTAPZ1302 as categories
-                            from AAMTBHAZ1301 where AAMTHSTZ1302 = 'active'
+                            TBIDM1701 as headerId ,
+                            CPTBM1701 as tableName,
+                            APNAM1701 as app,
+                            KTAPM1701 as categories
+                            from AAM1701 where STATM1701 = 'active'
                         """)
         selectTable = []
         for row in cur_sql:
@@ -65,12 +65,12 @@ def getDetailTable(id):
      if request.method == 'GET':
         cur_sql.execute("""
                        SELECT 
-                            AAMFEIDZ1302 as fieldId ,
-                            AAMNMZ1302 as fieldName,
-                            AAMVLZ1302 as maxLen,
-                            AAMDTZ1302 as datType,
-                            AAMPKZ1302 as isPk 
-                        FROM AAMTBDTZ1301 WHERE AAMHAIDZ1302 = %s
+                            FEIDM1801 as fieldId ,
+                            NMCAM1801 as fieldName,
+                            DEVAM1801 as maxLen,
+                            DATYM1801 as datType,
+                            ISPKM1801 as isPk 
+                        FROM AAM1801 WHERE HEIDM1801 = %s
                         """, (id))
         data = []
         for row in cur_sql:

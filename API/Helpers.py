@@ -29,14 +29,14 @@ def detectPkChange(newData,headerId):
     query = ''    
     cur_sql.execute("""
                 SELECT 
-                    AAMFEIDZ1302 as fieldId,
-                    AAMHAIDZ1302 as headerId,
-                    AAMVLZ1302 as defaultValue,
-                    AAMDTZ1302 as dataType,
-                    AAMPKZ1302 as isPk,
-                    AAMSTTDZ1301 as statuses
-                FROM AAMTBDTZ1301
-                where AAMHAIDZ1302 = %s and AAMPKZ1302 = '1' and AAMSTTDZ1301 = 'active'
+                    FEIDM1801 as fieldId,
+                    HEIDM1801 as headerId,
+                    DEVAM1801 as defaultValue,
+                    DATYM1801 as dataType,
+                    ISPKM1801 as isPk,
+                    STATM1801 as statuses
+                FROM AAM1801
+                where HEIDM1801 = %s and ISPKM1801 = '1' and STATM1801 = 'active'
                 """, (headerId,))
     oldField = [dict(zip([column[0] for column in cur_sql.description], [
                     str(x).strip() for x in row])) for row in cur_sql]
@@ -112,7 +112,7 @@ def getTableNameFromDB(first,second):
 def getTableNameFromInternal(first,second):
     cur_sql.execute("""
                     use TestAMGAPPS
-                    select AAMTBIDZ1302 as 'TABLE_NAME' from AAMTBHAZ1301
+                    select TBIDM1701 as 'TABLE_NAME' from AAM1701
                     where AAMTHSTZ1302 = 'active'
                     """)
     t = []
@@ -246,8 +246,8 @@ def postExtQuery(obj):
     else:
         getTable = obj['tableName']
         cur_sql.execute("""
-                            SELECT AAMTBIDZ1302 FROM AAMTBHAZ1301
-                            WHERE AAMCPTBZ1302 = '{tana}'
+                            SELECT TBIDM1701 FROM AAM1701
+                            WHERE CPTBM1701 = '{tana}'
                         """.format(tana = getTable))
         rows = cur_sql.fetchone()
         header_id = rows[0]
@@ -281,10 +281,10 @@ def postExtQuery(obj):
 def editQuery(inputNew,id):
     cur_sql.execute("""
             SELECT
-                AAMTBIDZ1302 as headerId,
-                AAMQESRZ1302 as query_existing  
-            from AAMTBHAZ1301
-            where AAMTBIDZ1302 = %s
+                TBIDM1701 as headerId,
+                QESRM1701 as query_existing  
+            from AAM1701
+            where TBIDM1701 = %s
             """, (id,))
     result1 = [dict(zip([column[0] for column in cur_sql.description], [
                     str(x).strip() for x in row])) for row in cur_sql]
@@ -292,16 +292,16 @@ def editQuery(inputNew,id):
 
     cur_sql.execute("""
                 SELECT 
-                    AAMFEIDZ1302 as fieldId,
-                    AAMHAIDZ1302 as headerId,
-                    AAMVLZ1302 as defaultValue,
-                    AAMDTZ1302 as dataType,
-                    AAMPKZ1302 as isPk,
-                    AAMSTTDZ1301 as 'statusTD',
-                    AAMISFKZ1301 as 'isFK',
-                    AAMFKTOZ1301 as 'isFKto'
-                FROM AAMTBDTZ1301
-                where AAMHAIDZ1302 = %s AND AAMSTTDZ1301 = 'active'
+                    FEIDM1801 as fieldId,
+                    HEIDM1801 as headerId,
+                    DEVAM1801 as defaultValue,
+                    DATYM1801 as dataType,
+                    ISPKM1801 as isPk,
+                    STATM1801 as 'statusTD',
+                    ISFKM1801 as 'isFK',
+                    FKTOM1801 as 'isFKto'
+                FROM AAM1801
+                where HEIDM1801 = %s AND STATM1801 = 'active'
                 """, (id,))
     result2 = [dict(zip([column[0] for column in cur_sql.description], [
                     str(x).strip() for x in row])) for row in cur_sql]
@@ -390,10 +390,10 @@ def editQuery(inputNew,id):
 def editExtQuery(inputNew,id):
     cur_sql.execute("""
             SELECT
-                AAMTBIDZ1302 as headerId,
-                AAMQESRZ1302 as query_existing  
-            from AAMTBHAZ1301
-            where AAMTBIDZ1302 = %s
+                TBIDM1701 as headerId,
+                QESRM1701 as query_existing  
+            from AAM1701
+            where TBIDM1701 = %s
             """, (id,))
     result1 = [dict(zip([column[0] for column in cur_sql.description], [
                     str(x).strip() for x in row])) for row in cur_sql]
@@ -401,14 +401,14 @@ def editExtQuery(inputNew,id):
 
     cur_sql.execute("""
                 SELECT 
-                    AAMFEIDZ1302 as fieldId,
-                    AAMHAIDZ1302 as headerId,
-                    AAMVLZ1302 as defaultValue,
-                    AAMDTZ1302 as dataType,
-                    AAMPKZ1302 as isPk,
-                    AAMSTTDZ1301 as 'status tabel'
-                FROM AAMTBDTZ1301
-                where AAMHAIDZ1302 = %s AND AAMSTTDZ1301 = 'active'
+                    FEIDM1801 as fieldId,
+                    HEIDM1801 as headerId,
+                    DEVAM1801 as defaultValue,
+                    DATYM1801 as dataType,
+                    ISPKM1801 as isPk,
+                    STATM1801 as 'status tabel'
+                FROM AAM1801
+                where HEIDM1801 = %s AND STATM1801 = 'active'
                 """, (id,))
     result2 = [dict(zip([column[0] for column in cur_sql.description], [
                     str(x).strip() for x in row])) for row in cur_sql]
@@ -483,7 +483,7 @@ def getFieldsPerTable(obj):
        cur_sql.execute("""
                     SELECT 
                         COUNT(*) AS totalData
-                    FROM AAMTBDTZ1301 WHERE AAMHAIDZ1302 = %s AND AAMSTTDZ1301 = 'active'
+                    FROM AAM1801 WHERE HEIDM1801 = %s AND STATM1801 = 'active'
                 """,(ids,))
        totalFields = cur_sql.fetchone()[0]
        data = {
