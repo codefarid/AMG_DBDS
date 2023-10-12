@@ -144,7 +144,7 @@
     <!-- <div id="bawah"></div> -->
     </p-dialog>
 <p-dialog [header]="modalTitle" [modal]="true" [(visible)]="displayOneQuery"  [style]="{maxWidth: '65vw'}">
-      <p-tabView class="justify-content-center">
+      <p-tabView class="justify-content-center" [(activeIndex)]="activeIndex">
         <p-tabPanel header="Select Query">
             <p-progressBar mode="indeterminate" [style]="{'height': '6px'}" *ngIf="this.loadingQueries"></p-progressBar>
             <div id="QueryContentSelect" *ngIf="!this.loadingQueries">

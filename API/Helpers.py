@@ -113,7 +113,7 @@ def getTableNameFromInternal(first,second):
     cur_sql.execute("""
                     use TestAMGAPPS
                     select TBIDM1701 as 'TABLE_NAME' from AAM1701
-                    where AAMTHSTZ1302 = 'active'
+                    where STATM1701 = 'active'
                     """)
     t = []
     for row in cur_sql:

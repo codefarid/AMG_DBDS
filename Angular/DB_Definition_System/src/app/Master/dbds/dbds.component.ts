@@ -42,6 +42,7 @@ export class DBDSComponent implements OnInit {
     maxLenValidator = 0;
     totalStoredQuery = 0;
     progresBarVallue = 0;
+    activeIndex: number = 0;
     loadSugestionInit = false
 
     selectedCategories: any;
@@ -1430,21 +1431,21 @@ export class DBDSComponent implements OnInit {
     }
 
     viewOneQueries(data: any) {
-        console.log(data)
+        // console.log(data)
         this.settingsQueryPlayGround()
         this.displayQuerySelect = []
         this.modalTitle = 'Generated Queries';
         this.displayOneQuery = true;
         this.loadingQueries = true;
+        this.displayQueryAfter = data.query.split('?');
+        for (let i = 1; i < this.displayQueryAfter.length - 3; i++) {
+            let values = this.checkParse(this.displayQueryAfter[i])
+            this.displayQueryAfter[i] = values + ',';
+        }
         this.api.getOneTable(data.id).subscribe(
             (res) => {
                 console.log(res)
                 this.loadingQueries = false
-                this.displayQueryAfter = res.createdQuery.split('?');
-                for (let i = 1; i < this.displayQueryAfter.length - 3; i++) {
-                    let values = this.checkParse(this.displayQueryAfter[i])
-                    this.displayQueryAfter[i] = values + ',';
-                }
 
                 this.displayQuerySelect = res.selecQuery.split('?');
                 for (let i = 1; i < this.displayQuerySelect.length - 3; i++) {
@@ -1520,6 +1521,7 @@ export class DBDSComponent implements OnInit {
             this.displayQuerySelect.push(`FETCH FIRST ${ui.fetchOnlyCond} ROWS ONLY`)
         }
         // console.log(this.displayQuerySelect)
+        this.activeIndex = 0
     }
 
     settingsQueryPlayGround() {

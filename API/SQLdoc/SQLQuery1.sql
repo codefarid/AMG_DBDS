@@ -331,17 +331,32 @@ UPTI1101 varchar(20),
 UPUS1101 varchar(20)
 )
 
+SELECT * FROM AAM1101
 select 
-ROID1101 as 'Row ID',
-APCD1101 as 'App Code',
-MOCD1101 as 'Module Code',
-MRNA1101 as 'Master Name',
-TSTP1101 as 'Time Stamp',
-CRUS1101 as 'create user',
-UPDT1101 as 'Update Date',
-UPTI1101 as 'Update Time',
-UPUS1101 as 'Update User'
+ROIDM1101 as 'Row ID',
+APCDM1101 as 'App Code',
+MOCDM1101 as 'Module Code',
+MRNAM1101 as 'Master Name',
+TSTPM1101 as 'Time Stamp',
+CRUSM1101 as 'create user',
+UPDTM1101 as 'Update Date',
+UPTIM1101 as 'Update Time',
+UPUSM1101 as 'Update User'
 from AAM1101
+
+select 
+ROIDM1102 as 'Row ID',
+ITNOM1102 as 'Item Code',
+DESCM1102 as 'Description',
+IDKSM1102 as 'ID Export',
+IDIMM1102 as 'ID Import',
+IDMCM1102 as 'IDOMA Code',
+TSTPM1102 as 'Time Stamp',
+CRUSM1102 as 'Create User',
+UPDTM1102 as 'Update Date',
+UPTIM1102 as 'Update Time',
+UPUSM1102 as 'Update User'
+from AAM1102
 
 create table AAM1102 (
 ROID1102 varchar(50) Primary key,
@@ -357,19 +372,7 @@ UPTI1102 varchar(20),
 UPUS1102 varchar(20)
 )
 
-select 
-ROID1102 as 'Row ID',
-ITNO1102 as 'Item Code',
-DESC1102 as 'Description',
-IDKS1102 as 'ID Export',
-IDIM1102 as 'ID Import',
-IDMC1102 as 'IDOMA Code',
-TSTP1102 as 'Time Stamp',
-CRUS1102 as 'Create User',
-UPDT1102 as 'Update Date',
-UPTI1102 as 'Update Time',
-UPUS1102 as 'Update User'
-from AAM1102
+
 
 ALTER TABLE EXIMT301 DROP CONSTRAINT FK_IDETT301
 DROP TABLE EXIMT301
@@ -380,3 +383,6 @@ use TestAMGAPPS
 use TestAMGAPPS
                     select AAMTBIDZ1302 as 'TABLE_NAME' from AAMTBHAZ1301
                     where AAMTHSTZ1302 = 'active'
+
+SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'AAMTCATEZ1301'
+EXEC sp_columns 'AAMTBDEZ1301'

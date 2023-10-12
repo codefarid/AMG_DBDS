@@ -149,9 +149,57 @@ def index():
 
 
         cur_sql.execute("""
-            INSERT INTO AAM1701 (TBIDM1701,CPTBM1701,APNOM1701,APNAM1701,KTAPM1701,QESRM1701,STATM1701,JOINM1701,CRDTM1701,CRTMM1701,CRUSM1701,UPDTM1701,UPTIM1701,UPUSM1701)
-            values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-            """,(headerId, data['tableName'], appId, appName,kategori, getQuery ,status,joinTo, date, time, user, date, time, user, isExist))
+            INSERT INTO AAM1701 (
+                TBIDM1701,
+                CPTBM1701,
+                APNOM1701,
+                APNAM1701,
+                KTAPM1701,
+                QESRM1701,
+                STATM1701,
+                JOINM1701,
+                EXTTM1701,
+                CRDTM1701,
+                CRTMM1701,
+                CRUSM1701,
+                UPDTM1701,
+                UPTIM1701,
+                UPUSM1701
+                )
+            values (
+                %s
+                ,%s
+                ,%s
+                ,%s
+                ,%s
+                ,%s
+                ,%s
+                ,%s
+                ,%s
+                ,%s
+                ,%s
+                ,%s
+                ,%s
+                ,%s
+                ,%s
+                
+                )
+            """,(headerId,
+                 data['tableName'],
+                 appId, 
+                 appName,
+                 kategori,
+                 getQuery,
+                 status,
+                 joinTo,
+                 isExist,
+                 date, 
+                 time,
+                 user,
+                 date,
+                 time,
+                 user
+                 ))
 
 
         for el in data['field']:
@@ -165,9 +213,58 @@ def index():
             status = 'active'
 
             cur_sql.execute("""
-                INSERT INTO AAM1801 (FEIDM1801,HEIDM1801,NMCAM1801,DEVAM1801,DATYM1801,ISPKM1801,EXTDM1801,CRDTM1801,CRTMM1801,CRUSM1801,UPDTM1801,UPTIM1801,UPUSM1801,STATM1801,ISFKM1801,FKTOM1801)
-                values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
-                """,(fieldId,headerId,fieldName,maxVal,daType,isPk,isExist,date, time, user, date, time, user,status,isFK,isFKto))
+                INSERT INTO AAM1801 (
+                    FEIDM1801,
+                    HEIDM1801,
+                    NMCAM1801,
+                    DEVAM1801,
+                    DATYM1801,
+                    ISPKM1801,
+                    EXTDM1801,
+                    CRDTM1801,
+                    CRTMM1801,
+                    CRUSM1801,
+                    UPDTM1801,
+                    UPTIM1801,
+                    UPUSM1801,
+                    STATM1801,
+                    ISFKM1801,
+                    FKTOM1801)
+                values (
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s);
+                """,(
+                    fieldId,
+                    headerId,
+                    daType,
+                    fieldName,
+                    maxVal,
+                    isExist,
+                    isFK,
+                    isFKto,
+                    isPk,
+                    status,
+                    date, 
+                    time, 
+                    user, 
+                    date, 
+                    time, 
+                    user
+                    ))
 
         DB_SQL.commit()
         return jsonify(0)
@@ -259,9 +356,9 @@ def getOneTable(id):
                 DATYM1801 as data_type,
                 ISPKM1801 as statPk,
                 EXTDM1801 as isExistField,
-                AAMSTTDZ1301 as status,
-                AAMISFKZ1301 as isFK,
-                AAMFKTOZ1301 as isFKto
+                STATM1801 as status,
+                ISFKM1801 as isFK,
+                FKTOM1801 as isFKto
             FROM AAM1801
             where HEIDM1801 = %s AND STATM1801 = 'active'
             """,(id,))
@@ -274,23 +371,23 @@ def getOneTable(id):
         
         result3 += f'FROM {result1[0]["table_id"]}?'
 
-        result4 = f'CREATE TABLE {result2[0]["header_id"]} (?'
-        for y in result2:
-                if y['default_value'] != '0':
-                    result4 += f'{y["field_id"]} {y["data_type"]}({y["default_value"]})?'
-                elif y['default_value'] != None:
-                    result4 += f'{y["field_id"]} {y["data_type"]}({y["default_value"]})?'
-                else:
-                    result4 += f'{y["field_id"]} {y["data_type"]}?'
+        # result4 = f'CREATE TABLE {result2[0]["header_id"]} (?'
+        # for y in result2:
+        #         if y['default_value'] != '0':
+        #             result4 += f'{y["field_id"]} {y["data_type"]}({y["default_value"]})?'
+        #         elif y['default_value'] != None:
+        #             result4 += f'{y["field_id"]} {y["data_type"]}({y["default_value"]})?'
+        #         else:
+        #             result4 += f'{y["field_id"]} {y["data_type"]}?'
         
-        for z in result2:
-            if z['isFK'] != "0" and z['isFKto'] != "0":
-                result4 += f'CONSTRAINT FK_{z["field_id"]} FOREIGN KEY ({z["field_id"]}) REFERENCES {z["isFKto"]}({z["isFK"]})'
+        # for z in result2:
+        #     if z['isFK'] != "0" and z['isFKto'] != "0":
+        #         result4 += f'CONSTRAINT FK_{z["field_id"]} FOREIGN KEY ({z["field_id"]}) REFERENCES {z["isFKto"]}({z["isFK"]})'
         
                     
-        result4 += ')?'
+        # result4 += ')?'
         
-        result_dict = {'table_data': result1, 'field_data': result2, 'selecQuery': result3,'createdQuery':result4}
+        result_dict = {'table_data': result1, 'field_data': result2, 'selecQuery': result3}
         # print(result_dict)
         return jsonify(result_dict)
     
@@ -331,7 +428,18 @@ def getOneTable(id):
                     UPUSM1701 = %s
                 WHERE
                     TBIDM1701 = %s
-                """,(data['tableName'], appId, appName, kategori, newCreatedQuery, editedQuery, date, time, user,headerId))
+                """,(
+                    data['tableName'],
+                    appId,
+                    appName,
+                    kategori,
+                    newCreatedQuery,
+                    editedQuery, 
+                    date,
+                    time,
+                    user,
+                    headerId
+                    ))
         
         DB_SQL.commit()
         
@@ -368,9 +476,58 @@ def getOneTable(id):
                     isPk = '1' if y['isPk'] else '0'
                     
                     cur_sql.execute("""
-                                    INSERT INTO AAM1801 (FEIDM1801,HEIDM1801,NMCAM1801,DEVAM1801,DATYM1801,ISPKM1801,EXTDM1801,CRDTM1801,CRTMM1801,CRUSM1801,UPDTM1801,UPTIM1801,UPUSM1801, STATM1801, ISFKM1801,FKTOM1801)
-                                    values (%s , %s , %s , %s , %s , %s , %s , %s , %s ,%s, %s, %s,%s,%s);
-                                    """,(newIds,headerId,fieldName,newMaxVal,newDat,isPk,isExist,date, time, user, date, time, user,statusTD,isFK,isFKto))
+                                    INSERT INTO AAM1801 (
+                                        FEIDM1801,
+                                        HEIDM1801,
+                                        DATYM1801,
+                                        NMCAM1801,
+                                        DEVAM1801,
+                                        EXTDM1801,
+                                        ISFKM1801,
+                                        FKTOM1801,
+                                        ISPKM1801,
+                                        STATM1801,
+                                        CRDTM1801,
+                                        CRTMM1801,
+                                        CRUSM1801,
+                                        UPDTM1801,
+                                        UPTIM1801,
+                                        UPUSM1801)
+                                    values (
+                                        %s ,
+                                        %s ,
+                                        %s ,
+                                        %s ,
+                                        %s ,
+                                        %s ,
+                                        %s ,
+                                        %s ,
+                                        %s ,
+                                        %s ,
+                                        %s ,
+                                        %s ,
+                                        %s ,
+                                        %s ,
+                                        %s ,
+                                        %s );
+                                    """,(
+                                        newIds,
+                                        headerId,
+                                        newDat,
+                                        fieldName,
+                                        newMaxVal,
+                                        isExist,
+                                        isFK,
+                                        isFKto,
+                                        isPk,
+                                        statusTD,
+                                        date,
+                                        time,
+                                        user,
+                                        date,
+                                        time,
+                                        user,
+                                        ))
                     DB_SQL.commit()
         else:
             for el in data['field']:
@@ -402,7 +559,21 @@ def getOneTable(id):
                                 FKTOM1801 = %s
                             WHERE
                                 FEIDM1801 = %s
-                            """,(headerId,fieldName,maxlen,daType,isPk,isExist,statTD,date, time, user,fieldId, isFK,isFKto))
+                            """,(
+                                headerId,
+                                 fieldName,
+                                 maxlen,
+                                 daType,
+                                 isPk,
+                                 isExist,
+                                 statTD,
+                                 date, 
+                                 time, 
+                                 user,
+                                 isFK,
+                                 isFKto,
+                                 fieldId
+                                 ))
                 DB_SQL.commit()
  
         return jsonify(0)
