@@ -4,13 +4,45 @@ import json
 import pprint
 import re
 
+UPLOAD_FOLDER = './uploads' 
 
-cur_sql.execute("""
-                SELECT 
-                TBIDM1701 as 'id'
-                FROM AAM1701
-                WHERE TBIDM1701 LIKE 'PRMT%'
-                """)
-results = []
-for row in cur_sql:
-            results.append(dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])))
+def getQuery():
+    filename = 'AAM1101.sql'
+    file_path = os.path.join(UPLOAD_FOLDER, filename)
+    f = open(file_path, "r")
+    sqlFiles = f.read()
+    f.close()
+    sqlCommands = sqlFiles.split('\n')
+    headerCreate = []
+    closeCreate = []
+    headerSelect = []
+    closeSelect = []
+    lanes = []
+    cleaned = []
+    getQuery = []
+    for i in range(len(sqlCommands)):
+        if 'CREATE TABLE'.lower() in sqlCommands[i].lower():
+            headerCreate.append(i)
+            lanes.append(i)
+        if ')' == sqlCommands[i]:
+            closeCreate.append(i)
+            lanes.append(i)
+            
+            
+        if 'SELECT'.lower() in sqlCommands[i].lower():
+            headerSelect.append(i)
+            lanes.append(i)
+            
+        if "FROM".lower() in sqlCommands[i].lower():
+            closeSelect.append(i)
+            lanes.append(i)
+    index = 0
+    
+    while index < len(lanes):
+        subarr = lanes[index:index + 2]
+        cleaned.append(subarr)
+        index += 2
+        
+    print(cleaned)
+
+print(getQuery())

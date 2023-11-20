@@ -709,16 +709,7 @@ def upload():
         file.save(file_path)
     
     f = open(file_path, "r")
-    allowed_value = ['CREATE TABLE', ")", "SELECT", "FROM"]
-    avLower = [i.lower() for i in allowed_value]
-    lineSelector = []
-    line = 0
-    for x in f:
-        line += 1
-        if all (avLower in  x.lower()):
-            lineSelector.append(line)
-    print(lineSelector)
-    # if not all(xi in hlower for xi in hsbLower):
+    
     f.close()
     return jsonify({"message":"File Saved !"})
     
