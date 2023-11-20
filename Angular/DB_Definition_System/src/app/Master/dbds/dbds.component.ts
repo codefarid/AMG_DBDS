@@ -19,6 +19,7 @@ import { GlobalConstants } from 'src/app/service/global'
 })
 export class DBDSComponent implements OnInit {
     baseURL = GlobalConstants.baseURL + 'api'
+    uploadUrl = ''
     isEdit = false;
     isExistingTable = false
     editExistingTable = false
@@ -122,6 +123,7 @@ export class DBDSComponent implements OnInit {
         
     }
     ngOnInit(): void {
+        this.uploadUrl = `${this.baseURL}/master_dbds/upload/sql`
         this.dropdownValueInit();
         this.fieldIdRemoved = []
         this.inputForm = this.fb.group({
@@ -254,21 +256,6 @@ export class DBDSComponent implements OnInit {
         // console.log(data)
     }
 
-    // foreignKeySelection() {
-    //     console.log(this.selectedAplications)
-    //     if(this.selectedAplications) {
-    //         setTimeout(() => {
-    //             this.api.getDataFkey().subscribe((data:any) => {
-    //                 this.fkey = data.data.filter((el:any) => el.app == this.selectedAplications)
-    //                 console.log(this.fkey)
-    //             },(error) => {
-    //                 console.log(error)
-    //             })
-    //         }, 750);
-    //     } else {
-    //     }
-    // }
-
    
     fourCharSugestions($event:any) {
         let x = $event.text
@@ -290,7 +277,7 @@ export class DBDSComponent implements OnInit {
             const param = {
                 'dataPerPage' : event.rows,
                 'dataBefore' : event.first,
-                'orderBy' : "AAMCEATZ1302",
+                'orderBy' : "CRDTM1701",
                 'orderMethod' : sortMethod, 
                 'globalFilter' :  event.globalFilter,
                 'filteredApp': this.filteredApplications
@@ -312,18 +299,29 @@ export class DBDSComponent implements OnInit {
                     this.loading = false;
                 },
                 (error) => {
+                    
                     console.log(error)
                     this.loading = false;
-                    this.messageService.add({
-                        key: 'Message',
-                        severity: 'error',
-                        summary: 'Reload Data',
-                        detail: 'Failed',
-                    });
+                    if(!this.selectedAplications) {
+                        this.messageService.add({
+                                key: 'Message',
+                                severity: 'info',
+                                summary: 'No Aplication Selected !',
+                                detail: 'Please Select Application for view queries.',
+                            });
+                    } else {
+                        this.messageService.add({
+                            key: 'Message',
+                            severity: 'error',
+                            summary: 'Reload Data',
+                            detail: 'Failed',
+                        });
+                    }
                 }
             );
         }, 5000);
     }
+
     filterAppdisplay(str:any) {
         console.log(str.value)
         this.filteredApplications = str.value
@@ -422,7 +420,6 @@ export class DBDSComponent implements OnInit {
         this.filteredFK = filtered;
     }
 
-
     filterCategory(event: any) {
         let filtered: any[] = [];
         let query = event.query;
@@ -456,7 +453,7 @@ export class DBDSComponent implements OnInit {
         let query = event.query;
 
         for(let i = 0 ;i < this.dropDownJoinTable.length;i++) {
-            let data = this.dropDownJoinTable[i]
+            let data : any = this.dropDownJoinTable[i]
             let og = {"app":"S", "text": `Table Name From DB `, "value":""}
             if (data.text.toLowerCase().indexOf(query.toLowerCase()) == 0) {
                 filtered.push(data);
@@ -627,18 +624,7 @@ export class DBDSComponent implements OnInit {
                 { label: 'varbinary', value: 'varbinary', max: '8,000' },
                 { label: 'image', value: 'image', max: '2^31-1' },
               ],
-            },
-            // {
-            //   label: 'Other Data Types',
-            //   items: [
-            //     { label: 'uniqueidentifier', value: 'uniqueidentifier', max: 'Guid' },
-            //     { label: 'xml', value: 'xml', max: '2^31-1' },
-            //     { label: 'cursor', value: 'cursor', max: '-' },
-            //     { label: 'table', value: 'table', max: '-' },
-            //     { label: 'variant', value: 'variant', max: '-' },
-            //     { label: 'sql_variant', value: 'sql_variant', max: '-' },
-            //   ],
-            // },
+            }
           ];
     }
 
@@ -690,7 +676,7 @@ export class DBDSComponent implements OnInit {
         
         this.api.getOneTable(data.id).subscribe(
             (res) => {
-                console.log(res)
+                console.log(res,"SJOW EDIT FORM")
                 let appName = res.table_data[0].aplication_name
                 let cateApp = res.table_data[0].kategori_app
                 let findApps = this.application.find(({text}) => text == appName)
@@ -740,102 +726,6 @@ export class DBDSComponent implements OnInit {
             }
         );
     }
-
-    // showQuery() {
-    //     const userInput = this.inputForm.getRawValue();
-    //     this.spinner.show()
-    //     console.log(userInput)
-    //     if(this.inputForm.get("field")?.value.length == 0) {
-    //         this.spinner.hide()
-    //         this.messageService.add({
-    //             key: 'Message',
-    //             severity: 'error',
-    //             summary: 'Submit Form',
-    //             detail: 'Failed, Fields Cannot be empty!',
-    //         });
-    //     } else {
-    //         if (this.isEdit == true) {
-    //             this.api.editPreviewQuery(userInput, this.getId).subscribe(
-    //                 (res) => {
-    //                     this.loading = false
-    //                     this.displayQuery = res.queries;
-    //                     this.spinner.hide()
-    //                 },
-    //                 (err) => {
-    //                     this.spinner.hide()
-    //                     this.isLoadingButton = false
-    //                 }
-    //             );
-                
-    //         } 
-    //         else if(this.isExistingTable == true) {
-    //             this.api.postPreviewExtQuery(userInput).subscribe((res) => {
-    //                     let temp = res.split('?');
-    //                     for (let i = 1; i < temp.length - 2; i++) {
-    //                         let values = this.checkParse(temp[i])
-    //                         temp[i] = values + ','
-    //                     }
-    //                     this.displayQuery = temp.join("")
-    //             },(err) => {
-    //                 this.spinner.hide()
-    //                 this.messageService.add({
-    //                     severity: 'error',
-    //                     summary: 'Failed',
-    //                     detail: 'Gagal Generate Query!',
-    //                 });
-    //                 this.isLoadingButton = false
-    //             })
-    //         }
-    //         // if(this.isExistingTable !== true && this.isEdit !== true) {
-    //         //     if(this.inputForm.get("tableName")?.value === null) {
-    //         //         this.messageService.add({
-    //         //             key: 'Message',
-    //         //             severity: 'error',
-    //         //             summary: 'Submit Form',
-    //         //             detail: 'Failed, Table Name Cannot be empty!',
-    //         //         });
-    //         //         this.spinner.hide()
-    //         //         return
-    //         //     } else {
-    //         //         let fieldLength = this.inputForm.get("field")?.value.length
-    //         //         for(let i = 0 ; i < fieldLength;i++) {
-    //         //             let validateDaType = this.inputForm.get("field")?.value[i].datTypeField
-    //         //             if (validateDaType === '') {
-    //         //                 this.messageService.add({
-    //         //                     key: 'Message',
-    //         //                     severity: 'error',
-    //         //                     summary: 'Submit Form',
-    //         //                     detail: `Failed, Data Type at Field No.${i+1} Cannot be Empty!`,
-    //         //                 });
-    //         //                 this.spinner.hide()
-    //         //                 return
-    //         //             }
-    //         //         }
-
-    //         //         this.api.postPreviewQuery(userInput).subscribe(
-    //         //             (res) => {
-    //         //                 this.spinner.hide()
-    //         //                 let temp = res.split('?');
-    //         //                 for (let i = 1; i < temp.length - 2; i++) {
-    //         //                     let values = this.checkParse(temp[i])
-    //         //                     temp[i] = values + ','
-    //         //                 }
-    //         //                 this.displayQuery = temp.join("")
-    //         //             },
-    //         //             (err) => {
-    //         //                 this.spinner.hide()
-    //         //                 this.isLoadingButton = false
-    //         //                 this.messageService.add({
-    //         //                     severity: 'error',
-    //         //                     summary: 'Failed',
-    //         //                     detail: 'Gagal Generate Query!',
-    //         //                 });
-    //         //             }
-    //         //         );
-    //         //     }
-    //         // }
-    //     } 
-    // }
 
     showQueryA(){
         this.spinner.show()
@@ -1444,7 +1334,7 @@ export class DBDSComponent implements OnInit {
         }
         this.api.getOneTable(data.id).subscribe(
             (res) => {
-                console.log(res)
+                
                 this.loadingQueries = false
 
                 this.displayQuerySelect = res.selecQuery.split('?');
@@ -1800,5 +1690,10 @@ export class DBDSComponent implements OnInit {
                         console.log(err)
                     })
                 }, 2500);
+    }
+
+    onUpload(event: any) {
+        const response = event.originalEvent.body.message;
+        console.log(response)
     }
 }

@@ -165,7 +165,7 @@ def generateIdHeader(obj):
                 return int(''.join(filter(str.isdigit,s)))
             val = get_number_only(selectedHeaderId[:-2])
             
-
+        
         return f'{firstStr}{midStr}{val + 1}01'
 
 def generateIdTDetail(input, headerId):

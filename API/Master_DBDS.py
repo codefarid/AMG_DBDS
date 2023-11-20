@@ -3,10 +3,16 @@ from flask import Blueprint, jsonify, request , send_file, Response
 from DB import *
 from Helpers import *
 from datetime import datetime
+from werkzeug.utils import secure_filename
 from Decorators import *
 
 
 master_dbds = Blueprint('master_dbds',__name__)
+
+module_id = 1
+
+UPLOAD_FOLDER = './uploads' 
+ALLOWED_EXTENSIONS = {'sql'}
 
 def checkColumn(alias):
     match alias:
@@ -21,7 +27,12 @@ def checkColumn(alias):
         
     return 'TBIDM1701'
 
-module_id = 1
+# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024  # Batasan ukuran file (2MB)
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS  
 
 @master_dbds.route('/api/master_dbds', methods=['GET', 'POST'])
 def index():
@@ -72,7 +83,7 @@ def index():
                             KTAPM1701 as 'categories',
                             JOINM1701 as 'joined'
                             from AAM1701 
-                            {where}
+                          where  {where}
                         ORDER BY {col} {method}
                         OFFSET {before} ROWS
                         FETCH NEXT {totalData} ROWS ONLY;
@@ -167,38 +178,38 @@ def index():
                 UPUSM1701
                 )
             values (
-                %s
-                ,%s
-                ,%s
-                ,%s
-                ,%s
-                ,%s
-                ,%s
-                ,%s
-                ,%s
-                ,%s
-                ,%s
-                ,%s
-                ,%s
-                ,%s
-                ,%s
-                
+                '{headerId}',
+                '{tableName}',
+                '{appId}',
+                '{appName}',
+                '{kategori}',
+                '{getQuery}',
+                '{status}',
+                '{joinTo}',
+                '{isExist}',
+                '{dates}',
+                '{times}',
+                '{users}',
+                '{date}',
+                '{time}',
+                '{user}'
                 )
-            """,(headerId,
-                 data['tableName'],
-                 appId, 
-                 appName,
-                 kategori,
-                 getQuery,
-                 status,
-                 joinTo,
-                 isExist,
-                 date, 
-                 time,
-                 user,
-                 date,
-                 time,
-                 user
+            """.format(
+                headerId = headerId,
+                tableName = data['tableName'],
+                appId = appId, 
+                appName = appName,
+                kategori = kategori,
+                getQuery = getQuery,
+                status = status,
+                joinTo = joinTo,
+                isExist = isExist,
+                dates = date, 
+                times = time,
+                users = user,
+                date = date,
+                time = time,
+                user = user
                  ))
 
 
@@ -211,59 +222,43 @@ def index():
             isFK = el['isFK'] if el['isFK'] else '0'
             isFKto = el['isFKto'] if el['isFKto'] else '0'
             status = 'active'
-
+            
             cur_sql.execute("""
-                INSERT INTO AAM1801 (
-                    FEIDM1801,
-                    HEIDM1801,
-                    NMCAM1801,
-                    DEVAM1801,
-                    DATYM1801,
-                    ISPKM1801,
-                    EXTDM1801,
-                    CRDTM1801,
-                    CRTMM1801,
-                    CRUSM1801,
-                    UPDTM1801,
-                    UPTIM1801,
-                    UPUSM1801,
-                    STATM1801,
-                    ISFKM1801,
-                    FKTOM1801)
+                INSERT INTO AAM1801 (FEIDM1801,HEIDM1801,DATYM1801,NMCAM1801,DEVAM1801,EXTDM1801,ISFKM1801,FKTOM1801,ISPKM1801,STATM1801,UPDTM1801,UPTIM1801,UPUSM1801,CRDTM1801,CRTMM1801,CRUSM1801)
                 values (
-                    %s,
-                    %s,
-                    %s,
-                    %s,
-                    %s,
-                    %s,
-                    %s,
-                    %s,
-                    %s,
-                    %s,
-                    %s,
-                    %s,
-                    %s,
-                    %s,
-                    %s,
-                    %s);
-                """,(
-                    fieldId,
-                    headerId,
-                    daType,
-                    fieldName,
-                    maxVal,
-                    isExist,
-                    isFK,
-                    isFKto,
-                    isPk,
-                    status,
-                    date, 
-                    time, 
-                    user, 
-                    date, 
-                    time, 
-                    user
+                    '{fieldId}',
+                    '{headerId}',
+                    '{daType}',
+                    '{fieldName}',
+                    '{maxVal}',
+                    '{isExist}',
+                    '{isFK}',
+                    '{isFKto}',
+                    '{isPk}',
+                    '{status}',
+                    '{dates}',
+                    '{times}',
+                    '{users}',
+                    '{date}',
+                    '{time}',
+                    '{user}');
+                """.format(
+                    fieldId = fieldId,
+                    headerId = headerId,
+                    daType = daType,
+                    fieldName = fieldName,
+                    maxVal = maxVal,
+                    isExist = isExist,
+                    isFK = isFK,
+                    isFKto = isFKto,
+                    isPk = isPk,
+                    status = 'active',
+                    dates = date, 
+                    times = time, 
+                    users = user, 
+                    date = date, 
+                    time = time, 
+                    user = user
                     ))
 
         DB_SQL.commit()
@@ -329,8 +324,8 @@ def getOneTable(id):
     
     if request.method == 'GET':
         # if auth_page[0] != '1':
-        #         return jsonify({'message': 'Not Authorized'}), 401
-        
+        #         return jsonify({'message': 'Not AuthoFrized'}), 401
+        print(id)
         cur_sql.execute("""
             SELECT
                 TBIDM1701 as table_id ,
@@ -342,11 +337,13 @@ def getOneTable(id):
                 JOINM1701 as joinTo ,
                 EXTTM1701 as isExist 
             from AAM1701
-            where TBIDM1701 = %s
-            """, (id,))
-        result1 = [dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])) for row in cur_sql]
-
+            where TBIDM1701 = '{id}' AND STATM1701 = 'active'
+            """.format(id = id,))
         
+        result1 = [dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])) for row in cur_sql]
+        
+        
+
         cur_sql.execute("""
             SELECT 
                 FEIDM1801 as field_id,
@@ -360,8 +357,8 @@ def getOneTable(id):
                 ISFKM1801 as isFK,
                 FKTOM1801 as isFKto
             FROM AAM1801
-            where HEIDM1801 = %s AND STATM1801 = 'active'
-            """,(id,))
+            where HEIDM1801 = '{id}' AND STATM1801 = 'active'
+            """.format(id= id))
         result2 = [dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])) for row in cur_sql]
         
         result3 = "SELECT?"
@@ -388,7 +385,7 @@ def getOneTable(id):
         # result4 += ')?'
         
         result_dict = {'table_data': result1, 'field_data': result2, 'selecQuery': result3}
-        # print(result_dict)
+        
         return jsonify(result_dict)
     
     if request.method == 'PUT':
@@ -417,28 +414,28 @@ def getOneTable(id):
         cur_sql.execute("""
                 UPDATE AAM1701
                 SET
-                    CPTBM1701 = %s,
-                    APNOM1701 = %s,
-                    APNAM1701 = %s,        
-                    KTAPM1701 = %s,
-                    QESRM1701 = %s,
-                    HISTM1701 = %s,
-                    UPDTM1701 = %s,
-                    UPTIM1701 = %s,
-                    UPUSM1701 = %s
+                    CPTBM1701 = '{tableName}',
+                    APNOM1701 = '{appId}',
+                    APNAM1701 = '{appName}',        
+                    KTAPM1701 = '{kategori}',
+                    QESRM1701 = '{newCreatedQuery}',
+                    HISTM1701 = '{editedQuery}',
+                    UPDTM1701 = '{date}',
+                    UPTIM1701 = '{time}',
+                    UPUSM1701 = '{user}'
                 WHERE
-                    TBIDM1701 = %s
-                """,(
-                    data['tableName'],
-                    appId,
-                    appName,
-                    kategori,
-                    newCreatedQuery,
-                    editedQuery, 
-                    date,
-                    time,
-                    user,
-                    headerId
+                    TBIDM1701 = '{headerId}'
+                """.format(
+                    tableName = data['tableName'],
+                    appId = appId,
+                    appName = appName,
+                    kategori = kategori,
+                    newCreatedQuery = newCreatedQuery,
+                    editedQuery = editedQuery, 
+                    date = date,
+                    time = time,
+                    user = user,
+                    headerId = headerId
                     ))
         
         DB_SQL.commit()
@@ -455,8 +452,8 @@ def getOneTable(id):
                 ISFKM1801 as isFK,
                 FKTOM1801 as isFKto
             FROM AAM1801
-            where HEIDM1801 = %s and STATM1801 = 'active'
-            """,(id,))
+            where HEIDM1801 = '{id}' and STATM1801 = 'active'
+            """.format( id = id,))
         oldDatas = [dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])) for row in cur_sql]
         oldLen = len(oldDatas)
         newLen = len(data['field'])
@@ -477,56 +474,56 @@ def getOneTable(id):
                     
                     cur_sql.execute("""
                                     INSERT INTO AAM1801 (
-                                        FEIDM1801,
-                                        HEIDM1801,
-                                        DATYM1801,
-                                        NMCAM1801,
-                                        DEVAM1801,
-                                        EXTDM1801,
-                                        ISFKM1801,
-                                        FKTOM1801,
-                                        ISPKM1801,
-                                        STATM1801,
-                                        CRDTM1801,
-                                        CRTMM1801,
-                                        CRUSM1801,
-                                        UPDTM1801,
-                                        UPTIM1801,
-                                        UPUSM1801)
+                                        FEIDM1801,newIds
+                                        HEIDM1801,headerId
+                                        DATYM1801,newDat
+                                        NMCAM1801,fieldName
+                                        DEVAM1801,newMaxVal
+                                        EXTDM1801,isExist
+                                        ISFKM1801,isFK
+                                        FKTOM1801,isFKto
+                                        ISPKM1801,isPk
+                                        STATM1801,statusTD
+                                        CRDTM1801,dates
+                                        CRTMM1801,times
+                                        CRUSM1801,users
+                                        UPDTM1801,date
+                                        UPTIM1801,time
+                                        UPUSM1801)user
                                     values (
-                                        %s ,
-                                        %s ,
-                                        %s ,
-                                        %s ,
-                                        %s ,
-                                        %s ,
-                                        %s ,
-                                        %s ,
-                                        %s ,
-                                        %s ,
-                                        %s ,
-                                        %s ,
-                                        %s ,
-                                        %s ,
-                                        %s ,
-                                        %s );
-                                    """,(
-                                        newIds,
-                                        headerId,
-                                        newDat,
-                                        fieldName,
-                                        newMaxVal,
-                                        isExist,
-                                        isFK,
-                                        isFKto,
-                                        isPk,
-                                        statusTD,
-                                        date,
-                                        time,
-                                        user,
-                                        date,
-                                        time,
-                                        user,
+                                        '{newIds}' ,
+                                        '{headerId}' ,
+                                        '{newDat}' ,
+                                        '{fieldName}' ,
+                                        '{newMaxVal}' ,
+                                        '{isExist}' ,
+                                        '{isFK}' ,
+                                        '{isFKto}' ,
+                                        '{isPk}' ,
+                                        '{statusTD}' ,
+                                        '{dates}' ,
+                                        '{times}' ,
+                                        '{users}' ,
+                                        '{date}' ,
+                                        '{time}' ,
+                                        '{user}' );
+                                    """.format(
+                                        newIds = newIds,
+                                        headerId = headerId,
+                                        newDat = newDat,
+                                        fieldName = fieldName,
+                                        newMaxVal = newMaxVal,
+                                        isExist = isExist,
+                                        isFK = isFK,
+                                        isFKto = isFKto,
+                                        isPk = isPk,
+                                        statusTD = statusTD,
+                                        dates = date,
+                                        times = time,
+                                        users = user,
+                                        date = date,
+                                        time = time,
+                                        user = user,
                                         ))
                     DB_SQL.commit()
         else:
@@ -545,34 +542,34 @@ def getOneTable(id):
                 cur_sql.execute("""
                             UPDATE AAM1801
                             SET
-                                HEIDM1801 = %s,
-                                NMCAM1801 = %s,        
-                                DEVAM1801 = %s,
-                                DATYM1801 = %s,
-                                ISPKM1801 = %s,
-                                EXTDM1801 = %s,
-                                STATM1801 = %s,
-                                UPDTM1801 = %s,
-                                UPTIM1801 = %s,
-                                UPUSM1801 = %s,
-                                ISFKM1801 = %s,
-                                FKTOM1801 = %s
+                                HEIDM1801 = '{headerId}',
+                                NMCAM1801 = '{fieldName}',        
+                                DEVAM1801 = '{maxlen}',
+                                DATYM1801 = '{daType}',
+                                ISPKM1801 = '{isPk}',
+                                EXTDM1801 = '{isExist}',
+                                STATM1801 = '{statTD}',
+                                UPDTM1801 = '{date}',
+                                UPTIM1801 = '{time}',
+                                UPUSM1801 = '{user}',
+                                ISFKM1801 = '{isFK}',
+                                FKTOM1801 = '{isFKto}'
                             WHERE
-                                FEIDM1801 = %s
-                            """,(
-                                headerId,
-                                 fieldName,
-                                 maxlen,
-                                 daType,
-                                 isPk,
-                                 isExist,
-                                 statTD,
-                                 date, 
-                                 time, 
-                                 user,
-                                 isFK,
-                                 isFKto,
-                                 fieldId
+                            FEIDM1801 = '{fieldId}'
+                            """.format(
+                                 headerId = headerId,
+                                 fieldName = fieldName,
+                                 maxlen = maxlen,
+                                 daType = daType,
+                                 isPk = isPk,
+                                 isExist = isExist,
+                                 statTD = statTD,
+                                 date = date,
+                                 time = time,
+                                 user = user,
+                                 isFK = isFK,
+                                 isFKto = isFKto,
+                                 fieldId = fieldId
                                  ))
                 DB_SQL.commit()
  
@@ -583,8 +580,8 @@ def deleteTable(id):
     cur_sql.execute("""
                     UPDATE AAM1701
                     SET STATM1701 = 'inactive' 
-                    WHERE TBIDM1701 = %s
-                    """, (id,))
+                    WHERE TBIDM1701 = '{id}'
+                    """.format(id = id,))
     DB_SQL.commit()
     return jsonify("Status Change!")
 
@@ -609,7 +606,6 @@ def getDDbyApp(appName):
         t.append(dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])))
     
     return jsonify({"msg":"wait",'data':t})
-
 
 @master_dbds.route('/api/master_dbds/post/downloads',methods=['POST'])
 def downloadFile():
@@ -685,3 +681,44 @@ def deleteFiles(fileName):
         print("The file does not exist")
         return jsonify({"msg":"The file does not exist"})
         
+@master_dbds.route('/api/master_dbds/upload/sql',methods=['POST'])
+def upload():
+    # token = request.headers['Authorization']
+    # appCode = decrypt_text(request.headers['App'].encode())
+    # auth_page = check_user_auth_page(token, appCode, module_id)
+    # if not auth_page:
+    #     return jsonify({'message': 'Token Invalid'}), 403
+    # else:
+    #     auth_page = auth_page.get_json()
+    #     auth_page = list(auth_page)
+    # user = check_user(token, amg = True)
+    if 'fileData[]' not in request.files:
+        print("File tidak ditemukan")
+        return jsonify({"message": "File tidak ditemukan"}), 400
+
+    file = request.files['fileData[]']
+    if file.filename == '':
+        return jsonify({"message": "Nama file kosong"}), 400
+
+    if not os.path.exists(UPLOAD_FOLDER):
+        os.makedirs(UPLOAD_FOLDER)
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(UPLOAD_FOLDER, filename)
+        file.save(file_path)
+    
+    f = open(file_path, "r")
+    allowed_value = ['CREATE TABLE', ")", "SELECT", "FROM"]
+    avLower = [i.lower() for i in allowed_value]
+    lineSelector = []
+    line = 0
+    for x in f:
+        line += 1
+        if all (avLower in  x.lower()):
+            lineSelector.append(line)
+    print(lineSelector)
+    # if not all(xi in hlower for xi in hsbLower):
+    f.close()
+    return jsonify({"message":"File Saved !"})
+    

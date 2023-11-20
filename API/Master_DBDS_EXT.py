@@ -82,9 +82,8 @@ def index():
               
             cur_sql.execute("""
                                 INSERT INTO AAM1701 (TBIDM1701,CPTBM1701,APNOM1701,APNAM1701,KTAPM1701,QESRM1701,STATM1701,JOINM1701,EXTTM1701,CRDTM1701,CRTMM1701,CRUSM1701,UPDTM1701,UPTIM1701,UPUSM1701)
-                                values 
-                                (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-                                """,(headerId, getName, appId, appName,kategori, getQuery ,status,joinTo, isExist, date, time, user, date, time, user))
+                                values ('{headerId}','{getName}','{appId}','{appName}','{kategori}','{getQuery}','{status}','{joinTo}','{isExist}','{dates}','{times}','{users}','{date}','{time}','{user}')
+                                """.format( headerId = headerId, getName = getName, appId = appId, appName = appName, kategori = kategori, getQuery = getQuery, status = status, joinTo = joinTo, isExist = isExist, dates = date, times = time, users = user, date = date, time = time, user = user))
                 
 
                     
@@ -103,33 +102,11 @@ def index():
                         
                     cur_sql.execute("""
                                     INSERT INTO AAM1801 (FEIDM1801,HEIDM1801,NMCAM1801,DEVAM1801,DATYM1801,ISPKM1801,EXTDM1801,CRDTM1801,CRTMM1801,CRUSM1801,UPDTM1801,UPTIM1801,UPUSM1801,STATM1801)
-                                    values (%s , %s , %s , %s , %s ,%s, %s , %s , %s , %s , %s, %s,%s,%s);
-                                    """,(fieldId,headerId,fieldName,maxVal,daType,isPk,isExist ,date, time, user, date, time, user,status))
+                                    values ('{fieldId}','{headerId}','{fieldName}','{maxVal}','{daType}','{isPk}','{isExist}','{dates}','{times}','{users}','{date}','{time}','{user}','{status}')
+                                    """.format(fieldId = fieldId,headerId = headerId,fieldName = fieldName,maxVal = maxVal,daType = daType,isPk = isPk,isExist = isExist ,dates = date,times = time,users = user,date = date,time = time,user = user,status = status))
                     
-                    # code = fieldId[0:4].upper()
 
-                    # cur_sql.execute("""
-                    #                 select
-                    #                     AAMTBCOZ1302 as 'code',
-                    #                     AAMTDEFZ1302 as 'value',
-                    #                     AAMDSTAZ1302 as 'status'
-                    #                     from AAMTBDEZ1301 
-                    #                     where AAMTBCOZ1302 = '{code}'
-                    #                 """.format(code = code))
-                    # detectCode = cur_sql.fetchone()
-
-                    # msg = {
-                    #     'message' : 'Belum mendaftarkan Field di dictionary, silahkan daftarkan dulu!'
-                    # }
-
-                    # if detectCode != None:
             msg['message'] = 'Sukes menambahkan Tabel!'
-            # msg['message'] = 'Error'
-            
-                        # DB_SQL.commit()
-                    #     return jsonify(msg)
-                    # else:
-                    #     return jsonify(msg)
             DB_SQL.commit()
         return jsonify(msg)
     
@@ -166,8 +143,8 @@ def putExtTable(id):
                 JOINM1701 as joinTo ,
                 EXTTM1701 as isExist 
             from AAM1701
-            where TBIDM1701 = %s
-            """, (id,))
+            where TBIDM1701 = '{id}'
+            """.format(id = id))
         result1 = [dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])) for row in cur_sql]
 
         
@@ -183,8 +160,8 @@ def putExtTable(id):
                 as isExistField,
                 STATM1801 as 'statTD'
             FROM AAM1801
-            where HEIDM1801 = %s AND STATM1801 = 'active'
-            """,(id,))
+            where HEIDM1801 = '{id}' AND STATM1801 = 'active'
+            """.format(id = id,))
         result2 = [dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])) for row in cur_sql]
 
         result_dict = {'table_data': result1, 'field_data': result2}
@@ -218,18 +195,30 @@ def putExtTable(id):
         cur_sql.execute("""
                 UPDATE AAM1701
                 SET
-                    CPTBM1701 = %s,
-                    APNOM1701 = %s,
-                    APNAM1701 = %s,        
-                    KTAPM1701 = %s,
-                    QESRM1701 = %s,
-                    HISTM1701 = %s,
-                    UPDTM1701 = %s,
-                    UPTIM1701 = %s,
-                    UPUSM1701 = %s
+                    CPTBM1701 =  '{data}',
+                    APNOM1701 =  '{appId}',
+                    APNAM1701 =  '{appName}',
+                    KTAPM1701 =  '{kategori}',
+                    QESRM1701 =  '{newCreatedQuery}',
+                    HISTM1701 =  '{editedQuery}',
+                    UPDTM1701 =  '{date}',
+                    UPTIM1701 =  '{time}',
+                    UPUSM1701 =  '{user}'
                 WHERE
-                    TBIDM1701 = %s
-                """,(data['tableName'], appId, appName, kategori, newCreatedQuery, editedQuery, date, time, user,headerId))
+                    TBIDM1701 = '{headerId}'
+                """.format(
+                    data = data['tableName'],
+                    appId = appId,
+                    appName = appName,
+                    kategori = kategori,
+                    newCreatedQuery = newCreatedQuery,
+                    editedQuery = editedQuery,
+                    date = date,
+                    time = time,
+                    user = user,
+                    headerId = headerId)
+                )
+
         
         DB_SQL.commit()
         
@@ -243,8 +232,8 @@ def putExtTable(id):
                 ISPKM1801 as statPk,
                 STATM1801 as 'statTD'
             FROM AAM1801
-            where HEIDM1801 = %s AND STATM1801 = 'active'
-            """,(id,))
+            where HEIDM1801 = '{id}' AND STATM1801 = 'active'
+            """.format(id = id,))
         oldDatas = [dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])) for row in cur_sql]
         oldLen = len(oldDatas)
         newLen = len(data['field'])
@@ -265,9 +254,9 @@ def putExtTable(id):
                     isPk = '1' if y['isPk'] else '0'
                     
                     cur_sql.execute("""
-                                    INSERT INTO AAM1801 (FEIDM1801,HEIDM1801,NMCAM1801,DEVAM1801,DATYM1801,ISPKM1801,EXTDM1801,CRDTM1801,CRTMM1801,CRUSM1801,UPDTM1801,UPTIM1801,UPUSM1801, STATM1801)
-                                    values (%s , %s , %s , %s , %s , %s , %s , %s , %s ,%s, %s, %s,%s, %s);
-                                    """,(newIds,headerId,fieldName,newMaxVal,newDat,isPk,isExist,date, time, user, date, time, user,stat))
+                                    INSERT INTO AAM1801 (FEIDM1801,HEIDM1801,NMCAM1801,DEVAM1801,DATYM1801,ISPKM1801,EXTDM1801,CRDTM1801,CRTMM1801,CRUSM1801,UPDTM1801,UPTIM1801,UPUSM1801,STATM1801)
+                                    values ('{newIds}','{headerId}','{fieldName}','{newMaxVal}','{newDat}','{isPk}','{isExist}','{dates}','{times}','{users}','{date}','{time}','{user}','{stat}')
+                                    """.format(newIds = newIds,headerId = headerId,fieldName = fieldName,newMaxVal = newMaxVal,newDat = newDat,isPk = isPk,isExist = isExist,dates = date,times = time,users = user,date = date,time = time,user = user,stat = stat))
                     DB_SQL.commit()
             else:
                 #  removedField = old['field_data'][len(inputNew['field']):len(old['field_data'])]
@@ -298,7 +287,8 @@ def putExtTable(id):
                     fieldId = el['fieldName']['value'].upper()
                 else:
                     fieldId = el['fieldName'].upper()
-                # fieldId = generateIdTDetail(y['fieldNameEdit']['value'], id)
+                # fieldId = generateIdTDetail(y['fieldNameEdit']['value'],
+                #  id)
                 # fieldName = el['fieldNameEdit']['key']
                     
                 daType = el['datTypeField'].upper()
@@ -309,19 +299,32 @@ def putExtTable(id):
                 cur_sql.execute("""
                             UPDATE AAM1801
                             SET
-                                HEIDM1801 = %s,
-                                NMCAM1801 = %s,        
-                                DEVAM1801 = %s,
-                                DATYM1801 = %s,
-                                ISPKM1801 = %s,
-                                EXTDM1801 = %s,
-                                STATM1801 = %s,
-                                UPDTM1801 = %s,
-                                UPTIM1801 = %s,
-                                UPUSM1801 = %s
+                                HEIDM1801 = '{headerId}',
+                                NMCAM1801 = '{fieldName}',        
+                                DEVAM1801 = '{maxlen}',
+                                DATYM1801 = '{daType}',
+                                ISPKM1801 = '{isPk}',
+                                EXTDM1801 = '{isExist}',
+                                STATM1801 = '{statTD}',
+                                UPDTM1801 = '{date}',
+                                UPTIM1801 = '{time}',
+                                UPUSM1801 = '{user}'
                             WHERE
-                                FEIDM1801 = %s
-                            """,(headerId,fieldName,maxlen,daType,isPk,isExist,statTD,date, time, user,fieldId))
+                                FEIDM1801 = '{fieldId}'
+                            """.format(
+                                headerId = headerId,
+                                fieldName = fieldName,
+                                maxlen = maxlen,
+                                daType = daType,
+                                isPk = isPk,
+                                isExist = isExist,
+                                statTD = statTD,
+                                date = date,
+                                time = time,
+                                user = user,
+                                fieldId = fieldId)
+                            )
+
                 DB_SQL.commit()
  
         return jsonify(0)

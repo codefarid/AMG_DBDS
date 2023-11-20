@@ -130,3 +130,4 @@ UPTIM1801 as 'Update Time',
 UPUSM1801 as 'Update User'
 FROM AAM1801
 
+use TestAMGAPPS
