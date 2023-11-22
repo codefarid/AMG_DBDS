@@ -353,7 +353,7 @@
             <button class="p-2 ml-2" pButton type="button" icon="pi pi-download" iconPos="left" label="Stored Querries" (click)="this.downloadQuery = true" >
                 <p-badge class="mr-2" [value]="this.totalStoredQuery.toString()" severity="warning" iconPos="top" *ngIf="this.totalStoredQuery !== 0"></p-badge>
             </button>
-            <p-fileUpload class="ml-2" name="fileData[]" mode="basic" [url]="this.uploadUrl" (onUpload)="onUpload($event)" method="post" chooseLabel="Upload RFA" [auto]="true" accept=".sql"></p-fileUpload>
+            <!-- <p-fileUpload class="ml-2" name="fileData[]" mode="basic" [url]="this.uploadUrl" (onUpload)="onUpload($event)" method="post" chooseLabel="Upload RFA" [auto]="true" accept=".sql"></p-fileUpload> -->
         </div>
         <div class="col-12"> 
             <p-table #dt [value]="dictionary" styleClass="p-datatable-sm p-datatable-gridlines justify-content-between" [rowHover]="true"
