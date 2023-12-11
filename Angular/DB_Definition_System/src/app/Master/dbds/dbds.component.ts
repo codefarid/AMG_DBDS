@@ -284,8 +284,8 @@ export class DBDSComponent implements OnInit {
             }
 
             // console.log(param);
-            
-            this.api.getAllTable(param).subscribe(
+            if(this.filteredApplications) {
+                this.api.getAllTable(param).subscribe(
                 (data: any) => {
                     console.log(data)
                     let dataTable = data.result;
@@ -300,25 +300,28 @@ export class DBDSComponent implements OnInit {
                 },
                 (error) => {
                     
-                    console.log(error)
+                    // console.log(error)
                     this.loading = false;
-                    if(!this.selectedAplications) {
-                        this.messageService.add({
-                                key: 'Message',
-                                severity: 'info',
-                                summary: 'No Aplication Selected !',
-                                detail: 'Please Select Application for view queries.',
-                            });
-                    } else {
-                        this.messageService.add({
-                            key: 'Message',
-                            severity: 'error',
-                            summary: 'Reload Data',
-                            detail: 'Failed',
-                        });
-                    }
+                    // if(!this.selectedAplications) {
+                    //     this.messageService.add({
+                    //             key: 'Message',
+                    //             severity: 'info',
+                    //             summary: 'No Aplication Selected !',
+                    //             detail: 'Please Select Application for view queries.',
+                    //         });
+                    // } else {
+                        // this.messageService.add({
+                        //     key: 'Message',
+                        //     severity: 'error',
+                        //     summary: 'Reload Data',
+                        //     detail: 'Failed',
+                        // });
+                    // }
                 }
             );
+            } else {
+                this.loading = false
+            }
         }, 5000);
     }
 
