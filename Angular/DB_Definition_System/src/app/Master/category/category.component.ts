@@ -143,11 +143,12 @@ export class CategoryComponent implements OnInit {
   showEditForm(data:any) {
     this.isEdit = true;
     this.modalTitle = 'Edit Categories';
-    this.inputForm.controls['ctText'].disable()
     this.displayForm = true;
     this.getId = data.code
+    console.log(this.getId,'///')
     this.api.getOneCategory(this.getId).subscribe((res) => {
       let cat = res.result[0]
+      console.log(res)
       this.inputForm.patchValue({
         ctText: cat.label,
         stCate: this.togleStatusEdit(cat.status)

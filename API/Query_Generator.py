@@ -21,6 +21,7 @@ def index():
         auth_page = auth_page.get_json()
         auth_page = list(auth_page)
     user = check_user(token, amg = True)
+    datas = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=["HS256"])
     if request.method == 'GET':
         cur_sql.execute("""
                         SELECT AMAPSH101 as 'value', AMAPNA101 as 'text' from AAM101
@@ -65,12 +66,24 @@ def index():
         for row in cur_sql:
                     joinTo.append(dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])))
         
+        cur_sql.execute(f"""
+                        select 
+                        APNAM1901 as "appName",
+                        CRUSM1901 as "users"
+                        from AAM1901
+                        where CRUSM1901 = '{datas['user']}'
+                        """)
+        selectedAppNames = []
+        for row in cur_sql:
+                    selectedAppNames.append(dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])))
+        
         
         data = {
             "sugestion": sugestionField,
             "dropApp": dropDownApp,
             "category": category,
-            "joinTo":joinTo
+            "joinTo":joinTo,
+            "selectedApp":selectedAppNames
         }
         
         

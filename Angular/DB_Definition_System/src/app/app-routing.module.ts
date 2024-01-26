@@ -27,28 +27,28 @@ const routes: Routes = [
                     data: { programId: '1' },
                     component: DBDSComponent,
                     title: "Setup Database",
-                    canActivate:[],
+                    canActivate:[AuthGuard],
                     children: []
                 },{
                     path: 'edb', 
                     data: { programId: '2' },
                     component: AddDefComponent,
                     title: "Setup Database",
-                    canActivate:[],
+                    canActivate:[AuthGuard],
                     children: []
                 },{
                     path: 'categories', 
                     data: { programId: '3' },
                     component: CategoryComponent,
                     title: "categories",
-                    canActivate:[],
+                    canActivate:[AuthGuard],
                     children: []
                 },{
                     path: 'dictionaries', 
                     data: { programId: '4' },
                     component: DictionaryComponent,
                     title: "dictionaries",
-                    canActivate:[],
+                    canActivate:[AuthGuard],
                     children: []
                 }
                 ]

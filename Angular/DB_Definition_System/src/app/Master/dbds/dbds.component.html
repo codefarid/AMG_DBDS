@@ -362,7 +362,7 @@
             [filterDelay]="1" [loading]="loading" dataKey="id" [totalRecords]="totalRecord">                   
             <ng-template pTemplate="caption">
                 <div class="flex">
-                    <p-dropdown class="mr-auto" [options]="application" placeholder="Filter By Apps" optionLabel="text" optionValue="text" [showClear]="true" (onChange)="filterAppdisplay($event)"></p-dropdown>
+                    <p-dropdown class="mr-auto" [options]="application" [(ngModel)]="this.filteredApplications" placeholder="Filter By Apps" optionLabel="text" optionValue="text" [showClear]="true" (onChange)="filterAppdisplay($event)"></p-dropdown>
                     <span class="p-input-icon-left ml-auto">
                         <i class="pi pi-search"></i>
                         <input pInputText type="text" (input)="dt.filterGlobal(getEventValue($event), 'contains')" placeholder="Search keyword" />

@@ -83,7 +83,7 @@ def index():
                             KTAPM1701 as 'categories',
                             JOINM1701 as 'joined'
                             from AAM1701 
-                          where  {where}
+                        {where}
                         ORDER BY {col} {method}
                         OFFSET {before} ROWS
                         FETCH NEXT {totalData} ROWS ONLY;
@@ -266,45 +266,104 @@ def index():
 
 @master_dbds.route('/api/master_dbds/dropdown/<string:appName>')
 def filterByApp(appName):
-    query = ''
-    if appName != 'null':
-        query = f"""
-                        Select 
-                                TBIDM1701 as 'id',
-                                CPTBM1701 as 'caption',
-                                QESRM1701 as 'query',
-                                STATM1701 as 'status',
-                                EXTTM1701 as 'isExisting',
-                                APNAM1701 as 'aplication',
-                                KTAPM1701 as 'categories',
-                                JOINM1701 as 'joined'
-                                from AAM1701
-                        WHERE APNAM1701 = '{appName}' and STATM1701 = 'active'
-                        """
-    else:
-        query = """
-                        Select 
-                                TBIDM1701 as 'id',
-                                CPTBM1701 as 'caption',
-                                QESRM1701 as 'query',
-                                STATM1701 as 'status',
-                                EXTTM1701 as 'isExisting',
-                                APNAM1701 as 'aplication',
-                                KTAPM1701 as 'categories',
-                                JOINM1701 as 'joined'
-                                from AAM1701
-                        WHERE STATM1701 = 'active'
-                        """
-    
-    cur_sql.execute(query)
-    results = []
-    for row in cur_sql:
-        results.append(dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])))
+    try:
+        token = request.headers['Authorization']
+        data = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=["HS256"])
+        
+        query = ''
+        if appName != 'null':
+            query = f"""
+                            Select 
+                                    TBIDM1701 as 'id',
+                                    CPTBM1701 as 'caption',
+                                    QESRM1701 as 'query',
+                                    STATM1701 as 'status',
+                                    EXTTM1701 as 'isExisting',
+                                    APNAM1701 as 'aplication',
+                                    KTAPM1701 as 'categories',
+                                    JOINM1701 as 'joined'
+                                    from AAM1701
+                            WHERE APNAM1701 = '{appName}' and STATM1701 = 'active'
+                            """
+        else:
+            query = """
+                            Select 
+                                    TBIDM1701 as 'id',
+                                    CPTBM1701 as 'caption',
+                                    QESRM1701 as 'query',
+                                    STATM1701 as 'status',
+                                    EXTTM1701 as 'isExisting',
+                                    APNAM1701 as 'aplication',
+                                    KTAPM1701 as 'categories',
+                                    JOINM1701 as 'joined'
+                                    from AAM1701
+                            WHERE STATM1701 = 'active'
+                            """
+        
+        cur_sql.execute(query)
+        results = []
+        for row in cur_sql:
+            results.append(dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])))
 
-    getFields = getFieldsPerTable(results)
+        getFields = getFieldsPerTable(results)
 
-    totalData = len(results)
-    return jsonify({ "totalRecord": totalData, "result":results, "fields":getFields})
+        totalData = len(results)
+        
+        cur_sql.execute("""
+                        select
+                        APNAM1901 as "appName",
+                        CRUSM1901 as "user"
+                        from AAM1901
+                        where 
+                        CRUSM1901 = '{users}'
+                        """.format(users = data['user']))
+        appStorage = []
+        for row in cur_sql:
+            appStorage.append(dict(zip([column[0] for column in cur_sql.description], [str(x).strip() for x in row])))
+        date = datetime.now()
+        time = date.strftime("%H%M")
+        date = date.strftime("%Y%m%d")
+        user = data['user']
+        print(appStorage,"APPS STORAGES")
+        if len(appStorage) == 0:
+            cur_sql.execute("""
+                            INSERT INTO AAM1901 (APNAM1901,CRDTM1901,CRTMM1901,CRUSM1901,UPDTM1901,UPTIM1901,UPUSM1901)
+                            VALUES (
+                                '{apna}',
+                                '{crdt}',
+                                '{crtm}',
+                                '{crus}',
+                                '{updt}',
+                                '{upti}',
+                                '{upus}'
+                            )
+                            """.format(
+                                apna = appName,
+                                crdt = date,
+                                crtm = time,
+                                crus = user,
+                                updt = date,
+                                upti = time,
+                                upus = user
+                            ))
+            DB_SQL.commit()
+            print('new data to app name storage inserted')
+        else :
+            cur_sql.execute("""
+                            UPDATE AAM1901 
+                            SET
+                            APNAM1901 = '{apna}'
+                            WHERE
+                            CRUSM1901 = '{user}'
+                            """.format(apna = appName,user = user))
+            DB_SQL.commit()
+            print(appStorage,"ADA STORE APP, data updated !")
+        # try insert to AAM1901 
+        # check before insert
+        # if there is similiar user at table , just update the app name where user == users
+        return jsonify({ "totalRecord": totalData, "result":results, "fields":getFields})
+    except Exception as e:
+        return jsonify({"message":f"error : {e}"})
     
 @master_dbds.route('/api/master_dbds/<string:id>', methods=['GET', 'PUT'])
 def getOneTable(id):
@@ -462,34 +521,35 @@ def getOneTable(id):
             if oldLen < newLen:
                 newFields = data['field'][oldLen: newLen]
                 for y in newFields:
+                    print(y,"????? >>")
                     newIds = generateIdTDetail(y['fieldNameEdit']['value'], id)
                     fieldName = y['fieldNameEdit']['key']
                     newDat = y['datTypeField'].upper()
                     newMaxVal = y['maxlenField']
                     statusTD = y['statTD']
-                    isFK = y['isFK']["value"] if y['isFK']["value"] else '0'
-                    isFKto = y['isFKto']['value'] if y['isFKto']['value'] else '0'
+                    isFK = y['isFK']["value"] if "value" in y['isFK'] and y['isFK']["value"] else '0'
+                    isFKto = y['isFKto']['value'] if "value" in y['isFKto'] and y['isFKto']['value'] else '0'
                     
                     isPk = '1' if y['isPk'] else '0'
                     
                     cur_sql.execute("""
                                     INSERT INTO AAM1801 (
-                                        FEIDM1801,newIds
-                                        HEIDM1801,headerId
-                                        DATYM1801,newDat
-                                        NMCAM1801,fieldName
-                                        DEVAM1801,newMaxVal
-                                        EXTDM1801,isExist
-                                        ISFKM1801,isFK
-                                        FKTOM1801,isFKto
-                                        ISPKM1801,isPk
-                                        STATM1801,statusTD
-                                        CRDTM1801,dates
-                                        CRTMM1801,times
-                                        CRUSM1801,users
-                                        UPDTM1801,date
-                                        UPTIM1801,time
-                                        UPUSM1801)user
+                                        FEIDM1801,
+                                        HEIDM1801,
+                                        DATYM1801,
+                                        NMCAM1801,
+                                        DEVAM1801,
+                                        EXTDM1801,
+                                        ISFKM1801,
+                                        FKTOM1801,
+                                        ISPKM1801,
+                                        STATM1801,
+                                        CRDTM1801,
+                                        CRTMM1801,
+                                        CRUSM1801,
+                                        UPDTM1801,
+                                        UPTIM1801,
+                                        UPUSM1801)
                                     values (
                                         '{newIds}' ,
                                         '{headerId}' ,

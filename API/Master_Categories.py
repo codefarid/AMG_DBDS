@@ -57,6 +57,7 @@ def index():
                                 """)
         categories = cur_sql.fetchone()
         if categories:
+            print(categories[0],'///')
             newVal = str(int(categories[0]) + 1)
         else :
             newVal = str(1)
@@ -80,8 +81,26 @@ def index():
                    
             cur_sql.execute("""
                                 INSERT INTO AAM1601( CANAM1601, CANOM1601, CRDTM1601, CRTMM1601, CRUSM1601, UPDTM1601,  UPTIM1601, UPUSM1601, STATM1601)
-                                VALUES (%s, %s, %s ,%s ,%s, %s ,%s ,%s, %s)
-                                """,(newVal, category,date,time,user,date,time,user, status))
+                                VALUES (
+                                    '{canam}',
+                                    '{canom}',
+                                    '{crdt}' ,
+                                    '{crtm}' ,
+                                    '{crus}',
+                                    '{updt}' ,
+                                    '{uptm}' ,
+                                    '{upus}',
+                                    '{stat}')
+                                """.format(
+                                    canom = newVal,
+                                    canam = category,
+                                    crdt = date,
+                                    crtm = time,
+                                    crus = user,
+                                    updt = date,
+                                    uptm = time,
+                                    upus = user,
+                                    stat = status))
             DB_SQL.commit()
             return jsonify(0)
 
@@ -89,8 +108,8 @@ def index():
 def putCate(id):
     if request.method == "GET":
         cur_sql.execute("""
-                        select CANOM1601 as label, STATM1601 as status from AAM1601
-                        where CANAM1601 = %s
+                        select CANAM1601 as label, STATM1601 as status from AAM1601
+                        where CANOM1601 = %s
                         """, (id,))
         results = []
         for row in cur_sql:
@@ -108,7 +127,7 @@ def putCate(id):
         user = 'santoso'
         category = data['ctText']
         status = data['stCate']
-        
+        print(status,'///')
         # cur_sql.execute("""
         #                         Select CANOM1601 as code from AAM1601 where CANOM1601 = '{names}'
         #                         """.format(names =  category))
@@ -125,12 +144,12 @@ def putCate(id):
         cur_sql.execute("""
                             UPDATE AAM1601
                             SET
-                                CANOM1601 = %s,
+                                CANAM1601 = %s,
                                 UPDTM1601 = %s,
                                 UPTIM1601 = %s,
                                 UPUSM1601 = %s,
                                 STATM1601= %s
-                            WHERE CANAM1601 = %s
+                            WHERE CANOM1601 = %s
                             """,(category,date,time,user,status, id))
         DB_SQL.commit()
             

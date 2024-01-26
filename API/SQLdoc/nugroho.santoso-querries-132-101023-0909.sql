@@ -1,3 +1,5 @@
+use AMGAPPS
+use TestAMGAPPS
 -- Create Query for Table Definition --
 CREATE TABLE AAM1501 (
 CRDTM1501 VARCHAR(20),
@@ -89,6 +91,7 @@ UPDTM1701 as 'Update Date',
 UPTIM1701 as 'Update Time',
 UPUSM1701 as 'Update User'
 FROM AAM1701
+WHERE CRDTM1701 like  '2024%'
 
 -- Create Query for Table Detail --
 CREATE TABLE AAM1801 (
@@ -131,3 +134,24 @@ UPUSM1801 as 'Update User'
 FROM AAM1801
 
 use TestAMGAPPS
+
+use AMGAPPS
+-- table for user selection app--
+create table AAM1901(
+APNAM1901 VARCHAR(20),
+CRDTM1901 VARCHAR(20),
+CRTMM1901 VARCHAR(20),
+CRUSM1901 VARCHAR(100),
+UPDTM1901 VARCHAR(20),
+UPTIM1901 VARCHAR(20),
+UPUSM1901 VARCHAR(100)
+)
+
+select 
+APNAM1901 as "appName",
+CRUSM1901 as "users"
+from AAM1901
+where CRUSM1901 = 'santoso'
+
+select * from AAM1901
+delete from AAM1901

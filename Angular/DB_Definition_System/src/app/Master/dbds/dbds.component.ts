@@ -326,12 +326,11 @@ export class DBDSComponent implements OnInit {
     }
 
     filterAppdisplay(str:any) {
-        console.log(str.value)
         this.filteredApplications = str.value
         this.loading = true;
         setTimeout(() => {
             this.api.getFilteringApp(str.value).subscribe((data)=> {
-                // console.log(data)
+                console.log(data)
                 let dataTable = data.result;
                         let fieldsPerTable = data.fields
                         this.tableNameList = dataTable
@@ -361,14 +360,19 @@ export class DBDSComponent implements OnInit {
             setTimeout(() => {
                 this.api.getMaterialInput().subscribe(
                     (data: any) => {
-                        // console.log(data)
+                        console.log(data, ' update ini !')
                         this.sugestion = data.sugestion;
                         this.application = data.dropApp;
                         this.categories = data.category;
                         this.dropDownTextAndValue = data.joinTo
                         this.dropDownIsFKto = data.joinTo
-                        this.spinner.hide()
                         this.loadSugestionInit = false
+                        setTimeout(() => {
+                            this.filteredApplications = data.selectedApp[0].appName
+                            setTimeout(() => {
+                                this.spinner.hide()
+                            }, 500);
+                        }, 500);
                     },
                     (error) => {
                         this.spinner.hide()

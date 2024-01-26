@@ -44,7 +44,7 @@ export class AuthGuard implements CanActivate {
       this.router.navigate(['/']);
       return false;
     }else{
-      window.location.href = GlobalConstants.baseURLHome
+      window.location.href = GlobalConstants.loginPage
       return false
     }
   }

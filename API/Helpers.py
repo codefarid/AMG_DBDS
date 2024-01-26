@@ -47,9 +47,15 @@ def detectPkChange(newData,headerId):
         if obj['isPk'] == True:
             newField.append(obj)   
 
-    newId =  newField[0]['fieldName']
-    oldId = oldField[0]['fieldId']  
+    newId =  newField[0]['fieldNameEdit']
+    
+    
+    if len(oldField) > 0:
+        oldId = oldField[0]['fieldId']  
+    else:
+        oldId = ''
     newIds = newId['value']
+    
     if newIds != oldId:
         query = 'ALTER TABLE ' + headerId + ' DROP CONSTRAINT '
         query += oldId
@@ -144,7 +150,7 @@ def generateIdHeader(obj):
     b = higestValueFromInternal[1] if higestValueFromInternal != None else 0
     
 
-    if obj['joinTo'] is not None:
+    if 'joinTo' in obj and obj['joinTo'] is not None:
         def get_number_only(s):
             return int(''.join(filter(str.isdigit,s)))
         getNumber = get_number_only(obj['joinTo']['value'])

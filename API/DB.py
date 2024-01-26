@@ -10,7 +10,7 @@ import pymssql
 #     print('Cant connect to DB2 Server')
 
 test = True
-#test = False
+# test = False
 
 deploy_local = False
 development = True

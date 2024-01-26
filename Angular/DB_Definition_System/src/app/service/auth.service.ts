@@ -44,7 +44,8 @@ export class AuthService {
 
   logout(){
     localStorage.removeItem('token')
-    this.router.navigate(['/'])
+    // this.router.navigate(['/'])
+    window.location.href = GlobalConstants.loginPage
     window.location.reload()
   }
 

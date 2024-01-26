@@ -381,8 +381,11 @@ select * from EXIMT301
 
 use TestAMGAPPS
 use TestAMGAPPS
-                    select AAMTBIDZ1302 as 'TABLE_NAME' from AAMTBHAZ1301
-                    where AAMTHSTZ1302 = 'active'
+select AAMTBIDZ1302 as 'TABLE_NAME' from AAMTBHAZ1301
+where AAMTHSTZ1302 = 'active'
 
 SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'AAMTCATEZ1301'
 EXEC sp_columns 'AAMTBDEZ1301'
+
+select * from AAM1101
+use AMGAPPS
