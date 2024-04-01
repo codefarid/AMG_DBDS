@@ -1,6 +1,6 @@
 export class GlobalConstants {
-    public static baseURL: string = "http://172.18.178.242:5017/"; //dbds_test 
-    // public static baseURL: string = "http://172.18.178.242:5018/"; //live
+    // public static baseURL: string = "http://172.18.178.242:5017/"; //dbds_test 
+    public static baseURL: string = "http://172.18.178.242:5018/"; //live
 
     // public static baseURL: string = "http://127.0.0.1:5006/"; //localhost
     public static loginPage: string = "http://172.18.178.242:888/home_test/login";
